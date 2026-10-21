@@ -1,0 +1,67 @@
+name: Update Kinshasa board & deploy
+
+# Regenerates the baked-in artery geometry / roadworks data every day,
+# commits the fresh data back to the repo, and deploys to GitHub Pages.
+# 05:45 UTC ≈ 06:45 Africa/Kinshasa (Kinshasa is UTC+1 year-round).
+
+on:
+  schedule:
+    - cron: "45 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write # commit the refreshed data
+  pages: write # deploy to GitHub Pages
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  update-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Regenerate board data and page
+        run: python3 scripts/build.py
+
+      - name: Commit the refreshed data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/board.json index.html sitemap.xml
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Daily Kinshasa board refresh ($(date -u +%Y-%m-%d))"
+            git push
+          fi
+
+      - name: Stage the public site files
+        run: |
+          mkdir -p _site/data
+          cp index.html robots.txt sitemap.xml _site/
+          cp data/board.json _site/data/
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload the site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
