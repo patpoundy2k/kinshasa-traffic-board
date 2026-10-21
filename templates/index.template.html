@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kinshasa Traffic Board — Circulation, chantiers et météo à Kinshasa</title>
+<meta name="description" content="FR : Circulation à Kinshasa en un coup d'œil — grandes artères (30 Juin, Lumumba, Libération…), congestion habituelle par heure, chantiers signalés par la presse, météo en direct et antennes relais. EN: Kinshasa traffic at a glance — main arteries, typical congestion by hour, reported roadworks, live weather and cell towers.">
+<meta name="description" lang="en" content="Kinshasa traffic at a glance: main arteries (30 Juin, Lumumba, Libération), typical congestion by hour, press-reported roadworks, live weather and cell towers. Bilingual FR/EN.">
+<link rel="canonical" href="https://patpoundy2k.github.io/kinshasa-traffic-board/">
+<link rel="alternate" hreflang="fr" href="https://patpoundy2k.github.io/kinshasa-traffic-board/">
+<link rel="alternate" hreflang="en" href="https://patpoundy2k.github.io/kinshasa-traffic-board/">
+<link rel="alternate" hreflang="x-default" href="https://patpoundy2k.github.io/kinshasa-traffic-board/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Kinshasa Traffic Board — Circulation à Kinshasa">
+<meta property="og:description" content="Grandes artères, congestion habituelle, chantiers, météo en direct et antennes relais à Kinshasa. Bilingue FR/EN.">
+<meta property="og:url" content="https://patpoundy2k.github.io/kinshasa-traffic-board/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kinshasa Traffic Board">
+<meta name="twitter:description" content="Kinshasa traffic at a glance — arteries, typical congestion, roadworks, live weather, cell towers. FR/EN.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Kinshasa Traffic Board",
+  "alternateName": "Tableau de circulation de Kinshasa",
+  "url": "https://patpoundy2k.github.io/kinshasa-traffic-board/",
+  "applicationCategory": "TravelApplication",
+  "operatingSystem": "Any (web browser)",
+  "inLanguage": ["fr", "en"],
+  "description": "Bilingual (FR/EN) traffic board for Kinshasa, DR Congo: map of the 10 main arteries with typical congestion by time of day, press-reported roadworks with sources, live weather from Open-Meteo, community-mapped cell towers, and local traffic reports.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "areaServed": { "@type": "City", "name": "Kinshasa", "address": { "@type": "PostalAddress", "addressCountry": "CD" } }
+}
+</script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  :root{
+    --ink:#14213d; --muted:#5b6b82; --bg:#f2f5f9; --card:#ffffff;
+    --brand1:#0b7a55; --brand2:#0e5a8a; --amber:#e8a13a; --red:#d64545;
+    --green:#2e9e5b; --orange:#e07b2a; --line:#dde5ee;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+  header.hero{background:linear-gradient(120deg,var(--brand1),var(--brand2));color:#fff;padding:26px 18px 20px}
+  .hero-in{max-width:1060px;margin:0 auto;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start;justify-content:space-between}
+  h1{margin:0;font-size:1.65rem;line-height:1.2}
+  .tagline{margin:6px 0 0;opacity:.92;max-width:640px}
+  .lang-switch{display:flex;gap:6px}
+  .lang-switch button{border:1px solid rgba(255,255,255,.6);background:transparent;color:#fff;border-radius:999px;padding:6px 14px;font-weight:600;cursor:pointer}
+  .lang-switch button.active{background:#fff;color:var(--brand2)}
+  main{max-width:1060px;margin:0 auto;padding:16px}
+  .grid{display:grid;grid-template-columns:1fr;gap:14px}
+  @media(min-width:900px){.grid{grid-template-columns:340px 1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 1px 3px rgba(20,33,61,.05)}
+  .card h2{margin:0 0 10px;font-size:1.05rem}
+  .card h3{margin:14px 0 8px;font-size:.98rem}
+  #map{height:480px;border-radius:12px;z-index:0}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:.86rem;margin-top:10px}
+  .dot{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:-1px;margin-right:5px}
+  .lvl-fluid{background:var(--green)} .lvl-slow{background:var(--amber)}
+  .lvl-heavy{background:var(--orange)} .lvl-blocked{background:var(--red)}
+  .note{font-size:.85rem;color:var(--muted)}
+  .honest{background:#fff7e8;border:1px solid #f0dcae;border-radius:10px;padding:10px 12px;font-size:.88rem}
+  ul.clean{list-style:none;margin:0;padding:0}
+  ul.clean li{padding:9px 0;border-bottom:1px solid var(--line)}
+  ul.clean li:last-child{border-bottom:none}
+  .badge{display:inline-block;font-size:.72rem;font-weight:700;border-radius:999px;padding:2px 8px;color:#fff;vertical-align:1px}
+  .b-active{background:var(--green)} .b-stopped{background:var(--red)}
+  .b-stalled{background:var(--orange)} .b-progressing{background:var(--brand2)} .b-degraded{background:#8a6d1f}
+  .pill{display:inline-block;font-size:.75rem;font-weight:700;border-radius:999px;padding:2px 9px;color:#fff}
+  label{display:block;font-size:.86rem;font-weight:600;margin:10px 0 4px}
+  input,select,textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;font:inherit;background:#fff}
+  button.cta{margin-top:12px;width:100%;background:var(--brand1);color:#fff;border:none;border-radius:10px;padding:11px;font-weight:700;cursor:pointer}
+  button.cta:hover{filter:brightness(1.07)}
+  .toggle-row{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:.9rem}
+  .wx-big{font-size:1.5rem;font-weight:700}
+  footer{max-width:1060px;margin:0 auto;padding:6px 16px 28px;color:var(--muted);font-size:.83rem}
+  .hidden{display:none !important}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-in">
+    <div>
+      <h1>🚦 Kinshasa Traffic Board</h1>
+      <p class="tagline" data-i18n="tagline">Circulation à Kinshasa : grandes artères, congestion habituelle, chantiers, météo en direct et antennes relais.</p>
+    </div>
+    <div class="lang-switch" role="group" aria-label="Language / Langue">
+      <button type="button" id="btn-fr">FR</button>
+      <button type="button" id="btn-en">EN</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="grid">
+    <div>
+      <section class="card" id="weather-card">
+        <h2>🌦️ <span data-i18n="weatherTitle">Météo à Kinshasa (en direct)</span></h2>
+        <div id="weather-body"><p class="note" data-i18n="weatherLoading">Chargement de la météo…</p></div>
+        <p class="note">Open-Meteo · <span data-i18n="updatedOn">Données du</span> {{GENERATED_DATE}}</p>
+      </section>
+
+      <section class="card">
+        <h2>📝 <span data-i18n="reportTitle">Signaler un embouteillage</span></h2>
+        <div class="honest" data-i18n="reportNote">Sur ce site public, votre signalement reste sur votre appareil (il n'est pas partagé avec les autres visiteurs). Le signalement partagé en direct se fait dans l'application Kinshasa Traffic Board.</div>
+        <form id="report-form">
+          <label for="rep-artery" data-i18n="reportArtery">Artère</label>
+          <select id="rep-artery" required></select>
+          <label for="rep-level" data-i18n="reportLevel">Niveau</label>
+          <select id="rep-level" required>
+            <option value="fluid" data-i18n="lvlFluid">Fluide</option>
+            <option value="slow" data-i18n="lvlSlow">Ralenti</option>
+            <option value="heavy" data-i18n="lvlHeavy">Dense</option>
+            <option value="blocked" data-i18n="lvlBlocked">Bloqué</option>
+          </select>
+          <label for="rep-comment" data-i18n="reportComment">Commentaire (optionnel)</label>
+          <textarea id="rep-comment" rows="2" maxlength="200"></textarea>
+          <button type="submit" class="cta" data-i18n="reportSubmit">Ajouter mon signalement</button>
+        </form>
+        <h3 data-i18n="myReports">Mes signalements (cet appareil)</h3>
+        <ul class="clean" id="my-reports"><li class="note" data-i18n="noReports">Aucun signalement pour le moment.</li></ul>
+      </section>
+    </div>
+
+    <div>
+      <section class="card">
+        <h2>🗺️ <span data-i18n="mapTitle">Carte des grandes artères</span></h2>
+        <div id="map" aria-label="Map of Kinshasa main arteries"></div>
+        <div class="legend">
+          <span><span class="dot lvl-fluid"></span><span data-i18n="lvlFluid">Fluide</span></span>
+          <span><span class="dot lvl-slow"></span><span data-i18n="lvlSlow">Ralenti</span></span>
+          <span><span class="dot lvl-heavy"></span><span data-i18n="lvlHeavy">Dense</span></span>
+          <span><span class="dot lvl-blocked"></span><span data-i18n="lvlBlocked">Bloqué</span></span>
+          <span>🚧 <span data-i18n="legendWorks">Chantier signalé</span></span>
+        </div>
+        <label class="toggle-row"><input type="checkbox" id="towers-toggle" style="width:auto"> <span data-i18n="towersToggle">Afficher les antennes relais (téléphonie mobile)</span></label>
+        <p class="note" id="towers-status"></p>
+        <p class="honest" style="margin-top:10px" data-i18n="typicalNote">Couleurs = congestion HABITUELLE selon l'heure à Kinshasa (modèle par heure de la journée), pas des données en temps réel : il n'existe pas de flux de trafic en direct gratuit pour Kinshasa.</p>
+      </section>
+
+      <section class="card">
+        <h2>🛣️ <span data-i18n="arteriesTitle">Les 10 grandes artères</span></h2>
+        <ul class="clean" id="arteries-list">
+{{ARTERIES_LIST_HTML}}
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>🚧 <span data-i18n="worksTitle">Chantiers et points signalés</span></h2>
+        <p class="note" data-i18n="worksNote">Informations tirées de la presse congolaise, avec source et date — à confirmer sur place.</p>
+        <ul class="clean" id="works-list">
+{{ROADWORKS_LIST_HTML}}
+        </ul>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p data-i18n="footerNote">Sources : OpenStreetMap (géométrie des routes et antennes, données communautaires pouvant être incomplètes), Open-Meteo (météo), presse congolaise (chantiers). Aucune donnée de trafic en temps réel n'est affichée : la congestion est un modèle habituel par heure.</p>
+  <p>Kinshasa Traffic Board — <span data-i18n="generatedOn">Page générée le</span> {{GENERATED_DATE}}</p>
+</footer>
+
+<script id="board-data" type="application/json">{{BOARD_JSON}}</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(function(){
+"use strict";
+var BOARD = JSON.parse(document.getElementById('board-data').textContent);
+var LANG_KEY = 'ktb-lang';
+var REPORTS_KEY = 'ktb-reports';
+
+var I18N = {
+  fr: {
+    tagline: "Circulation à Kinshasa : grandes artères, congestion habituelle, chantiers, météo en direct et antennes relais.",
+    weatherTitle: "Météo à Kinshasa (en direct)",
+    weatherLoading: "Chargement de la météo…",
+    weatherError: "Météo indisponible pour le moment.",
+    updatedOn: "Données du",
+    rainRisk: "Risque de pluie",
+    floodNote: "Pluie forte possible : risque d'inondations locales et de ralentissements importants sur les artères basses.",
+    reportTitle: "Signaler un embouteillage",
+    reportNote: "Sur ce site public, votre signalement reste sur votre appareil (il n'est pas partagé avec les autres visiteurs). Le signalement partagé en direct se fait dans l'application Kinshasa Traffic Board.",
+    reportArtery: "Artère",
+    reportLevel: "Niveau",
+    reportComment: "Commentaire (optionnel)",
+    reportSubmit: "Ajouter mon signalement",
+    myReports: "Mes signalements (cet appareil)",
+    noReports: "Aucun signalement pour le moment.",
+    mapTitle: "Carte des grandes artères",
+    legendWorks: "Chantier signalé",
+    towersToggle: "Afficher les antennes relais (téléphonie mobile)",
+    towersLoading: "Chargement des antennes…",
+    towersCount: "antennes affichées (OpenStreetMap, données communautaires — couverture possiblement incomplète)",
+    towersError: "Antennes indisponibles pour le moment.",
+    typicalNote: "Couleurs = congestion HABITUELLE selon l'heure à Kinshasa (modèle par heure de la journée), pas des données en temps réel : il n'existe pas de flux de trafic en direct gratuit pour Kinshasa.",
+    arteriesTitle: "Les 10 grandes artères",
+    worksTitle: "Chantiers et points signalés",
+    worksNote: "Informations tirées de la presse congolaise, avec source et date — à confirmer sur place.",
+    lvlFluid: "Fluide", lvlSlow: "Ralenti", lvlHeavy: "Dense", lvlBlocked: "Bloqué",
+    typicalPrefix: "Habituel à cette heure",
+    sourceLabel: "Source",
+    reportedLabel: "signalé",
+    footerNote: "Sources : OpenStreetMap (géométrie des routes et antennes, données communautaires pouvant être incomplètes), Open-Meteo (météo), presse congolaise (chantiers). Aucune donnée de trafic en temps réel n'est affichée : la congestion est un modèle habituel par heure.",
+    generatedOn: "Page générée le",
+    status: { active:"En cours", stopped:"À l'arrêt", stalled:"Presque à l'arrêt", progressing:"En progression", degraded:"Dégradé" }
+  },
+  en: {
+    tagline: "Traffic in Kinshasa: main arteries, typical congestion, roadworks, live weather and cell towers.",
+    weatherTitle: "Kinshasa weather (live)",
+    weatherLoading: "Loading weather…",
+    weatherError: "Weather unavailable right now.",
+    updatedOn: "Data as of",
+    rainRisk: "Rain risk",
+    floodNote: "Heavy rain possible: risk of local flooding and major slowdowns on low-lying arteries.",
+    reportTitle: "Report a traffic jam",
+    reportNote: "On this public website, your report stays on your device (it is not shared with other visitors). Shared live reporting is in the Kinshasa Traffic Board app.",
+    reportArtery: "Artery",
+    reportLevel: "Level",
+    reportComment: "Comment (optional)",
+    reportSubmit: "Add my report",
+    myReports: "My reports (this device)",
+    noReports: "No reports yet.",
+    mapTitle: "Main arteries map",
+    legendWorks: "Reported roadworks",
+    towersToggle: "Show cell towers (mobile network)",
+    towersLoading: "Loading towers…",
+    towersCount: "towers shown (OpenStreetMap, community-mapped — coverage may be incomplete)",
+    towersError: "Towers unavailable right now.",
+    typicalNote: "Colours = TYPICAL congestion for this time of day in Kinshasa (an hourly pattern model), not real-time data: no free live traffic feed exists for Kinshasa.",
+    arteriesTitle: "The 10 main arteries",
+    worksTitle: "Roadworks and reported trouble spots",
+    worksNote: "Information from the Congolese press, with source and date — confirm on site.",
+    lvlFluid: "Fluid", lvlSlow: "Slow", lvlHeavy: "Heavy", lvlBlocked: "Blocked",
+    typicalPrefix: "Typical at this hour",
+    sourceLabel: "Source",
+    reportedLabel: "reported",
+    footerNote: "Sources: OpenStreetMap (road geometry and towers, community data that may be incomplete), Open-Meteo (weather), Congolese press (roadworks). No real-time traffic data is shown: congestion is a typical hourly pattern model.",
+    generatedOn: "Page generated on",
+    status: { active:"Active", stopped:"Stopped", stalled:"Nearly stopped", progressing:"Progressing", degraded:"Degraded" }
+  }
+};
+
+var lang = localStorage.getItem(LANG_KEY) || 'fr';
+if (lang !== 'fr' && lang !== 'en') lang = 'fr';
+function t(key){ return I18N[lang][key] || key; }
+
+var COLORS = { fluid:'#2e9e5b', slow:'#e8a13a', heavy:'#e07b2a', blocked:'#d64545' };
+
+/* ---- Typical congestion model (hourly pattern, Africa/Kinshasa) ---- */
+function kinshasaHour(){
+  try {
+    var s = new Intl.DateTimeFormat('en-GB',{timeZone:'Africa/Kinshasa',hour:'numeric',hour12:false}).format(new Date());
+    return parseInt(s,10) % 24;
+  } catch(e){ return new Date().getHours(); }
+}
+function dayFactor(h){
+  if (h < 5) return 0.08;
+  if (h < 6) return 0.3;
+  if (h < 9) return 1.0;      /* morning peak 06–09 */
+  if (h < 11) return 0.65;
+  if (h < 14) return 0.55;    /* midday */
+  if (h < 16) return 0.7;
+  if (h < 20) return 1.0;     /* evening peak 16–20 */
+  if (h < 22) return 0.45;
+  return 0.15;
+}
+function typicalLevel(artery){
+  var score = artery.peak * dayFactor(kinshasaHour());
+  if (score >= 0.88) return 'blocked';
+  if (score >= 0.62) return 'heavy';
+  if (score >= 0.35) return 'slow';
+  return 'fluid';
+}
+
+/* ---- Map ---- */
+var map = L.map('map').setView([BOARD.city.lat, BOARD.city.lon], 12);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 18, attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+var arteryLayers = {};
+function drawArteries(){
+  Object.keys(arteryLayers).forEach(function(id){ map.removeLayer(arteryLayers[id]); });
+  arteryLayers = {};
+  BOARD.arteries.features.forEach(function(f){
+    var lvl = typicalLevel(f.properties);
+    var layer = L.geoJSON(f, { style: { color: COLORS[lvl], weight: 5, opacity: 0.85 } });
+    layer.bindPopup('<strong>' + f.properties.name + '</strong><br>' +
+      (lang === 'fr' ? f.properties.zones_fr : f.properties.zones_en) + '<br>' +
+      t('typicalPrefix') + ' : ' + t('lvl' + lvl.charAt(0).toUpperCase() + lvl.slice(1)));
+    layer.addTo(map);
+    arteryLayers[f.properties.id] = layer;
+  });
+}
+var worksLayer = L.layerGroup().addTo(map);
+function drawWorks(){
+  worksLayer.clearLayers();
+  BOARD.roadworks.forEach(function(rw){
+    rw.points.forEach(function(pt){
+      L.marker([pt[0], pt[1]], {
+        icon: L.divIcon({ className:'', html:'<div style="font-size:20px">🚧</div>', iconSize:[22,22], iconAnchor:[11,11] })
+      }).bindPopup('<strong>' + (lang === 'fr' ? rw.title_fr : rw.title_en) + '</strong><br>' +
+        (lang === 'fr' ? rw.detail_fr : rw.detail_en) + '<br><em>' +
+        t('sourceLabel') + ' : ' + rw.source + ' — ' + rw.date + '</em>').addTo(worksLayer);
+    });
+  });
+}
+var towersLayer = L.layerGroup();
+var towersLoaded = false;
+function loadTowers(){
+  var st = document.getElementById('towers-status');
+  st.textContent = t('towersLoading');
+  var q = '[out:json][timeout:40];(' +
+    'node["man_made"="communication_tower"](-4.50,15.10,-4.20,15.60);' +
+    'node["man_made"="mast"]["communication:mobile_phone"="yes"](-4.50,15.10,-4.20,15.60);' +
+    'node["tower:type"="communication"](-4.50,15.10,-4.20,15.60);' +
+    ');out body 400;';
+  fetch('https://overpass-api.de/api/interpreter', {
+    method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body: 'data=' + encodeURIComponent(q)
+  }).then(function(r){ return r.json(); }).then(function(data){
+    var seen = {};
+    (data.elements || []).forEach(function(el){
+      if (seen[el.id]) return; seen[el.id] = 1;
+      var op = (el.tags && (el.tags.operator || el.tags.name)) || '';
+      L.circleMarker([el.lat, el.lon], { radius:5, color:'#0e5a8a', fillColor:'#3f9bd8', fillOpacity:0.8 })
+        .bindPopup('📡 ' + (op ? op.replace(/</g,'&lt;') : '—')).addTo(towersLayer);
+    });
+    towersLoaded = true;
+    st.textContent = Object.keys(seen).length + ' ' + t('towersCount');
+  }).catch(function(){ st.textContent = t('towersError'); });
+}
+document.getElementById('towers-toggle').addEventListener('change', function(ev){
+  if (ev.target.checked){ towersLayer.addTo(map); if (!towersLoaded) loadTowers(); }
+  else { map.removeLayer(towersLayer); document.getElementById('towers-status').textContent = ''; }
+});
+
+/* ---- Weather (live, Open-Meteo, keyless) ---- */
+function loadWeather(){
+  var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + BOARD.city.lat +
+    '&longitude=' + BOARD.city.lon +
+    '&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m' +
+    '&hourly=precipitation_probability&forecast_days=1&timezone=Africa%2FKinshasa';
+  fetch(url).then(function(r){ return r.json(); }).then(function(d){
+    var c = d.current;
+    var probs = (d.hourly && d.hourly.precipitation_probability || []).filter(function(x){ return x != null; });
+    var maxProb = probs.length ? Math.max.apply(null, probs) : null;
+    var html = '<div class="wx-big">' + Math.round(c.temperature_2m) + ' °C</div>' +
+      '<div>💧 ' + c.relative_humidity_2m + ' % · 🌬️ ' + Math.round(c.wind_speed_10m) + ' km/h' +
+      (c.precipitation > 0 ? ' · 🌧️ ' + c.precipitation + ' mm' : '') + '</div>';
+    if (maxProb != null) html += '<div>' + t('rainRisk') + ' : ' + maxProb + ' %</div>';
+    if ((maxProb != null && maxProb >= 60) || c.precipitation >= 2) {
+      html += '<p class="honest" style="margin-top:8px">⚠️ ' + t('floodNote') + '</p>';
+    }
+    document.getElementById('weather-body').innerHTML = html;
+  }).catch(function(){
+    document.getElementById('weather-body').innerHTML = '<p class="note">' + t('weatherError') + '</p>';
+  });
+}
+
+/* ---- Lists (re-rendered in the active language) ---- */
+function renderLists(){
+  var ul = document.getElementById('arteries-list');
+  ul.innerHTML = '';
+  BOARD.arteries.features.forEach(function(f){
+    var lvl = typicalLevel(f.properties);
+    var li = document.createElement('li');
+    li.innerHTML = '<span class="dot lvl-' + lvl + '"></span><strong></strong> — <span></span> · <em></em>';
+    li.querySelector('strong').textContent = f.properties.name;
+    li.querySelector('span:not(.dot)').textContent = (lang === 'fr' ? f.properties.zones_fr : f.properties.zones_en);
+    li.querySelector('em').textContent = t('typicalPrefix') + ' : ' + t('lvl' + lvl.charAt(0).toUpperCase() + lvl.slice(1));
+    ul.appendChild(li);
+  });
+  var wl = document.getElementById('works-list');
+  wl.innerHTML = '';
+  BOARD.roadworks.forEach(function(rw){
+    var li = document.createElement('li');
+    var badge = '<span class="badge b-' + rw.status + '">' + (t('status')[rw.status] || rw.status) + '</span> ';
+    li.innerHTML = badge + '<strong></strong><br><span></span><br><em></em>';
+    li.querySelector('strong').textContent = (lang === 'fr' ? rw.title_fr : rw.title_en);
+    li.querySelector('span:not(.badge)').textContent = (lang === 'fr' ? rw.detail_fr : rw.detail_en);
+    li.querySelector('em').textContent = t('sourceLabel') + ' : ' + rw.source + ' — ' + rw.date + ' (' + t('reportedLabel') + ')';
+    wl.appendChild(li);
+  });
+  var sel = document.getElementById('rep-artery');
+  sel.innerHTML = '';
+  BOARD.arteries.features.forEach(function(f){
+    var o = document.createElement('option');
+    o.value = f.properties.id; o.textContent = f.properties.name;
+    sel.appendChild(o);
+  });
+}
+
+/* ---- Reports (this device only, localStorage, 4 h expiry) ---- */
+var reportMarkers = L.layerGroup().addTo(map);
+function loadReports(){
+  var now = Date.now(), out = [];
+  try {
+    (JSON.parse(localStorage.getItem(REPORTS_KEY) || '[]')).forEach(function(r){
+      if (now - r.ts < 4 * 3600 * 1000) out.push(r);
+    });
+  } catch(e){}
+  return out;
+}
+function saveReports(list){ localStorage.setItem(REPORTS_KEY, JSON.stringify(list)); }
+function renderReports(){
+  var list = loadReports(); saveReports(list);
+  reportMarkers.clearLayers();
+  var ul = document.getElementById('my-reports');
+  ul.innerHTML = '';
+  if (!list.length){
+    ul.innerHTML = '<li class="note">' + t('noReports') + '</li>';
+    return;
+  }
+  list.slice().reverse().forEach(function(r){
+    var art = BOARD.arteries.features.filter(function(f){ return f.properties.id === r.arteryId; })[0];
+    var name = art ? art.properties.name : r.arteryId;
+    var li = document.createElement('li');
+    li.innerHTML = '<span class="dot lvl-' + r.level + '"></span><strong></strong> · <span></span><br><em></em>';
+    li.querySelector('strong').textContent = name;
+    li.querySelector('span:not(.dot)').textContent = t('lvl' + r.level.charAt(0).toUpperCase() + r.level.slice(1));
+    li.querySelector('em').textContent = new Date(r.ts).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) +
+      (r.comment ? ' — ' + r.comment : '');
+    ul.appendChild(li);
+    if (art && art.properties.centre){
+      L.circleMarker(art.properties.centre, { radius:9, color:COLORS[r.level], fillColor:COLORS[r.level], fillOpacity:0.55 })
+        .bindPopup('<strong>' + name + '</strong><br>' + t('lvl' + r.level.charAt(0).toUpperCase() + r.level.slice(1))).addTo(reportMarkers);
+    }
+  });
+}
+document.getElementById('report-form').addEventListener('submit', function(ev){
+  ev.preventDefault();
+  var list = loadReports();
+  list.push({
+    arteryId: document.getElementById('rep-artery').value,
+    level: document.getElementById('rep-level').value,
+    comment: document.getElementById('rep-comment').value.trim(),
+    ts: Date.now()
+  });
+  saveReports(list);
+  document.getElementById('rep-comment').value = '';
+  renderReports();
+});
+
+/* ---- Language ---- */
+function applyLang(){
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var k = el.getAttribute('data-i18n');
+    if (I18N[lang][k]) el.textContent = I18N[lang][k];
+  });
+  document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  renderLists(); drawArteries(); drawWorks(); renderReports();
+}
+document.getElementById('btn-fr').addEventListener('click', function(){ lang = 'fr'; localStorage.setItem(LANG_KEY, lang); applyLang(); });
+document.getElementById('btn-en').addEventListener('click', function(){ lang = 'en'; localStorage.setItem(LANG_KEY, lang); applyLang(); });
+
+applyLang();
+loadWeather();
+setInterval(drawArteries, 15 * 60 * 1000);
+})();
+</script>
+</body>
+</html>
