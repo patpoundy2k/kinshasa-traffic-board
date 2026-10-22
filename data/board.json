@@ -21032,7 +21032,7 @@
   }
  },
  "flightsBoard": {
-  "checkedAt": "2026-10-22T20:22:05Z",
+  "checkedAt": "2026-10-22T22:00:06Z",
   "source": "AeroDataBox",
   "departures": [
    {
@@ -21154,6 +21154,30 @@
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
+   },
+   {
+    "flight": "ET 70",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "FKI",
+     "name": "Kisangani"
+    },
+    "sched": "2026-10-23T10:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 98",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "BRU",
+     "name": "Brussels"
+    },
+    "sched": "2026-10-23T10:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
    }
   ],
   "arrivals": [
@@ -21213,6 +21237,18 @@
      "name": "Lubumbashi"
     },
     "sched": "2026-10-23T09:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "BU 1633",
+    "airline": "CAA",
+    "from": {
+     "iata": "KWZ",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-10-23T10:30+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
