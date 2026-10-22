@@ -20928,5 +20928,107 @@
   "roadworks": "Researched from Congolese press; each item carries its source and date.",
   "river": "Researched from Congolese press and official/UN reports; each item carries its source, source URL and date. No live river-level or vessel feed exists for Kinshasa.",
   "reports": "On this public website, reports are stored only in the visitor's own browser (localStorage). Shared live reporting is in the Kinshasa Traffic Board app."
+ },
+ "live": {
+  "checkedAt": "2026-10-22T15:29:04Z",
+  "source": "Google Routes",
+  "arteries": {
+   "av-elengesa-bypass": {
+    "ratio": 1.28,
+    "level": "heavy",
+    "mins": 35.9,
+    "staticMins": 28.1
+   },
+   "av-huileries": {
+    "ratio": 1.6,
+    "level": "blocked",
+    "mins": 18.9,
+    "staticMins": 11.8
+   },
+   "av-kasa-vubu": {
+    "ratio": 1.33,
+    "level": "heavy",
+    "mins": 45.4,
+    "staticMins": 34.0
+   },
+   "av-liberation": {
+    "ratio": 1.15,
+    "level": "slow",
+    "mins": 71.3,
+    "staticMins": 61.8
+   },
+   "av-mondjiba": {
+    "ratio": 1.51,
+    "level": "blocked",
+    "mins": 15.4,
+    "staticMins": 10.2
+   },
+   "av-nguma": {
+    "ratio": 1.51,
+    "level": "blocked",
+    "mins": 22.4,
+    "staticMins": 14.9
+   },
+   "av-tourisme": {
+    "ratio": 1.33,
+    "level": "heavy",
+    "mins": 21.9,
+    "staticMins": 16.4
+   },
+   "av-universite": {
+    "ratio": 1.06,
+    "level": "fluid",
+    "mins": 79.5,
+    "staticMins": 74.9
+   },
+   "av-victoire": {
+    "ratio": 1.42,
+    "level": "heavy",
+    "mins": 23.7,
+    "staticMins": 16.7
+   },
+   "bd-30-juin": {
+    "ratio": 1.27,
+    "level": "heavy",
+    "mins": 21.2,
+    "staticMins": 16.6
+   },
+   "bd-lumumba": {
+    "ratio": 1.53,
+    "level": "blocked",
+    "mins": 81.7,
+    "staticMins": 53.3
+   },
+   "bd-sendwe": {
+    "ratio": 1.64,
+    "level": "blocked",
+    "mins": 10.3,
+    "staticMins": 6.3
+   },
+   "bd-triomphal": {
+    "ratio": 1.24,
+    "level": "slow",
+    "mins": 24.7,
+    "staticMins": 19.9
+   },
+   "bd-tshatshi": {
+    "ratio": 0.99,
+    "level": "fluid",
+    "mins": 6.6,
+    "staticMins": 6.6
+   },
+   "poids-lourds": {
+    "ratio": 1.48,
+    "level": "heavy",
+    "mins": 4.4,
+    "staticMins": 3.0
+   },
+   "rn1-matadi": {
+    "ratio": 1.31,
+    "level": "heavy",
+    "mins": 93.0,
+    "staticMins": 70.9
+   }
+  }
  }
 }
