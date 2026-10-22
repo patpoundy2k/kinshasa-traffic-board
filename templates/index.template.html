@@ -43,7 +43,7 @@
   "applicationCategory": "TravelApplication",
   "operatingSystem": "Any (web browser)",
   "inLanguage": ["fr-CD", "en"],
-  "description": "Bilingual (FR/EN) traffic board for Kinshasa, DR Congo: map of the 10 main arteries with typical congestion by time of day, press-reported roadworks with sources, live weather from Open-Meteo, and crowd-reported traffic jams. Also followed by readers across the Congo River in Brazzaville, Republic of Congo.",
+  "description": "Bilingual (FR/EN) traffic board for Kinshasa, DR Congo: map of the main arteries with typical congestion by time of day, press-reported roadworks with sources, live weather from Open-Meteo, and crowd-reported traffic jams. Also followed by readers across the Congo River in Brazzaville, Republic of Congo.",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
   "areaServed": { "@type": "City", "name": "Kinshasa", "address": { "@type": "PostalAddress", "addressCountry": "CD" } },
   "audience": {
@@ -141,6 +141,7 @@
   input[type=range].hour-slider:focus-visible{outline:2px solid var(--brand-2);outline-offset:4px;border-radius:999px}
   .hour-ticks{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted);font-variant-numeric:tabular-nums;padding:0 2px}
   .preview-chip{display:inline-flex;align-items:center;gap:6px;margin:10px 0 2px;background:#fef3c7;border:1px solid #fcd34d;color:#92400e;border-radius:999px;padding:5px 13px;font-size:.85rem;font-weight:700}
+  .live-badge{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;background:#fef2f2;border:1px solid #fca5a5;color:#b91c1c;border-radius:999px;padding:5px 13px;font-size:.85rem;font-weight:700}
 
   /* ---- Lists, badges, forms ---- */
   ul.clean{list-style:none;margin:0;padding:0}
@@ -206,6 +207,7 @@
 
   <section class="card" id="map-card">
     <h2>🗺️ <span data-i18n="mapTitle">Carte des grandes artères</span></h2>
+    <p class="live-badge hidden" id="live-badge" role="status"></p>
     <div id="map" aria-label="Map of Kinshasa main arteries"></div>
     <div class="hour-control">
       <div class="hour-top">
@@ -225,7 +227,7 @@
       <span>🚧 <span data-i18n="legendWorks">Chantier signalé</span></span>
     </div>
     <p class="note hidden" id="sat-note" data-i18n="satNote">Photo satellite : image fixe, pas en direct.</p>
-    <p class="honest" style="margin-top:10px" data-i18n="typicalNote">Couleurs = congestion HABITUELLE selon l'heure à Kinshasa (modèle par heure de la journée), pas des données en temps réel : il n'existe pas de flux de trafic en direct gratuit pour Kinshasa.</p>
+    <p class="honest" style="margin-top:10px" id="map-note" data-i18n="typicalNote">Couleurs = congestion HABITUELLE selon l'heure à Kinshasa (modèle par heure de la journée), pas des données en temps réel : il n'existe pas de flux de trafic en direct gratuit pour Kinshasa.</p>
     <p class="note live-links" style="margin-top:8px">🛰️ <a href="https://zoom.earth/maps/satellite/#view=-4.32,15.32,9z" target="_blank" rel="noopener" data-i18n="zoomEarthLink">Satellite en direct (Zoom Earth)</a> · 🚗 <a href="https://www.google.com/maps/@-4.325,15.322,13z/data=!5m1!1e1" target="_blank" rel="noopener" data-i18n="googleTrafficLink">Circulation en direct (Google Maps)</a></p>
   </section>
 
@@ -267,7 +269,7 @@
 
     <div>
       <section class="card">
-        <h2>🛣️ <span data-i18n="arteriesTitle">Les 10 grandes artères</span></h2>
+        <h2>🛣️ <span data-i18n="arteriesTitle">Les grandes artères</span></h2>
         <ul class="clean" id="arteries-list">
 {{ARTERIES_LIST_HTML}}
         </ul>
@@ -293,7 +295,7 @@
 </main>
 
 <footer>
-  <p data-i18n="footerNote">Sources : OpenStreetMap (géométrie des routes, données communautaires pouvant être incomplètes), Open-Meteo (météo), presse congolaise (chantiers). Aucune donnée de trafic en temps réel n'est affichée : la congestion est un modèle habituel par heure.</p>
+  <p data-i18n="footerNote">Sources : OpenStreetMap (géométrie des routes, données communautaires pouvant être incomplètes), Open-Meteo (météo), Google (trafic en direct, lorsqu'il est récent), presse congolaise (chantiers). À défaut de données en direct récentes, la congestion affichée est un modèle habituel par heure.</p>
   <p>Kinshasa Traffic Board — <span data-i18n="generatedOn">Page générée le</span> {{GENERATED_DATE}}</p>
   <p class="owner-line">© 2026 Patpound Corporation · <span data-i18n="supportLabel">Assistance</span> : <a href="mailto:patpoundy2kb@gmail.com">patpoundy2kb@gmail.com</a><span id="gc-visits"></span></p>
 </footer>
@@ -345,11 +347,16 @@ var I18N = {
     mapTitle: "Carte des grandes artères",
     legendWorks: "Chantier signalé",
     typicalNote: "Couleurs = congestion HABITUELLE selon l'heure à Kinshasa (modèle par heure de la journée), pas des données en temps réel : il n'existe pas de flux de trafic en direct gratuit pour Kinshasa.",
+    liveBadge: "🔴 En direct — Google · vérifié à {T}",
+    liveNote: "Couleurs = trafic EN DIRECT (Google), vérifié à {T}. Le curseur affiche la congestion habituelle.",
+    liveLabel: "En direct",
+    liveDelay: "{D} min",
+    liveMins: "{M} min",
     sliderLabel: "Trafic habituel",
     sliderPreview: "Aperçu — trafic habituel à {H}",
     sliderNow: "Maintenant",
     typicalAtHour: "Habituel à {H}",
-    arteriesTitle: "Les 10 grandes artères",
+    arteriesTitle: "Les grandes artères",
     worksTitle: "Chantiers et points signalés",
     worksNote: "Informations tirées de la presse congolaise, avec source et date — à confirmer sur place.",
     riverTitle: "Fleuve Congo — navigation et traversée",
@@ -358,7 +365,7 @@ var I18N = {
     typicalPrefix: "Habituel à cette heure",
     sourceLabel: "Source",
     reportedLabel: "signalé",
-    footerNote: "Sources : OpenStreetMap (géométrie des routes, données communautaires pouvant être incomplètes), Open-Meteo (météo), presse congolaise (chantiers). Aucune donnée de trafic en temps réel n'est affichée : la congestion est un modèle habituel par heure.",
+    footerNote: "Sources : OpenStreetMap (géométrie des routes, données communautaires pouvant être incomplètes), Open-Meteo (météo), Google (trafic en direct, lorsqu'il est récent), presse congolaise (chantiers). À défaut de données en direct récentes, la congestion affichée est un modèle habituel par heure.",
     supportLabel: "Assistance",
     visitsLabel: "visites",
     baseStreets: "Plan",
@@ -407,11 +414,16 @@ var I18N = {
     mapTitle: "Main arteries map",
     legendWorks: "Reported roadworks",
     typicalNote: "Colours = TYPICAL congestion for this time of day in Kinshasa (an hourly pattern model), not real-time data: no free live traffic feed exists for Kinshasa.",
+    liveBadge: "🔴 Live — Google · checked at {T}",
+    liveNote: "Colours = LIVE traffic (Google), checked at {T}. The slider shows typical congestion.",
+    liveLabel: "Live",
+    liveDelay: "{D} min",
+    liveMins: "{M} min",
     sliderLabel: "Typical traffic",
     sliderPreview: "Preview — typical traffic at {H}",
     sliderNow: "Now",
     typicalAtHour: "Typical at {H}",
-    arteriesTitle: "The 10 main arteries",
+    arteriesTitle: "The main arteries",
     worksTitle: "Roadworks and reported trouble spots",
     worksNote: "Information from the Congolese press, with source and date — confirm on site.",
     riverTitle: "Congo River — navigation & crossing",
@@ -420,7 +432,7 @@ var I18N = {
     typicalPrefix: "Typical at this hour",
     sourceLabel: "Source",
     reportedLabel: "reported",
-    footerNote: "Sources: OpenStreetMap (road geometry, community data that may be incomplete), Open-Meteo (weather), Congolese press (roadworks). No real-time traffic data is shown: congestion is a typical hourly pattern model.",
+    footerNote: "Sources: OpenStreetMap (road geometry, community data that may be incomplete), Open-Meteo (weather), Google (live traffic, when recent), Congolese press (roadworks). When no fresh live data is available, the congestion shown is a typical hourly pattern model.",
     supportLabel: "Support",
     visitsLabel: "visits",
     baseStreets: "Streets",
@@ -476,6 +488,73 @@ function typicalLabel(){
   return previewHour == null ? t('typicalPrefix') : t('typicalAtHour').replace('{H}', fmtHour(previewHour));
 }
 
+/* ---- Live traffic (Google Routes sweeps baked into BOARD.live) ----
+   A server-side job refreshes BOARD.live every ~30 min at busy times
+   (the API key never reaches this page). Live is ACTIVE only while
+   the sweep is fresh (< 3 h, Africa/Kinshasa "now"); stale or absent
+   live data leaves the page exactly on the typical model. In live
+   mode an artery with no live entry falls back to its typical level
+   for the current hour. The slider always previews the typical model;
+   "Now" returns to live when live is active. */
+var LIVE_MAX_AGE_MS = 3 * 3600 * 1000;
+function liveCheckedAt(){
+  if (!BOARD.live || !BOARD.live.checkedAt) return null;
+  var d = new Date(BOARD.live.checkedAt);
+  return isNaN(d.getTime()) ? null : d;
+}
+function liveActive(){
+  var d = liveCheckedAt();
+  if (!d) return false;
+  var age = Date.now() - d.getTime();
+  return age < LIVE_MAX_AGE_MS && age > -3600 * 1000;
+}
+function liveEntry(id){
+  if (!BOARD.live || !BOARD.live.arteries) return null;
+  return BOARD.live.arteries[id] || null;
+}
+function kinshasaHM(d){
+  try {
+    return new Intl.DateTimeFormat('en-GB',{timeZone:'Africa/Kinshasa',hour:'2-digit',minute:'2-digit',hour12:false}).format(d);
+  } catch(e){ return ''; }
+}
+/* The level actually displayed for an artery in the current mode. */
+function displayLevel(props){
+  if (previewHour != null) return typicalLevelAt(props, previewHour);
+  if (liveActive()){
+    var e = liveEntry(props.id);
+    if (e && e.level) return e.level;
+    /* live sweep exists but not for this artery: typical, current hour */
+  }
+  return typicalLevel(props);
+}
+function fmtDelay(e){
+  var d = Math.round(e.mins - e.staticMins);
+  return t('liveDelay').replace('{D}', d > 0 ? '+' + d : '' + d);
+}
+/* Status text (+ the live entry when the row/popup is showing live). */
+function statusInfo(props){
+  var lvl = displayLevel(props);
+  if (previewHour == null && liveActive()){
+    var e = liveEntry(props.id);
+    if (e && e.level) return { text: t('liveLabel') + ' : ' + t(lvlKey(lvl)), live: e };
+  }
+  return { text: typicalLabel() + ' : ' + t(lvlKey(lvl)), live: null };
+}
+function updateLiveUI(){
+  var active = liveActive();
+  var badge = document.getElementById('live-badge');
+  if (badge){
+    badge.classList.toggle('hidden', !active);
+    if (active) badge.textContent = t('liveBadge').replace('{T}', kinshasaHM(liveCheckedAt()));
+  }
+  var note = document.getElementById('map-note');
+  if (note){
+    note.textContent = active
+      ? t('liveNote').replace('{T}', kinshasaHM(liveCheckedAt()))
+      : t('typicalNote');
+  }
+}
+
 /* ---- Header clock (live, Africa/Kinshasa) ---- */
 function updateClock(){
   var el = document.getElementById('kin-clock');
@@ -522,7 +601,7 @@ function arteriesGeoJSON(){
   BOARD.arteries.features.forEach(function(f){
     var props = {};
     Object.keys(f.properties).forEach(function(k){ if (k !== 'centre') props[k] = f.properties[k]; });
-    props.level = typicalLevel(f.properties);
+    props.level = displayLevel(f.properties);
     fc.features.push({ type: 'Feature', properties: props, geometry: f.geometry });
   });
   return fc;
@@ -636,11 +715,19 @@ map.on('click', function(){
 map.on('click', 'arteries-hit', function(e){
   if (!e.features || !e.features.length) return;
   var p = e.features[0].properties;
+  var full = null;
+  BOARD.arteries.features.forEach(function(f){ if (f.properties.id === p.id) full = f.properties; });
+  var props = full || p;
+  var st = statusInfo(props);
+  var line = st.text;
+  if (st.live){
+    line += ' · ' + t('liveMins').replace('{M}', Math.round(st.live.mins)) +
+      ' (' + fmtDelay(st.live) + ')';
+  }
   new maplibregl.Popup({ maxWidth: '280px' })
     .setLngLat(e.lngLat)
-    .setHTML('<strong>' + p.name + '</strong><br>' +
-      (lang === 'fr' ? p.zones_fr : p.zones_en) + '<br>' +
-      typicalLabel() + ' : ' + t(lvlKey(p.level)))
+    .setHTML('<strong>' + props.name + '</strong><br>' +
+      (lang === 'fr' ? props.zones_fr : props.zones_en) + '<br>' + line)
     .addTo(map);
 });
 map.on('mouseenter', 'arteries-hit', function(){ map.getCanvas().style.cursor = 'pointer'; });
@@ -782,12 +869,13 @@ function renderArteriesList(){
   var ul = document.getElementById('arteries-list');
   ul.innerHTML = '';
   BOARD.arteries.features.forEach(function(f){
-    var lvl = typicalLevel(f.properties);
+    var lvl = displayLevel(f.properties);
+    var st = statusInfo(f.properties);
     var li = document.createElement('li');
     li.innerHTML = '<span class="dot lvl-' + lvl + '"></span><strong></strong> — <span></span> · <em></em>';
     li.querySelector('strong').textContent = f.properties.name;
     li.querySelector('span:not(.dot)').textContent = (lang === 'fr' ? f.properties.zones_fr : f.properties.zones_en);
-    li.querySelector('em').textContent = typicalLabel() + ' : ' + t(lvlKey(lvl));
+    li.querySelector('em').textContent = st.text + (st.live ? ' · ' + fmtDelay(st.live) : '');
     ul.appendChild(li);
   });
 }
@@ -928,7 +1016,7 @@ function applyLang(){
   });
   document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
   document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-  renderLists(); drawArteries(); drawWorks(); renderReports(); paintGcVisits(); buildLayersControl(); updateSliderUI(); renderAirQuality();
+  renderLists(); drawArteries(); drawWorks(); renderReports(); paintGcVisits(); buildLayersControl(); updateSliderUI(); renderAirQuality(); updateLiveUI();
 }
 document.getElementById('btn-fr').addEventListener('click', function(){ lang = 'fr'; localStorage.setItem(LANG_KEY, lang); applyLang(); });
 document.getElementById('btn-en').addEventListener('click', function(){ lang = 'en'; localStorage.setItem(LANG_KEY, lang); applyLang(); });
@@ -954,7 +1042,7 @@ loadWeather();
 loadAirQuality();
 updateClock();
 setInterval(updateClock, 1000);
-setInterval(function(){ drawArteries(); if (previewHour == null) { renderArteriesList(); updateSliderUI(); } }, 15 * 60 * 1000);
+setInterval(function(){ updateLiveUI(); drawArteries(); if (previewHour == null) { renderArteriesList(); updateSliderUI(); } }, 15 * 60 * 1000);
 setInterval(function(){ if (previewHour == null) updateSliderUI(); }, 60 * 1000);
 })();
 </script>
