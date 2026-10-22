@@ -1,0 +1,95 @@
+name: FIH flights board (AeroDataBox)
+
+# Refreshes the "flightsBoard" block in data/board.json (N'djili
+# airport departures/arrivals from AeroDataBox) and republishes the
+# site. The API key lives ONLY in the RAPIDAPI_KEY repository secret
+# (server-side); it never appears in the page or the repo. If the key
+# is missing or any AeroDataBox call fails, scripts/flights_refresh.py
+# exits 0 without touching the data, and this workflow simply has
+# nothing to commit.
+#
+# Cadence (Pat's rule): checks ONLY between 16:00 and 23:00 Kinshasa
+# time — no fetches overnight or in the morning. Kinshasa is UTC+1
+# year-round, so the UTC crons below are WAT minus 1 hour:
+#
+#   16:30 WAT = 15:30 UTC
+#   19:30 WAT = 18:30 UTC
+#   22:30 WAT = 21:30 UTC
+#
+# Each fetch covers the NEXT 12 h, so the board still shows the full
+# day: the 22:30 fetch alone covers until 10:30 the next morning, and
+# the fetcher merges in the same-day rows earlier fetches found, so
+# the day's board is cumulative.
+#
+# Quota (AeroDataBox FREE Basic plan, hard cap 400 units/month):
+# the FIDS endpoint is TIER 2 = 2 units/call; one fetch = 2 calls
+# (departures + arrivals) = 4 units; 3 fetches/day = 12 units/day
+# ≈ 372 units/month worst case — inside the cap, with no headroom
+# for extra scheduled fetches. Do not add crons without redoing
+# this arithmetic.
+
+on:
+  schedule:
+    # 15:30, 18:30, 21:30 UTC = 16:30, 19:30, 22:30 Africa/Kinshasa
+    - cron: "30 15,18,21 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write # commit the refreshed flights board
+  pages: write # deploy to GitHub Pages
+  id-token: write
+
+concurrency:
+  group: pages # same group as update.yml/live.yml: never deploy two builds at once
+  cancel-in-progress: false
+
+jobs:
+  flights-board:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run the FIH flights board fetch
+        env:
+          RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
+        run: python3 scripts/flights_refresh.py
+
+      - name: Commit the refreshed flights board
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/board.json index.html
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "FIH flights board refresh ($(date -u +%Y-%m-%dT%H:%MZ))"
+            git push || (git pull --rebase && git push)
+          fi
+
+      - name: Stage the public site files
+        run: |
+          mkdir -p _site/data _site/images
+          cp index.html robots.txt sitemap.xml _site/
+          cp data/board.json _site/data/
+          cp -r images/. _site/images/
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload the site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
