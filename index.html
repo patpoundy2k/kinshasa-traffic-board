@@ -59,83 +59,144 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
   :root{
-    --ink:#14213d; --muted:#5b6b82; --bg:#f2f5f9; --card:#ffffff;
-    --brand1:#0b7a55; --brand2:#0e5a8a; --amber:#e8a13a; --red:#d64545;
-    --green:#2e9e5b; --orange:#e07b2a; --line:#dde5ee;
+    --ink:#0f1c2e; --muted:#64748b; --bg:#edf1f6; --card:#ffffff;
+    --brand:#0e7a5f; --brand-2:#0b5e8a; --header-1:#0a2748; --header-2:#0a3d31;
+    --green:#16a34a; --amber:#f59e0b; --orange:#ea580c; --red:#dc2626;
+    --line:#e2e8f0; --radius:18px;
+    --shadow:0 1px 2px rgba(15,28,46,.05),0 12px 32px -14px rgba(15,28,46,.18);
   }
   *{box-sizing:border-box}
-  body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
-  header.hero{background:linear-gradient(120deg,var(--brand1),var(--brand2));color:#fff;padding:26px 18px 20px}
-  .hero-in{max-width:1060px;margin:0 auto;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start;justify-content:space-between}
-  h1{margin:0;font-size:1.65rem;line-height:1.2}
-  .tagline{margin:6px 0 0;opacity:.92;max-width:640px}
-  .lang-switch{display:flex;gap:6px}
-  .lang-switch button{border:1px solid rgba(255,255,255,.6);background:transparent;color:#fff;border-radius:999px;padding:6px 14px;font-weight:600;cursor:pointer}
-  .lang-switch button.active{background:#fff;color:var(--brand2)}
-  main{max-width:1060px;margin:0 auto;padding:16px}
-  .grid{display:grid;grid-template-columns:1fr;gap:14px}
-  @media(min-width:900px){.grid{grid-template-columns:340px 1fr}}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 1px 3px rgba(20,33,61,.05)}
-  .card h2{margin:0 0 10px;font-size:1.05rem}
-  .card h3{margin:14px 0 8px;font-size:.98rem}
-  #map{height:480px;border-radius:12px;z-index:0}
-  .legend{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:.86rem;margin-top:10px}
-  .dot{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:-1px;margin-right:5px}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  ::selection{background:rgba(14,122,95,.25)}
+
+  /* ---- Sticky slim header ---- */
+  header.site-head{position:sticky;top:0;z-index:1300;background:linear-gradient(120deg,var(--header-1),var(--header-2));color:#fff;box-shadow:0 2px 14px rgba(10,30,55,.28)}
+  .head-in{max-width:1120px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;justify-content:space-between}
+  .brand{display:flex;align-items:center;gap:9px;min-width:0}
+  .brand-icon{font-size:1.35rem;line-height:1}
+  h1.brand-name{margin:0;font-size:1.08rem;font-weight:800;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .head-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+  .clock-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:5px 12px;font-size:.86rem;font-weight:600;font-variant-numeric:tabular-nums}
+  .clock-chip .clock-city{opacity:.75;font-weight:500}
+  @media(max-width:560px){.clock-chip .clock-city{display:none}h1.brand-name{font-size:.98rem}}
+  .lang-switch{display:flex;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:3px;gap:2px}
+  .lang-switch button{border:none;background:transparent;color:#fff;border-radius:999px;padding:5px 13px;font:inherit;font-size:.85rem;font-weight:700;cursor:pointer;transition:background .15s ease,color .15s ease}
+  .lang-switch button.active{background:#fff;color:var(--header-1);box-shadow:0 1px 4px rgba(0,0,0,.22)}
+  .lang-switch button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+
+  /* ---- Layout & cards ---- */
+  main{max-width:1120px;margin:0 auto;padding:18px 16px 8px}
+  .tagline{margin:0 0 16px;color:var(--muted);font-size:1rem;line-height:1.5;max-width:780px}
+  .grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px}
+  @media(min-width:920px){.grid{grid-template-columns:350px 1fr}}
+  .grid>div{display:flex;flex-direction:column;gap:16px;min-width:0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+  .card h2{margin:0 0 12px;font-size:1.06rem;font-weight:750;letter-spacing:.01em;display:flex;align-items:center;gap:8px}
+  .card h3{margin:16px 0 8px;font-size:.97rem;font-weight:700}
+
+  /* ---- Map ---- */
+  #map{height:430px;border-radius:14px;z-index:0;background:#dbe7f3}
+  @media(min-width:920px){#map{height:540px}}
+  .leaflet-container{font:inherit;border-radius:14px}
+  .leaflet-control-attribution{font-size:10px !important;background:rgba(255,255,255,.75) !important}
+  .leaflet-bar a{border-radius:8px !important}
+  .legend{display:flex;flex-wrap:wrap;gap:7px 14px;font-size:.86rem;margin-top:12px;color:var(--ink)}
+  .dot{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:-1px;margin-right:5px;box-shadow:inset 0 0 0 1px rgba(15,28,46,.12)}
   .lvl-fluid{background:var(--green)} .lvl-slow{background:var(--amber)}
   .lvl-heavy{background:var(--orange)} .lvl-blocked{background:var(--red)}
-  .note{font-size:.85rem;color:var(--muted)}
-  .honest{background:#fff7e8;border:1px solid #f0dcae;border-radius:10px;padding:10px 12px;font-size:.88rem}
+  .note{font-size:.85rem;color:var(--muted);line-height:1.5}
+  .honest{background:#fff8e6;border:1px solid #f3ddab;border-radius:12px;padding:10px 13px;font-size:.88rem;line-height:1.5}
+  .live-links a{color:var(--brand-2);font-weight:600;text-decoration:none}
+  .live-links a:hover{text-decoration:underline}
+
+  /* ---- Hour slider ---- */
+  .hour-control{margin-top:14px;background:#f6f9fc;border:1px solid var(--line);border-radius:14px;padding:13px 15px 11px}
+  .hour-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .hour-label{display:inline-flex;align-items:center;gap:6px;font-size:.92rem;font-weight:700;margin:0}
+  .hour-value{font-size:1.4rem;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:.01em;margin-left:auto;line-height:1}
+  .now-btn{border:none;background:linear-gradient(120deg,var(--brand),var(--brand-2));color:#fff;border-radius:999px;padding:7px 15px;font:inherit;font-size:.85rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(11,94,138,.28);transition:filter .15s ease}
+  .now-btn:hover{filter:brightness(1.1)}
+  .now-btn:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px}
+  input[type=range].hour-slider{-webkit-appearance:none;appearance:none;width:100%;height:28px;background:transparent;border:none;padding:0;margin:4px 0 0;cursor:pointer}
+  input[type=range].hour-slider::-webkit-slider-runnable-track{height:8px;border-radius:999px;background:linear-gradient(90deg,#16a34a 0%,#84cc16 20%,#f59e0b 27%,#dc2626 33%,#f59e0b 46%,#84cc16 58%,#f59e0b 68%,#dc2626 76%,#ea580c 84%,#f59e0b 92%,#16a34a 100%)}
+  input[type=range].hour-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:23px;height:23px;border-radius:50%;background:#fff;border:3px solid var(--ink);margin-top:-7.5px;box-shadow:0 1px 5px rgba(15,28,46,.35)}
+  input[type=range].hour-slider::-moz-range-track{height:8px;border-radius:999px;background:linear-gradient(90deg,#16a34a 0%,#84cc16 20%,#f59e0b 27%,#dc2626 33%,#f59e0b 46%,#84cc16 58%,#f59e0b 68%,#dc2626 76%,#ea580c 84%,#f59e0b 92%,#16a34a 100%)}
+  input[type=range].hour-slider::-moz-range-thumb{width:17px;height:17px;border-radius:50%;background:#fff;border:3px solid var(--ink);box-shadow:0 1px 5px rgba(15,28,46,.35)}
+  input[type=range].hour-slider:focus-visible{outline:2px solid var(--brand-2);outline-offset:4px;border-radius:999px}
+  .hour-ticks{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted);font-variant-numeric:tabular-nums;padding:0 2px}
+  .preview-chip{display:inline-flex;align-items:center;gap:6px;margin:10px 0 2px;background:#fef3c7;border:1px solid #fcd34d;color:#92400e;border-radius:999px;padding:5px 13px;font-size:.85rem;font-weight:700}
+
+  /* ---- Lists, badges, forms ---- */
   ul.clean{list-style:none;margin:0;padding:0}
-  ul.clean li{padding:9px 0;border-bottom:1px solid var(--line)}
+  ul.clean li{padding:10px 0;border-bottom:1px solid var(--line);line-height:1.5}
   ul.clean li:last-child{border-bottom:none}
-  .badge{display:inline-block;font-size:.72rem;font-weight:700;border-radius:999px;padding:2px 8px;color:#fff;vertical-align:1px}
+  ul.clean a{color:var(--brand-2)}
+  .badge{display:inline-block;font-size:.72rem;font-weight:700;border-radius:999px;padding:2px 9px;color:#fff;vertical-align:1px}
   .b-active{background:var(--green)} .b-stopped{background:var(--red)}
-  .b-stalled{background:var(--orange)} .b-progressing{background:var(--brand2)} .b-degraded{background:#8a6d1f}
+  .b-stalled{background:var(--orange)} .b-progressing{background:var(--brand-2)} .b-degraded{background:#a16207}
   .pill{display:inline-block;font-size:.75rem;font-weight:700;border-radius:999px;padding:2px 9px;color:#fff}
-  .p-river{background:var(--brand2)}
+  .p-river{background:var(--brand-2)}
   label{display:block;font-size:.86rem;font-weight:600;margin:10px 0 4px}
-  input,select,textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;font:inherit;background:#fff}
-  button.cta{margin-top:12px;width:100%;background:var(--brand1);color:#fff;border:none;border-radius:10px;padding:11px;font-weight:700;cursor:pointer}
-  button.cta:hover{filter:brightness(1.07)}
-  .toggle-row{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:.9rem}
-  .wx-big{font-size:1.5rem;font-weight:700}
-  footer{max-width:1060px;margin:0 auto;padding:6px 16px 28px;color:var(--muted);font-size:.83rem}
-  .owner-line{margin-top:8px}
+  input,select,textarea{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff;color:var(--ink)}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(14,122,95,.18)}
+  button.cta{margin-top:14px;width:100%;background:linear-gradient(120deg,var(--brand),var(--brand-2));color:#fff;border:none;border-radius:12px;padding:12px;font:inherit;font-weight:700;cursor:pointer;box-shadow:0 4px 14px -4px rgba(11,94,138,.45);transition:filter .15s ease}
+  button.cta:hover{filter:brightness(1.08)}
+  .wx-big{font-size:2rem;font-weight:800;letter-spacing:-.01em}
+
+  /* ---- Footer ---- */
+  footer{max-width:1120px;margin:0 auto;padding:14px 16px 30px;color:var(--muted);font-size:.84rem;line-height:1.55}
+  footer p{margin:6px 0}
+  .owner-line{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
   .owner-line a{color:inherit;text-decoration:underline}
   .hidden{display:none !important}
 </style>
 </head>
 <body>
 
-<header class="hero">
-  <div class="hero-in">
-    <div>
-      <h1>🚦 Kinshasa Traffic Board</h1>
-      <p class="tagline" data-i18n="tagline">Circulation à Kinshasa : grandes artères, congestion habituelle, chantiers, météo en direct et signalements d'embouteillages.</p>
+<header class="site-head">
+  <div class="head-in">
+    <div class="brand">
+      <span class="brand-icon" aria-hidden="true">🚦</span>
+      <h1 class="brand-name">Kinshasa Traffic Board</h1>
     </div>
-    <div class="lang-switch" role="group" aria-label="Language / Langue">
-      <button type="button" id="btn-fr">FR</button>
-      <button type="button" id="btn-en">EN</button>
+    <div class="head-right">
+      <span class="clock-chip" aria-label="Heure de Kinshasa / Kinshasa time">🕐 <span id="kin-clock">--:--:--</span><span class="clock-city">Kinshasa</span></span>
+      <div class="lang-switch" role="group" aria-label="Language / Langue">
+        <button type="button" id="btn-fr">FR</button>
+        <button type="button" id="btn-en">EN</button>
+      </div>
     </div>
   </div>
 </header>
 
 <main>
-    <section class="card" id="map-card">
-      <h2>🗺️ <span data-i18n="mapTitle">Carte des grandes artères</span></h2>
-      <div id="map" aria-label="Map of Kinshasa main arteries"></div>
-      <div class="legend">
-        <span><span class="dot lvl-fluid"></span><span data-i18n="lvlFluid">Fluide</span></span>
-        <span><span class="dot lvl-slow"></span><span data-i18n="lvlSlow">Ralenti</span></span>
-        <span><span class="dot lvl-heavy"></span><span data-i18n="lvlHeavy">Dense</span></span>
-        <span><span class="dot lvl-blocked"></span><span data-i18n="lvlBlocked">Bloqué</span></span>
-        <span>🚧 <span data-i18n="legendWorks">Chantier signalé</span></span>
-      </div>
-      <p class="note hidden" id="sat-note" data-i18n="satNote">Photo satellite : image fixe, pas en direct.</p>
-      <p class="honest" style="margin-top:10px" data-i18n="typicalNote">Couleurs = congestion HABITUELLE selon l'heure à Kinshasa (modèle par heure de la journée), pas des données en temps réel : il n'existe pas de flux de trafic en direct gratuit pour Kinshasa.</p>
-      <p class="note" style="margin-top:8px">🛰️ <a href="https://zoom.earth/maps/satellite/#view=-4.32,15.32,9z" target="_blank" rel="noopener" data-i18n="zoomEarthLink">Satellite en direct (Zoom Earth)</a> · 🚗 <a href="https://www.google.com/maps/@-4.325,15.322,13z/data=!5m1!1e1" target="_blank" rel="noopener" data-i18n="googleTrafficLink">Circulation en direct (Google Maps)</a></p>
-    </section>
+  <p class="tagline" data-i18n="tagline">Circulation à Kinshasa : grandes artères, congestion habituelle, chantiers, météo en direct et signalements d'embouteillages.</p>
 
+  <section class="card" id="map-card">
+    <h2>🗺️ <span data-i18n="mapTitle">Carte des grandes artères</span></h2>
+    <div id="map" aria-label="Map of Kinshasa main arteries"></div>
+    <div class="hour-control">
+      <div class="hour-top">
+        <span class="hour-label">🕐 <span data-i18n="sliderLabel">Trafic habituel</span></span>
+        <span class="hour-value" id="hour-value">--</span>
+        <button type="button" id="hour-now" class="now-btn hidden" data-i18n="sliderNow">Maintenant</button>
+      </div>
+      <input type="range" class="hour-slider" id="hour-slider" min="0" max="23" step="1" value="12">
+      <div class="hour-ticks" aria-hidden="true"><span>0 h</span><span>6 h</span><span>12 h</span><span>18 h</span><span>23 h</span></div>
+      <p class="preview-chip hidden" id="preview-chip">👁️ <span id="preview-text"></span></p>
+    </div>
+    <div class="legend">
+      <span><span class="dot lvl-fluid"></span><span data-i18n="lvlFluid">Fluide</span></span>
+      <span><span class="dot lvl-slow"></span><span data-i18n="lvlSlow">Ralenti</span></span>
+      <span><span class="dot lvl-heavy"></span><span data-i18n="lvlHeavy">Dense</span></span>
+      <span><span class="dot lvl-blocked"></span><span data-i18n="lvlBlocked">Bloqué</span></span>
+      <span>🚧 <span data-i18n="legendWorks">Chantier signalé</span></span>
+    </div>
+    <p class="note hidden" id="sat-note" data-i18n="satNote">Photo satellite : image fixe, pas en direct.</p>
+    <p class="honest" style="margin-top:10px" data-i18n="typicalNote">Couleurs = congestion HABITUELLE selon l'heure à Kinshasa (modèle par heure de la journée), pas des données en temps réel : il n'existe pas de flux de trafic en direct gratuit pour Kinshasa.</p>
+    <p class="note live-links" style="margin-top:8px">🛰️ <a href="https://zoom.earth/maps/satellite/#view=-4.32,15.32,9z" target="_blank" rel="noopener" data-i18n="zoomEarthLink">Satellite en direct (Zoom Earth)</a> · 🚗 <a href="https://www.google.com/maps/@-4.325,15.322,13z/data=!5m1!1e1" target="_blank" rel="noopener" data-i18n="googleTrafficLink">Circulation en direct (Google Maps)</a></p>
+  </section>
 
   <div class="grid">
     <div>
@@ -246,6 +307,10 @@ var I18N = {
     mapTitle: "Carte des grandes artères",
     legendWorks: "Chantier signalé",
     typicalNote: "Couleurs = congestion HABITUELLE selon l'heure à Kinshasa (modèle par heure de la journée), pas des données en temps réel : il n'existe pas de flux de trafic en direct gratuit pour Kinshasa.",
+    sliderLabel: "Trafic habituel",
+    sliderPreview: "Aperçu — trafic habituel à {H}",
+    sliderNow: "Maintenant",
+    typicalAtHour: "Habituel à {H}",
     arteriesTitle: "Les 10 grandes artères",
     worksTitle: "Chantiers et points signalés",
     worksNote: "Informations tirées de la presse congolaise, avec source et date — à confirmer sur place.",
@@ -286,6 +351,10 @@ var I18N = {
     mapTitle: "Main arteries map",
     legendWorks: "Reported roadworks",
     typicalNote: "Colours = TYPICAL congestion for this time of day in Kinshasa (an hourly pattern model), not real-time data: no free live traffic feed exists for Kinshasa.",
+    sliderLabel: "Typical traffic",
+    sliderPreview: "Preview — typical traffic at {H}",
+    sliderNow: "Now",
+    typicalAtHour: "Typical at {H}",
     arteriesTitle: "The 10 main arteries",
     worksTitle: "Roadworks and reported trouble spots",
     worksNote: "Information from the Congolese press, with source and date — confirm on site.",
@@ -313,7 +382,7 @@ var lang = localStorage.getItem(LANG_KEY) || 'fr';
 if (lang !== 'fr' && lang !== 'en') lang = 'fr';
 function t(key){ return I18N[lang][key] || key; }
 
-var COLORS = { fluid:'#2e9e5b', slow:'#e8a13a', heavy:'#e07b2a', blocked:'#d64545' };
+var COLORS = { fluid:'#16a34a', slow:'#f59e0b', heavy:'#ea580c', blocked:'#dc2626' };
 
 /* ---- Typical congestion model (hourly pattern, Africa/Kinshasa) ---- */
 function kinshasaHour(){
@@ -333,12 +402,31 @@ function dayFactor(h){
   if (h < 22) return 0.45;
   return 0.15;
 }
-function typicalLevel(artery){
-  var score = artery.peak * dayFactor(kinshasaHour());
+function typicalLevelAt(artery, h){
+  var score = artery.peak * dayFactor(h);
   if (score >= 0.88) return 'blocked';
   if (score >= 0.62) return 'heavy';
   if (score >= 0.35) return 'slow';
   return 'fluid';
+}
+/* Hour currently shown on the map: null = live (current Kinshasa hour),
+   a number = slider preview of that hour's typical pattern. */
+var previewHour = null;
+function effectiveHour(){ return previewHour == null ? kinshasaHour() : previewHour; }
+function typicalLevel(artery){ return typicalLevelAt(artery, effectiveHour()); }
+function lvlKey(lvl){ return 'lvl' + lvl.charAt(0).toUpperCase() + lvl.slice(1); }
+function fmtHour(h){ return lang === 'fr' ? h + ' h' : (h < 10 ? '0' + h : '' + h) + ':00'; }
+function typicalLabel(){
+  return previewHour == null ? t('typicalPrefix') : t('typicalAtHour').replace('{H}', fmtHour(previewHour));
+}
+
+/* ---- Header clock (live, Africa/Kinshasa) ---- */
+function updateClock(){
+  var el = document.getElementById('kin-clock');
+  if (!el) return;
+  try {
+    el.textContent = new Intl.DateTimeFormat('en-GB',{timeZone:'Africa/Kinshasa',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(new Date());
+  } catch(e){ el.textContent = new Date().toLocaleTimeString(); }
 }
 
 /* ---- Map ---- */
@@ -376,7 +464,7 @@ function drawArteries(){
     var layer = L.geoJSON(f, { style: { color: COLORS[lvl], weight: 5, opacity: 0.85 } });
     layer.bindPopup('<strong>' + f.properties.name + '</strong><br>' +
       (lang === 'fr' ? f.properties.zones_fr : f.properties.zones_en) + '<br>' +
-      t('typicalPrefix') + ' : ' + t('lvl' + lvl.charAt(0).toUpperCase() + lvl.slice(1)));
+      typicalLabel() + ' : ' + t(lvlKey(lvl)));
     layer.addTo(map);
     arteryLayers[f.properties.id] = layer;
   });
@@ -394,6 +482,7 @@ function drawWorks(){
     });
   });
 }
+
 /* ---- Weather (live, Open-Meteo, keyless) ---- */
 function loadWeather(){
   var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + BOARD.city.lat +
@@ -418,7 +507,7 @@ function loadWeather(){
 }
 
 /* ---- Lists (re-rendered in the active language) ---- */
-function renderLists(){
+function renderArteriesList(){
   var ul = document.getElementById('arteries-list');
   ul.innerHTML = '';
   BOARD.arteries.features.forEach(function(f){
@@ -427,9 +516,12 @@ function renderLists(){
     li.innerHTML = '<span class="dot lvl-' + lvl + '"></span><strong></strong> — <span></span> · <em></em>';
     li.querySelector('strong').textContent = f.properties.name;
     li.querySelector('span:not(.dot)').textContent = (lang === 'fr' ? f.properties.zones_fr : f.properties.zones_en);
-    li.querySelector('em').textContent = t('typicalPrefix') + ' : ' + t('lvl' + lvl.charAt(0).toUpperCase() + lvl.slice(1));
+    li.querySelector('em').textContent = typicalLabel() + ' : ' + t(lvlKey(lvl));
     ul.appendChild(li);
   });
+}
+function renderLists(){
+  renderArteriesList();
   var wl = document.getElementById('works-list');
   wl.innerHTML = '';
   BOARD.roadworks.forEach(function(rw){
@@ -467,6 +559,36 @@ function renderLists(){
   });
 }
 
+/* ---- Hour slider (typical-traffic preview) ---- */
+function updateSliderUI(){
+  var slider = document.getElementById('hour-slider');
+  if (!slider) return;
+  var cur = kinshasaHour();
+  if (previewHour == null) slider.value = cur;
+  var shown = previewHour == null ? cur : previewHour;
+  document.getElementById('hour-value').textContent = fmtHour(shown);
+  var preview = previewHour != null;
+  document.getElementById('preview-chip').classList.toggle('hidden', !preview);
+  document.getElementById('hour-now').classList.toggle('hidden', !preview);
+  if (preview) {
+    document.getElementById('preview-text').textContent =
+      t('sliderPreview').replace('{H}', fmtHour(previewHour));
+  }
+  slider.setAttribute('aria-label', t('sliderLabel'));
+}
+function setPreviewHour(h){
+  previewHour = (h == null || h === kinshasaHour()) ? null : h;
+  updateSliderUI();
+  drawArteries();
+  renderArteriesList();
+}
+document.getElementById('hour-slider').addEventListener('input', function(){
+  setPreviewHour(parseInt(this.value, 10));
+});
+document.getElementById('hour-now').addEventListener('click', function(){
+  setPreviewHour(null);
+});
+
 /* ---- Reports (this device only, localStorage, 4 h expiry) ---- */
 var reportMarkers = L.layerGroup().addTo(map);
 function loadReports(){
@@ -494,13 +616,13 @@ function renderReports(){
     var li = document.createElement('li');
     li.innerHTML = '<span class="dot lvl-' + r.level + '"></span><strong></strong> · <span></span><br><em></em>';
     li.querySelector('strong').textContent = name;
-    li.querySelector('span:not(.dot)').textContent = t('lvl' + r.level.charAt(0).toUpperCase() + r.level.slice(1));
+    li.querySelector('span:not(.dot)').textContent = t(lvlKey(r.level));
     li.querySelector('em').textContent = new Date(r.ts).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) +
       (r.comment ? ' — ' + r.comment : '');
     ul.appendChild(li);
     if (art && art.properties.centre){
       L.circleMarker(art.properties.centre, { radius:9, color:COLORS[r.level], fillColor:COLORS[r.level], fillOpacity:0.55 })
-        .bindPopup('<strong>' + name + '</strong><br>' + t('lvl' + r.level.charAt(0).toUpperCase() + r.level.slice(1))).addTo(reportMarkers);
+        .bindPopup('<strong>' + name + '</strong><br>' + t(lvlKey(r.level))).addTo(reportMarkers);
     }
   });
 }
@@ -527,7 +649,7 @@ function applyLang(){
   });
   document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
   document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-  renderLists(); drawArteries(); drawWorks(); renderReports(); paintGcVisits(); buildLayersControl();
+  renderLists(); drawArteries(); drawWorks(); renderReports(); paintGcVisits(); buildLayersControl(); updateSliderUI();
 }
 document.getElementById('btn-fr').addEventListener('click', function(){ lang = 'fr'; localStorage.setItem(LANG_KEY, lang); applyLang(); });
 document.getElementById('btn-en').addEventListener('click', function(){ lang = 'en'; localStorage.setItem(LANG_KEY, lang); applyLang(); });
@@ -550,7 +672,10 @@ fetch('https://kinshasabouge.goatcounter.com/counter/TOTAL.json')
 
 applyLang();
 loadWeather();
-setInterval(drawArteries, 15 * 60 * 1000);
+updateClock();
+setInterval(updateClock, 1000);
+setInterval(function(){ drawArteries(); if (previewHour == null) { renderArteriesList(); updateSliderUI(); } }, 15 * 60 * 1000);
+setInterval(function(){ if (previewHour == null) updateSliderUI(); }, 60 * 1000);
 })();
 </script>
 <script data-goatcounter="https://kinshasabouge.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
