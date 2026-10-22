@@ -1,0 +1,102 @@
+name: Live traffic sweep (Google Routes)
+
+# Refreshes the "live" block in data/board.json with current Google
+# Routes traffic levels and republishes the site. The API key lives
+# ONLY in the ROUTES_API_KEY repository secret (server-side); it never
+# appears in the page or the repo. If the key is missing or any Google
+# call fails, scripts/live_refresh.py exits 0 without touching the
+# data, and this workflow simply has nothing to commit.
+#
+# Cadence (Pat's design): rush hours checked every 30 min, slow times
+# rarely, nights never. Kinshasa is UTC+1 year-round, so the UTC crons
+# below are WAT minus 1 hour.
+#
+#   Mon–Fri 06:00–09:30 + 16:00–20:00 WAT  every 30 min  (17 sweeps/day)
+#   Mon–Fri other daytime hours            every 2 h     (10, 12, 14, 21 WAT)
+#   Sat     08:00–12:00 WAT every 30 min, then every 2 h until 22:00
+#   Sun     every 3 h, 08:00–20:00 WAT
+#   Nothing 22:00–06:00 WAT.
+#
+# Budget: 21 sweeps/weekday + 13 Sat + 5 Sun = 123 sweeps/week
+# ≈ 535 sweeps/month × 6 chained Routes calls = ~3,200 calls/month,
+# inside Google's 5,000/month free tier and the ~4,000 design ceiling.
+
+on:
+  schedule:
+    # Mon–Fri morning peak: 05:00–08:30 UTC = 06:00–09:30 WAT, every 30 min
+    - cron: "0,30 5-8 * * 1-5"
+    # Mon–Fri evening peak: 15:00–18:30 UTC = 16:00–19:30 WAT, every 30 min
+    - cron: "0,30 15-18 * * 1-5"
+    # Mon–Fri evening peak close: 19:00 UTC = 20:00 WAT
+    - cron: "0 19 * * 1-5"
+    # Mon–Fri off-peak: 09,11,13,20 UTC = 10:00, 12:00, 14:00, 21:00 WAT
+    - cron: "0 9,11,13,20 * * 1-5"
+    # Sat morning: 07:00–10:30 UTC = 08:00–11:30 WAT, every 30 min
+    - cron: "0,30 7-10 * * 6"
+    # Sat morning close: 11:00 UTC = 12:00 WAT
+    - cron: "0 11 * * 6"
+    # Sat afternoon/evening: 13,15,17,19 UTC = 14:00, 16:00, 18:00, 20:00 WAT
+    - cron: "0 13,15,17,19 * * 6"
+    # Sun: 07,10,13,16,19 UTC = 08:00, 11:00, 14:00, 17:00, 20:00 WAT
+    - cron: "0 7,10,13,16,19 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: write # commit the refreshed live block
+  pages: write # deploy to GitHub Pages
+  id-token: write
+
+concurrency:
+  group: pages # same group as update.yml: never deploy two builds at once
+  cancel-in-progress: false
+
+jobs:
+  live-sweep:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run the live traffic sweep
+        env:
+          ROUTES_API_KEY: ${{ secrets.ROUTES_API_KEY }}
+        run: python3 scripts/live_refresh.py
+
+      - name: Commit the refreshed live data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/board.json index.html
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Live traffic sweep ($(date -u +%Y-%m-%dT%H:%MZ))"
+            git push || (git pull --rebase && git push)
+          fi
+
+      - name: Stage the public site files
+        run: |
+          mkdir -p _site/data _site/images
+          cp index.html robots.txt sitemap.xml _site/
+          cp data/board.json _site/data/
+          cp -r images/. _site/images/
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload the site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
