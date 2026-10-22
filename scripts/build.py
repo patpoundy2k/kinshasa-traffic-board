@@ -2,7 +2,7 @@
 """
 Kinshasa Traffic Board — static site generator.
 
-Fetches the real road geometry for Kinshasa's 10 main arteries from
+Fetches the real road geometry for Kinshasa's main arteries from
 OpenStreetMap via the Overpass API, merges it with the curated roadworks
 list (researched from Congolese press, each item carrying its source and
 date), and writes:
@@ -54,7 +54,7 @@ USER_AGENT = "KinshasaTrafficBoard/1.0 (static site build; contact: patpoundy2kb
 # Ndjili airport in the east and the Matadi road leaving to the southwest.
 BBOX = "-4.50,15.10,-4.20,15.60"
 
-# The 10 main arteries. "osm_name_regex" matches how the road is named in
+# The main arteries. "osm_name_regex" matches how the road is named in
 # OpenStreetMap; "peak" is a 0..1 weight for how jam-prone the artery is
 # at peak hours (used by the page's *typical* congestion model — it is a
 # pattern model, never live data, and the page labels it as such).
@@ -66,6 +66,14 @@ ARTERIES = [
         "zones_fr": "Gombe — centre-ville, ministères et ambassades",
         "zones_en": "Gombe — downtown, ministries and embassies",
         "peak": 0.85,
+    },
+    {
+        "id": "bd-tshatshi",
+        "name": "Boulevard du Colonel Tshatshi",
+        "osm_name_regex": "(Boulevard|Avenue) du Colonel Tshatshi",
+        "zones_fr": "Gombe — boulevard du fleuve, Présidence et Primature",
+        "zones_en": "Gombe — riverfront boulevard, Presidency and Prime Minister's office",
+        "peak": 0.65,
     },
     {
         "id": "bd-lumumba",
@@ -82,6 +90,30 @@ ARTERIES = [
         "zones_fr": "Ngaliema, Selembao — sortie sud-ouest vers Matadi",
         "zones_en": "Ngaliema, Selembao — southwest exit toward Matadi",
         "peak": 0.8,
+    },
+    {
+        "id": "av-nguma",
+        "name": "Avenue Nguma",
+        "osm_name_regex": "Avenue Nguma",
+        "zones_fr": "Ngaliema — axe nord-sud principal de la commune",
+        "zones_en": "Ngaliema — the commune's main north–south axis",
+        "peak": 0.85,
+    },
+    {
+        "id": "av-mondjiba",
+        "name": "Avenue Colonel Mondjiba",
+        "osm_name_regex": "Mondjiba",
+        "zones_fr": "Kintambo, Ngaliema — axe ouest vers Gombe",
+        "zones_en": "Kintambo, Ngaliema — western axis toward Gombe",
+        "peak": 0.8,
+    },
+    {
+        "id": "av-tourisme",
+        "name": "Avenue du Tourisme",
+        "osm_name_regex": "Avenue du Tourisme",
+        "zones_fr": "Gombe, Ngaliema — route du fleuve vers l'ouest et les rapides",
+        "zones_en": "Gombe, Ngaliema — river road west toward the rapids",
+        "peak": 0.65,
     },
     {
         "id": "av-liberation",
@@ -116,12 +148,28 @@ ARTERIES = [
         "peak": 0.85,
     },
     {
+        "id": "av-victoire",
+        "name": "Avenue de la Victoire",
+        "osm_name_regex": "Avenue de la Victoire",
+        "zones_fr": "Kasa-Vubu, Kalamu — à partir du Rond-Point Victoire",
+        "zones_en": "Kasa-Vubu, Kalamu — from Rond-Point Victoire",
+        "peak": 0.9,
+    },
+    {
         "id": "bd-triomphal",
         "name": "Boulevard Triomphal",
         "osm_name_regex": "Triomphal",
         "zones_fr": "Kasa-Vubu, Lingwala — Palais du Peuple",
         "zones_en": "Kasa-Vubu, Lingwala — Palais du Peuple",
         "peak": 0.8,
+    },
+    {
+        "id": "av-huileries",
+        "name": "Avenue des Huileries (Démocratie)",
+        "osm_name_regex": "Avenue des Huileries",
+        "zones_fr": "Lingwala, Kinshasa — axe nord-sud, du Rond-Point Mandela vers Kasa-Vubu",
+        "zones_en": "Lingwala, Kinshasa — north–south axis, from Rond-Point Mandela toward Kasa-Vubu",
+        "peak": 0.85,
     },
     {
         "id": "av-universite",
@@ -372,6 +420,21 @@ def load_previous_geometry():
         return {}
 
 
+def load_previous_live():
+    """The "live" block in board.json is written by
+    scripts/live_refresh.py (Google Routes sweeps), never by this
+    generator — carry it over verbatim so a daily rebuild cannot
+    clobber live traffic data."""
+    if not DATA_FILE.exists():
+        return None
+    try:
+        old = json.loads(DATA_FILE.read_text(encoding="utf-8"))
+        live = old.get("live")
+        return live if isinstance(live, dict) else None
+    except Exception:  # noqa: BLE001
+        return None
+
+
 def arteries_list_html(features):
     """Baked-in (French, default language) artery list for SEO/no-JS."""
     items = []
@@ -447,13 +510,18 @@ def main():
         "roadworks": ROADWORKS,
         "river": RIVER,
         "dataNotes": {
-            "congestion": "Typical pattern model by time of day (Africa/Kinshasa) — NOT live traffic data. No free live traffic feed exists for Kinshasa.",
+            "congestion": "Typical pattern model by time of day (Africa/Kinshasa). When board.json carries a recent 'live' block (Google Routes sweep by scripts/live_refresh.py, key held server-side only), the page shows those live levels instead and falls back to the typical model when the block is stale or absent.",
             "towers": "Cell towers are fetched live by the page from OpenStreetMap via Overpass: community-mapped data, possibly incomplete.",
             "roadworks": "Researched from Congolese press; each item carries its source and date.",
             "river": "Researched from Congolese press and official/UN reports; each item carries its source, source URL and date. No live river-level or vessel feed exists for Kinshasa.",
             "reports": "On this public website, reports are stored only in the visitor's own browser (localStorage). Shared live reporting is in the Kinshasa Traffic Board app.",
         },
     }
+
+    previous_live = load_previous_live()
+    if previous_live is not None:
+        board["live"] = previous_live
+        print("Preserved the existing live block from scripts/live_refresh.py.")
 
     DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
     DATA_FILE.write_text(
