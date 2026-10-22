@@ -130,9 +130,10 @@
         <span><span class="dot lvl-blocked"></span><span data-i18n="lvlBlocked">Bloqué</span></span>
         <span>🚧 <span data-i18n="legendWorks">Chantier signalé</span></span>
       </div>
-      <label class="toggle-row"><input type="checkbox" id="towers-toggle" style="width:auto"> <span data-i18n="towersToggle">Afficher les antennes relais (téléphonie mobile)</span></label>
       <p class="note" id="towers-status"></p>
+      <p class="note hidden" id="sat-note" data-i18n="satNote">Photo satellite : image fixe, pas en direct.</p>
       <p class="honest" style="margin-top:10px" data-i18n="typicalNote">Couleurs = congestion HABITUELLE selon l'heure à Kinshasa (modèle par heure de la journée), pas des données en temps réel : il n'existe pas de flux de trafic en direct gratuit pour Kinshasa.</p>
+      <p class="note" style="margin-top:8px">🛰️ <a href="https://zoom.earth/maps/satellite/#view=-4.32,15.32,9z" target="_blank" rel="noopener" data-i18n="zoomEarthLink">Satellite en direct (Zoom Earth)</a> · 🚗 <a href="https://www.google.com/maps/@-4.325,15.322,13z/data=!5m1!1e1" target="_blank" rel="noopener" data-i18n="googleTrafficLink">Circulation en direct (Google Maps)</a></p>
     </section>
 
 
@@ -247,6 +248,13 @@ var I18N = {
     footerNote: "Sources : OpenStreetMap (géométrie des routes et antennes, données communautaires pouvant être incomplètes), Open-Meteo (météo), presse congolaise (chantiers). Aucune donnée de trafic en temps réel n'est affichée : la congestion est un modèle habituel par heure.",
     supportLabel: "Assistance",
     visitsLabel: "visites",
+    baseStreets: "Plan",
+    baseSatellite: "Satellite",
+    overlayTowers: "Antennes relais",
+    overlayClouds: "Nuages (NASA, quasi temps réel)",
+    satNote: "Photo satellite : image fixe, pas en direct.",
+    zoomEarthLink: "Satellite en direct (Zoom Earth)",
+    googleTrafficLink: "Circulation en direct (Google Maps)",
     generatedOn: "Page générée le",
     status: { active:"En cours", stopped:"À l'arrêt", stalled:"Presque à l'arrêt", progressing:"En progression", degraded:"Dégradé" }
   },
@@ -283,6 +291,13 @@ var I18N = {
     footerNote: "Sources: OpenStreetMap (road geometry and towers, community data that may be incomplete), Open-Meteo (weather), Congolese press (roadworks). No real-time traffic data is shown: congestion is a typical hourly pattern model.",
     supportLabel: "Support",
     visitsLabel: "visits",
+    baseStreets: "Streets",
+    baseSatellite: "Satellite",
+    overlayTowers: "Cell towers",
+    overlayClouds: "Clouds (NASA, near-live)",
+    satNote: "Satellite photo: still image, not live.",
+    zoomEarthLink: "Live satellite (Zoom Earth)",
+    googleTrafficLink: "Live traffic (Google Maps)",
     generatedOn: "Page generated on",
     status: { active:"Active", stopped:"Stopped", stalled:"Nearly stopped", progressing:"Progressing", degraded:"Degraded" }
   }
@@ -322,9 +337,37 @@ function typicalLevel(artery){
 
 /* ---- Map ---- */
 var map = L.map('map').setView([BOARD.city.lat, BOARD.city.lon], 12);
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+var osmBase = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 18, attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
+var esriBase = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+  maxZoom: 18, attribution: 'Esri, Maxar, Earthstar Geographics'
+});
+/* NASA GIBS near-live clouds: GIBS lags a few hours, so use yesterday (UTC). */
+var gibsDate = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+var gibsLayer = L.tileLayer('https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/' + gibsDate + '/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg', {
+  maxZoom: 9, opacity: 0.65, attribution: 'NASA GIBS'
+});
+var layersControl = null;
+function buildLayersControl(){
+  if (layersControl) map.removeControl(layersControl);
+  var baseMaps = {};
+  baseMaps[t('baseStreets')] = osmBase;
+  baseMaps[t('baseSatellite')] = esriBase;
+  var overlayMaps = {};
+  overlayMaps[t('overlayTowers')] = towersLayer;
+  overlayMaps[t('overlayClouds')] = gibsLayer;
+  layersControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
+}
+map.on('baselayerchange', function(e){
+  document.getElementById('sat-note').classList.toggle('hidden', e.layer !== esriBase);
+});
+map.on('overlayadd', function(e){
+  if (e.layer === towersLayer && !towersLoaded) loadTowers();
+});
+map.on('overlayremove', function(e){
+  if (e.layer === towersLayer) document.getElementById('towers-status').textContent = '';
+});
 
 var arteryLayers = {};
 function drawArteries(){
@@ -378,10 +421,7 @@ function loadTowers(){
     st.textContent = Object.keys(seen).length + ' ' + t('towersCount');
   }).catch(function(){ st.textContent = t('towersError'); });
 }
-document.getElementById('towers-toggle').addEventListener('change', function(ev){
-  if (ev.target.checked){ towersLayer.addTo(map); if (!towersLoaded) loadTowers(); }
-  else { map.removeLayer(towersLayer); document.getElementById('towers-status').textContent = ''; }
-});
+/* Towers are toggled via the layers control overlay (see overlayadd/overlayremove handlers above). */
 
 /* ---- Weather (live, Open-Meteo, keyless) ---- */
 function loadWeather(){
@@ -499,7 +539,7 @@ function applyLang(){
   });
   document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
   document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-  renderLists(); drawArteries(); drawWorks(); renderReports(); paintGcVisits();
+  renderLists(); drawArteries(); drawWorks(); renderReports(); paintGcVisits(); buildLayersControl();
 }
 document.getElementById('btn-fr').addEventListener('click', function(){ lang = 'fr'; localStorage.setItem(LANG_KEY, lang); applyLang(); });
 document.getElementById('btn-en').addEventListener('click', function(){ lang = 'en'; localStorage.setItem(LANG_KEY, lang); applyLang(); });
