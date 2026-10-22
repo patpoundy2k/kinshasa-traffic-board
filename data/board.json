@@ -17286,10 +17286,73 @@
    ]
   }
  ],
+ "river": [
+  {
+   "id": "baleinieres-bois-interdites",
+   "tag_fr": "Navigation",
+   "tag_en": "Navigation",
+   "title_fr": "Baleinières en bois interdites à partir du 15 novembre 2026",
+   "title_en": "Wooden baleinières banned from 15 November 2026",
+   "detail_fr": "Le ministère des Transports interdit les baleinières en bois sur le fleuve Congo et l'ensemble des voies navigables dès le 15 novembre 2026 ; les armateurs disposent d'un mois pour les remplacer par des embarcations conformes.",
+   "detail_en": "The Ministry of Transport bans wooden baleinières (whaleboats) on the Congo River and all waterways from 15 November 2026; owners have one month to replace them with compliant vessels.",
+   "source": "Bankable",
+   "source_url": "https://bankable.africa/en/climat-des-affaires/0910-3766-navigation-kinshasa-donne-un-mois-aux-armateurs-pour-remplacer-leurs-baleinieres-en-bois",
+   "date": "2026-10-09"
+  },
+  {
+   "id": "crue-quartiers-riverains",
+   "tag_fr": "Crue",
+   "tag_en": "Flooding",
+   "title_fr": "Le fleuve Congo déborde sur les quartiers riverains",
+   "title_en": "Congo River overflows into riverside neighbourhoods",
+   "detail_fr": "Après de fortes pluies, le fleuve est sorti de son lit : Kingabwa et la Cité du Fleuve (Limete) ainsi que Pompage (Ngaliema) sont inondés, et des habitants ont abandonné leurs maisons.",
+   "detail_en": "After heavy rains, the river burst its banks: Kingabwa and Cité du Fleuve (Limete) as well as Pompage (Ngaliema) are flooded, and residents have left their homes.",
+   "source": "Le Quotidien RDC",
+   "source_url": "https://lequotidienrdc.com/kinshasa-le-fleuve-congo-deborde-sur-quelques-quartiers-cotiers/",
+   "date": "2026-10-21"
+  },
+  {
+   "id": "beach-ngobila-controle-sanitaire",
+   "tag_fr": "Traversée",
+   "tag_en": "Crossing",
+   "title_fr": "Beach Ngobila — le bouclier sanitaire se renforce à la traversée",
+   "title_en": "Beach Ngobila — health screening strengthened at the crossing",
+   "detail_fr": "Au Beach Ngobila, principal point de traversée entre Kinshasa et Brazzaville, la technologie renforce le contrôle sanitaire entre les deux capitales, selon l'OMS.",
+   "detail_en": "At Beach Ngobila, the main crossing point between Kinshasa and Brazzaville, technology is strengthening health screening between the two capitals, according to WHO.",
+   "source": "ReliefWeb (OMS)",
+   "source_url": "https://reliefweb.int/report/democratic-republic-congo/au-beach-ngobila-de-kinshasa-la-technologie-renforce-le-bouclier-sanitaire-entre-kinshasa-et-brazzaville",
+   "date": "2026-10-19"
+  },
+  {
+   "id": "pont-route-rail-brazzaville",
+   "tag_fr": "Travaux",
+   "tag_en": "Works",
+   "title_fr": "Pont route-rail Kinshasa–Brazzaville — travaux prévus dès juin 2027",
+   "title_en": "Kinshasa–Brazzaville road-rail bridge — works planned from June 2027",
+   "detail_fr": "L'accord signé le 9 octobre 2026 avec Africa50 prévoit le démarrage des travaux du pont route-rail entre les deux capitales en juin 2027.",
+   "detail_en": "Under the agreement signed on 9 October 2026 with Africa50, works on the road-rail bridge between the two capitals are planned to start in June 2027.",
+   "source": "Congo Quotidien",
+   "source_url": "https://www.congoquotidien.com/2026/10/12/accord-pont-rail-africa50-kinshasa-brazzaville/",
+   "date": "2026-10-12"
+  },
+  {
+   "id": "bac-popokabaka-reprise",
+   "tag_fr": "Traversée",
+   "tag_en": "Crossing",
+   "title_fr": "Kwango — le bac de Popokabaka reprend après 4 ans d'arrêt",
+   "title_en": "Kwango — Popokabaka ferry resumes after 4 years",
+   "detail_fr": "Le trafic fluvial a repris au bac de Popokabaka, sur la rivière Kwango, après quatre ans d'interruption ; ce bac alimente le corridor de la RN16.",
+   "detail_en": "River traffic has resumed at the Popokabaka ferry on the Kwango River after a four-year shutdown; the ferry feeds the RN16 corridor.",
+   "source": "Actualite.cd (via Congo Quotidien)",
+   "source_url": "https://www.congoquotidien.com/2026/10/10/reprise-bac-popokabaka-riviere-kwango/",
+   "date": "2026-10-10"
+  }
+ ],
  "dataNotes": {
   "congestion": "Typical pattern model by time of day (Africa/Kinshasa) — NOT live traffic data. No free live traffic feed exists for Kinshasa.",
   "towers": "Cell towers are fetched live by the page from OpenStreetMap via Overpass: community-mapped data, possibly incomplete.",
   "roadworks": "Researched from Congolese press; each item carries its source and date.",
+  "river": "Researched from Congolese press and official/UN reports; each item carries its source, source URL and date. No live river-level or vessel feed exists for Kinshasa.",
   "reports": "On this public website, reports are stored only in the visitor's own browser (localStorage). Shared live reporting is in the Kinshasa Traffic Board app."
  }
 }
