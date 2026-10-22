@@ -112,6 +112,11 @@ def fids_url(direction, window_start, window_end):
             f"{fmt_local(window_start)}/{fmt_local(window_end)}")
     query = urllib.parse.urlencode({
         "direction": direction,          # "Departure" | "Arrival"
+        # withLeg=false is contractual: rows then carry a single
+        # "movement" object (the shape normalize_flight handles
+        # first). Without it the response shape depends on the API's
+        # default, which is how production silently broke once.
+        "withLeg": "false",
         "withCancelled": "true",
         "withCodeshared": "true",
         "withCargo": "false",
@@ -186,6 +191,21 @@ def _time_local(time_obj):
     return None
 
 
+def _canon_time(value):
+    """Canonicalize an AeroDataBox time string to ISO with a "T"
+    separator. Real payload strings look like "2026-10-22 18:45+01:00"
+    (SPACE separator); parse_iso and the page's JS expect the
+    "2026-10-22T18:45+01:00" form the original fixtures used.
+    Already-canonical and "Z" strings pass through unchanged apart
+    from the separator fix; non-strings pass through untouched."""
+    if not isinstance(value, str):
+        return value
+    text = value.strip()
+    if len(text) > 10 and text[10] == " ":
+        text = text[:10] + "T" + text[11:]
+    return text
+
+
 def _movement(item, key):
     move = item.get(key)
     return move if isinstance(move, dict) else None
@@ -247,23 +267,35 @@ def normalize_flight(item, direction):
         return None
     if item.get("isCargo") is True:
         return None  # passenger board (the query also excludes cargo)
-    if direction == "Departure":
+    movement = item.get("movement")
+    if isinstance(movement, dict):
+        # Real FIDS shape (withLeg=false, pinned in fids_url): a
+        # single "movement" object. For BOTH directions its
+        # scheduledTime is the FIH-side time (it carries the +01:00
+        # Kinshasa offset even on the other airport's row), and its
+        # "airport" is the OTHER airport — destination for a
+        # departure, origin for an arrival.
+        fih_side = movement
+        other_airport = _airport_of(movement)
+        place_key = "to" if direction == "Departure" else "from"
+    elif direction == "Departure":
+        # Leg shape (withLeg=true): per-leg departure/arrival objects.
         fih_side = _movement(item, "departure")
-        other_side = _movement(item, "arrival")
+        other_airport = _airport_of(_movement(item, "arrival"))
         place_key = "to"
     else:
         fih_side = _movement(item, "arrival")
-        other_side = _movement(item, "departure")
+        other_airport = _airport_of(_movement(item, "departure"))
         place_key = "from"
     if fih_side is None:
         return None
-    sched = _time_local(fih_side.get("scheduledTime"))
+    sched = _canon_time(_time_local(fih_side.get("scheduledTime")))
     if not sched:
         return None
     revised = None
     for key in ("revisedTime", "actualTime", "runwayTime",
                 "predictedTime", "estimatedTime"):
-        revised = _time_local(fih_side.get(key))
+        revised = _canon_time(_time_local(fih_side.get(key)))
         if revised:
             break
     number = _flight_number(item)
@@ -280,7 +312,7 @@ def normalize_flight(item, direction):
     return {
         "flight": number,
         "airline": str(airline_name),
-        place_key: _airport_of(other_side),
+        place_key: other_airport,
         "sched": sched,
         "revised": revised,
         "status": status,
