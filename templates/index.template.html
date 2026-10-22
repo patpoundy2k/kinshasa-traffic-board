@@ -536,10 +536,10 @@ var gcCount = null;
 function paintGcVisits(){
   var el = document.getElementById('gc-visits');
   if(!el) return;
-  if(gcCount == null || !(gcCount > 0)){ el.textContent = ''; return; }
+  if(gcCount == null){ el.textContent = ''; return; }
   el.textContent = ' · ' + gcCount + ' ' + t('visitsLabel');
 }
-fetch('https://kinshasabouge.goatcounter.com/counter/%2F.json')
+fetch('https://kinshasabouge.goatcounter.com/counter/TOTAL.json')
   .then(function(r){ return r && r.ok ? r.json() : null; })
   .then(function(d){
     if(d && d.count != null){ var n = parseInt(d.count, 10); if(!isNaN(n)) gcCount = n; }
