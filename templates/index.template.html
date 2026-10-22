@@ -85,6 +85,38 @@
   .lang-switch button.active{background:#fff;color:var(--header-1);box-shadow:0 1px 4px rgba(0,0,0,.22)}
   .lang-switch button:focus-visible{outline:2px solid #fff;outline-offset:2px}
 
+  /* ---- Accessibility options (button + panel in the header) ---- */
+  .a11y-wrap{position:relative}
+  .a11y-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);color:#fff;border-radius:999px;padding:6px 13px;font:inherit;font-size:.85rem;font-weight:700;cursor:pointer;transition:background .15s ease}
+  .a11y-btn:hover{background:rgba(255,255,255,.22)}
+  .a11y-btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+  @media(max-width:560px){.a11y-btn-word{display:none}.a11y-btn{padding:6px 10px}}
+  .a11y-panel{position:absolute;top:calc(100% + 8px);right:0;min-width:246px;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 36px -10px rgba(15,28,46,.45);padding:12px 15px 8px;z-index:1400;text-align:left}
+  .a11y-title{margin:0 0 4px;font-size:.95rem;font-weight:800}
+  .a11y-row{display:flex;align-items:center;gap:9px;font-size:.92rem;font-weight:600;margin:0;padding:8px 0;cursor:pointer}
+  .a11y-row input{width:19px;height:19px;padding:0;margin:0;accent-color:var(--brand);flex-shrink:0;cursor:pointer}
+  .a11y-row input:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px}
+  /* Larger text: the layout is sized in rem (popups included), so one
+     root step scales the whole page without touching the map. */
+  html.a11y-text{font-size:120%}
+  /* High contrast: darken the palette variables (level dots, badges,
+     links and buttons all read them) + stronger borders/outlines. */
+  body.a11y-contrast{
+    --ink:#000000; --muted:#3d4a61; --line:#8795ab; --bg:#e3e9f1;
+    --brand:#065f46; --brand-2:#075985;
+    --green:#15803d; --amber:#b45309; --orange:#c2410c; --red:#b91c1c;
+  }
+  body.a11y-contrast .card{border-width:2px}
+  body.a11y-contrast .dot{box-shadow:0 0 0 2px rgba(0,0,0,.55)}
+  body.a11y-contrast .honest{border-color:#92600a;border-width:2px}
+  body.a11y-contrast a{text-decoration:underline}
+  body.a11y-contrast :focus-visible{outline:3px solid #000;outline-offset:2px}
+  /* Reduced motion: kill CSS animations/transitions + smooth scroll. */
+  html.a11y-motion{scroll-behavior:auto}
+  body.a11y-motion *,body.a11y-motion *::before,body.a11y-motion *::after{
+    animation:none !important;transition:none !important;
+  }
+
   /* ---- Layout & cards ---- */
   main{max-width:1120px;margin:0 auto;padding:18px 16px 8px}
   .tagline{margin:0 0 16px;color:var(--muted);font-size:1rem;line-height:1.5;max-width:780px}
@@ -116,6 +148,11 @@
   .ktb-layer-row{display:flex;align-items:center;gap:7px;font-size:.87rem;font-weight:500;margin:0;padding:3px 0;cursor:pointer;white-space:nowrap}
   .ktb-layer-row input{width:auto;padding:0;margin:0;accent-color:var(--brand)}
   .ktb-layers-sep{border-top:1px solid var(--line);margin:6px 0}
+  /* Flight layer markers (MapLibre port of flight-layer/flights.js) */
+  .ktb-plane{width:26px;height:26px;cursor:pointer}
+  .ktb-plane span{display:block;width:26px;height:26px}
+  .ktb-airport{display:flex;align-items:center}
+  .ktb-airport-chip{background:#fff;border:1px solid var(--line);border-radius:999px;box-shadow:0 1px 5px rgba(15,28,46,.3);padding:2px 9px;font-size:.78rem;font-weight:700;color:var(--ink);white-space:nowrap;cursor:pointer}
   .legend{display:flex;flex-wrap:wrap;gap:7px 14px;font-size:.86rem;margin-top:12px;color:var(--ink)}
   .dot{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:-1px;margin-right:5px;box-shadow:inset 0 0 0 1px rgba(15,28,46,.12)}
   .lvl-fluid{background:var(--green)} .lvl-slow{background:var(--amber)}
@@ -198,6 +235,17 @@
         <button type="button" id="btn-fr">FR</button>
         <button type="button" id="btn-en">EN</button>
       </div>
+      <div class="a11y-wrap" id="a11y-wrap">
+        <button type="button" id="a11y-btn" class="a11y-btn" aria-label="Accessibilité" aria-haspopup="true" aria-expanded="false" aria-controls="a11y-panel">
+          <span aria-hidden="true">♿</span> <span class="a11y-btn-word" data-i18n="a11yButton">Accessibilité</span>
+        </button>
+        <div class="a11y-panel hidden" id="a11y-panel" role="region" aria-labelledby="a11y-title">
+          <p class="a11y-title" id="a11y-title" data-i18n="a11yTitle">Accessibilité</p>
+          <label class="a11y-row"><input type="checkbox" id="a11y-opt-text"> <span data-i18n="a11yText">Texte plus grand</span></label>
+          <label class="a11y-row"><input type="checkbox" id="a11y-opt-contrast"> <span data-i18n="a11yContrast">Contraste élevé</span></label>
+          <label class="a11y-row"><input type="checkbox" id="a11y-opt-motion"> <span data-i18n="a11yMotion">Réduire les animations</span></label>
+        </div>
+      </div>
     </div>
   </div>
 </header>
@@ -228,7 +276,9 @@
     </div>
     <p class="note hidden" id="sat-note" data-i18n="satNote">Photo satellite : image fixe, pas en direct.</p>
     <p class="honest" style="margin-top:10px" id="map-note" data-i18n="typicalNote">Couleurs = congestion HABITUELLE selon l'heure à Kinshasa (modèle par heure de la journée), pas des données en temps réel : il n'existe pas de flux de trafic en direct gratuit pour Kinshasa.</p>
-    <p class="note live-links" style="margin-top:8px">🛰️ <a href="https://zoom.earth/maps/satellite/#view=-4.32,15.32,9z" target="_blank" rel="noopener" data-i18n="zoomEarthLink">Satellite en direct (Zoom Earth)</a> · 🚗 <a href="https://www.google.com/maps/@-4.325,15.322,13z/data=!5m1!1e1" target="_blank" rel="noopener" data-i18n="googleTrafficLink">Circulation en direct (Google Maps)</a></p>
+    <p class="note hidden" id="flights-note" style="margin-top:8px" data-i18n="flightsNote">Données de vol : adsb.lol — ADS-B communautaire (ODbL). Vols en direct — Congo Airways (COG), Ethiopian (ETH), Air France (AFR), Brussels Airlines (BEL). Couverture limitée autour de Kinshasa : l'absence d'avion ne signifie pas l'absence de vol.</p>
+    <p class="note hidden" id="flights-none" style="margin-top:8px" role="status" data-i18n="flightsNone">Aucun avion suivi pour le moment (couverture limitée autour de Kinshasa).</p>
+    <p class="note live-links" style="margin-top:8px">🛰️ <a href="https://zoom.earth/maps/satellite/#view=-4.32,15.32,9z" target="_blank" rel="noopener" data-i18n="zoomEarthLink">Satellite en direct (Zoom Earth)</a></p>
   </section>
 
   <div class="grid">
@@ -247,7 +297,7 @@
 
       <section class="card">
         <h2>📝 <span data-i18n="reportTitle">Signaler un embouteillage</span></h2>
-        <div class="honest" data-i18n="reportNote">Sur ce site public, votre signalement reste sur votre appareil (il n'est pas partagé avec les autres visiteurs). Le signalement partagé en direct se fait dans l'application Kinshasa Traffic Board.</div>
+        <div class="honest" data-i18n="reportNote">Votre signalement est partagé avec tous les visiteurs et reste visible 24 heures.</div>
         <form id="report-form">
           <label for="rep-artery" data-i18n="reportArtery">Artère</label>
           <select id="rep-artery" required></select>
@@ -259,9 +309,10 @@
             <option value="blocked" data-i18n="lvlBlocked">Bloqué</option>
           </select>
           <label for="rep-comment" data-i18n="reportComment">Commentaire (optionnel)</label>
-          <textarea id="rep-comment" rows="2" maxlength="200"></textarea>
+          <textarea id="rep-comment" rows="2" maxlength="140"></textarea>
           <button type="submit" class="cta" data-i18n="reportSubmit">Ajouter mon signalement</button>
         </form>
+        <p id="report-error" class="note" role="alert" style="display:none;color:#b91c1c" data-i18n="reportError">Envoi impossible pour le moment — réessayez dans un instant.</p>
         <h3 data-i18n="myReports">Mes signalements (cet appareil)</h3>
         <ul class="clean" id="my-reports"><li class="note" data-i18n="noReports">Aucun signalement pour le moment.</li></ul>
       </section>
@@ -295,7 +346,7 @@
 </main>
 
 <footer>
-  <p data-i18n="footerNote">Sources : OpenStreetMap (géométrie des routes, données communautaires pouvant être incomplètes), Open-Meteo (météo), Google (trafic en direct, lorsqu'il est récent), presse congolaise (chantiers). À défaut de données en direct récentes, la congestion affichée est un modèle habituel par heure.</p>
+  <p data-i18n="footerNote">Sources : OpenStreetMap (géométrie des routes, données communautaires pouvant être incomplètes), Open-Meteo (météo), Google (trafic en direct, lorsqu'il est récent), presse congolaise (chantiers), adsb.lol (vols suivis, ADS-B communautaire, ODbL). À défaut de données en direct récentes, la congestion affichée est un modèle habituel par heure.</p>
   <p>Kinshasa Traffic Board — <span data-i18n="generatedOn">Page générée le</span> {{GENERATED_DATE}}</p>
   <p class="owner-line">© 2026 Patpound Corporation · <span data-i18n="supportLabel">Assistance</span> : <a href="mailto:patpoundy2kb@gmail.com">patpoundy2kb@gmail.com</a><span id="gc-visits"></span></p>
 </footer>
@@ -308,6 +359,17 @@
 var BOARD = JSON.parse(document.getElementById('board-data').textContent);
 var LANG_KEY = 'ktb-lang';
 var REPORTS_KEY = 'ktb-reports';
+/* Shared jam reports backend (Cloudflare Worker + D1, reports-worker/).
+   patpoundy2kb is a placeholder: at deploy time it becomes the
+   account's real workers.dev subdomain, then the page is regenerated. */
+var REPORTS_API = "https://kinshasa-reports.patpoundy2kb.workers.dev";
+/* Live flight layer relay (Cloudflare Worker "kinshasa-flights" —
+   flight-layer/worker.js). It proxies ONE fixed adsb.lol query
+   (~100 NM around Kinshasa) because adsb.lol sends no CORS headers;
+   the path is ignored by the relay. patpoundy2kb is a
+   placeholder, swapped for the real workers.dev subdomain when the
+   relay is deployed, then the page is regenerated. */
+var FLIGHTS_API = "https://kinshasa-flights.patpoundy2kb.workers.dev";
 
 var I18N = {
   fr: {
@@ -337,11 +399,12 @@ var I18N = {
     aqAdviceVeryUnhealthy: "Évitez les efforts dehors et gardez les fenêtres fermées si possible.",
     aqAdviceHazardous: "Air dangereux — restez à l'intérieur autant que possible.",
     reportTitle: "Signaler un embouteillage",
-    reportNote: "Sur ce site public, votre signalement reste sur votre appareil (il n'est pas partagé avec les autres visiteurs). Le signalement partagé en direct se fait dans l'application Kinshasa Traffic Board.",
+    reportNote: "Votre signalement est partagé avec tous les visiteurs et reste visible 24 heures.",
     reportArtery: "Artère",
     reportLevel: "Niveau",
     reportComment: "Commentaire (optionnel)",
     reportSubmit: "Ajouter mon signalement",
+    reportError: "Envoi impossible pour le moment — réessayez dans un instant.",
     myReports: "Mes signalements (cet appareil)",
     noReports: "Aucun signalement pour le moment.",
     mapTitle: "Carte des grandes artères",
@@ -365,16 +428,29 @@ var I18N = {
     typicalPrefix: "Habituel à cette heure",
     sourceLabel: "Source",
     reportedLabel: "signalé",
-    footerNote: "Sources : OpenStreetMap (géométrie des routes, données communautaires pouvant être incomplètes), Open-Meteo (météo), Google (trafic en direct, lorsqu'il est récent), presse congolaise (chantiers). À défaut de données en direct récentes, la congestion affichée est un modèle habituel par heure.",
+    footerNote: "Sources : OpenStreetMap (géométrie des routes, données communautaires pouvant être incomplètes), Open-Meteo (météo), Google (trafic en direct, lorsqu'il est récent), presse congolaise (chantiers), adsb.lol (vols suivis, ADS-B communautaire, ODbL). À défaut de données en direct récentes, la congestion affichée est un modèle habituel par heure.",
     supportLabel: "Assistance",
     visitsLabel: "visites",
     baseStreets: "Plan",
     baseSatellite: "Satellite",
     overlayClouds: "Nuages (NASA, quasi temps réel)",
+    flightsToggle: "✈ Vols",
+    flightsNone: "Aucun avion suivi pour le moment (couverture limitée autour de Kinshasa).",
+    flightsNote: "Données de vol : adsb.lol — ADS-B communautaire (ODbL). Vols en direct — Congo Airways (COG), Ethiopian (ETH), Air France (AFR), Brussels Airlines (BEL). Couverture limitée autour de Kinshasa : l'absence d'avion ne signifie pas l'absence de vol.",
+    airportLabel: "Aéroport de N'djili (FIH)",
+    flightAlt: "Altitude",
+    flightSpeed: "Vitesse sol",
+    flightHeading: "Cap",
+    flightGround: "au sol",
+    compass: ["N", "NE", "E", "SE", "S", "SO", "O", "NO"],
     satNote: "Photo satellite : image fixe, pas en direct.",
     zoomEarthLink: "Satellite en direct (Zoom Earth)",
-    googleTrafficLink: "Circulation en direct (Google Maps)",
     generatedOn: "Page générée le",
+    a11yButton: "Accessibilité",
+    a11yTitle: "Accessibilité",
+    a11yText: "Texte plus grand",
+    a11yContrast: "Contraste élevé",
+    a11yMotion: "Réduire les animations",
     status: { active:"En cours", stopped:"À l'arrêt", stalled:"Presque à l'arrêt", progressing:"En progression", degraded:"Dégradé" }
   },
   en: {
@@ -404,11 +480,12 @@ var I18N = {
     aqAdviceVeryUnhealthy: "Avoid efforts outdoors and keep windows closed if possible.",
     aqAdviceHazardous: "Hazardous air — stay indoors as much as possible.",
     reportTitle: "Report a traffic jam",
-    reportNote: "On this public website, your report stays on your device (it is not shared with other visitors). Shared live reporting is in the Kinshasa Traffic Board app.",
+    reportNote: "Your report is shared with all visitors and stays visible for 24 hours.",
     reportArtery: "Artery",
     reportLevel: "Level",
     reportComment: "Comment (optional)",
     reportSubmit: "Add my report",
+    reportError: "Couldn't send right now — please try again in a moment.",
     myReports: "My reports (this device)",
     noReports: "No reports yet.",
     mapTitle: "Main arteries map",
@@ -432,16 +509,29 @@ var I18N = {
     typicalPrefix: "Typical at this hour",
     sourceLabel: "Source",
     reportedLabel: "reported",
-    footerNote: "Sources: OpenStreetMap (road geometry, community data that may be incomplete), Open-Meteo (weather), Google (live traffic, when recent), Congolese press (roadworks). When no fresh live data is available, the congestion shown is a typical hourly pattern model.",
+    footerNote: "Sources: OpenStreetMap (road geometry, community data that may be incomplete), Open-Meteo (weather), Google (live traffic, when recent), Congolese press (roadworks), adsb.lol (tracked flights, community ADS-B, ODbL). When no fresh live data is available, the congestion shown is a typical hourly pattern model.",
     supportLabel: "Support",
     visitsLabel: "visits",
     baseStreets: "Streets",
     baseSatellite: "Satellite",
     overlayClouds: "Clouds (NASA, near-live)",
+    flightsToggle: "✈ Flights",
+    flightsNone: "No tracked flights right now (limited coverage around Kinshasa).",
+    flightsNote: "Flight data: adsb.lol — community ADS-B (ODbL). Live flights — Congo Airways (COG), Ethiopian (ETH), Air France (AFR), Brussels Airlines (BEL). Coverage around Kinshasa is sparse: no aircraft shown does not mean no flight is operating.",
+    airportLabel: "N'djili Airport (FIH)",
+    flightAlt: "Altitude",
+    flightSpeed: "Ground speed",
+    flightHeading: "Heading",
+    flightGround: "on ground",
+    compass: ["N", "NE", "E", "SE", "S", "SW", "W", "NW"],
     satNote: "Satellite photo: still image, not live.",
     zoomEarthLink: "Live satellite (Zoom Earth)",
-    googleTrafficLink: "Live traffic (Google Maps)",
     generatedOn: "Page generated on",
+    a11yButton: "Accessibility",
+    a11yTitle: "Accessibility",
+    a11yText: "Larger text",
+    a11yContrast: "High contrast",
+    a11yMotion: "Reduce motion",
     status: { active:"Active", stopped:"Stopped", stalled:"Nearly stopped", progressing:"Progressing", degraded:"Degraded" }
   }
 };
@@ -568,6 +658,7 @@ function updateClock(){
 var MAP_STYLE_URL = 'https://tiles.openfreemap.org/styles/liberty';
 var baseMode = 'plan';      /* 'plan' = OpenFreeMap vector style | 'sat' = Esri raster */
 var cloudsOn = false;
+var flightsOn = false;      /* live flight layer (enableFlights/disableFlights below) */
 var mapReady = false;
 var styleLayerIds = [];
 var coarsePointer = false;
@@ -626,9 +717,9 @@ function setBase(mode){
   buildLayersControl();
 }
 
-/* Layers control (custom): radio base layers + a clouds checkbox, with
-   labels and checked state rebuilt on every language switch via
-   buildLayersControl(). */
+/* Layers control (custom): radio base layers + clouds and flights
+   checkboxes, with labels and checked state rebuilt on every language
+   switch via buildLayersControl(). */
 var layersEls = {};
 var LAYERS_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 3 21 8l-9 5-9-5 9-5z"/><path d="M3 12.5l9 5 9-5"/><path d="M3 17l9 5 9-5" opacity=".45"/></svg>';
 var layersControl = {
@@ -660,7 +751,8 @@ var layersControl = {
     sep.className = 'ktb-layers-sep';
     panel.appendChild(sep);
     var clouds = makeRow('checkbox', null, null);
-    layersEls = { container: container, plan: plan, sat: sat, clouds: clouds };
+    var flights = makeRow('checkbox', null, null);
+    layersEls = { container: container, plan: plan, sat: sat, clouds: clouds, flights: flights };
     toggle.addEventListener('click', function(ev){
       ev.stopPropagation();
       container.classList.toggle('open');
@@ -668,6 +760,7 @@ var layersControl = {
     plan.input.addEventListener('change', function(){ if (this.checked) setBase('plan'); });
     sat.input.addEventListener('change', function(){ if (this.checked) setBase('sat'); });
     clouds.input.addEventListener('change', function(){ cloudsOn = this.checked; applyCloudsState(); });
+    flights.input.addEventListener('change', function(){ if (this.checked) enableFlights(); else disableFlights(); });
     container.appendChild(toggle);
     container.appendChild(panel);
     buildLayersControl();
@@ -681,9 +774,11 @@ function buildLayersControl(){
   layersEls.plan.span.textContent = t('baseStreets');
   layersEls.sat.span.textContent = t('baseSatellite');
   layersEls.clouds.span.textContent = t('overlayClouds');
+  layersEls.flights.span.textContent = t('flightsToggle');
   layersEls.plan.input.checked = baseMode === 'plan';
   layersEls.sat.input.checked = baseMode === 'sat';
   layersEls.clouds.input.checked = cloudsOn;
+  layersEls.flights.input.checked = flightsOn;
 }
 
 map.on('load', function(){
@@ -948,64 +1043,431 @@ document.getElementById('hour-now').addEventListener('click', function(){
   setPreviewHour(null);
 });
 
-/* ---- Reports (this device only, localStorage, 4 h expiry) ---- */
+/* ---- Reports (SHARED with all visitors via the kinshasa-reports
+   Worker; this device also keeps its own record in localStorage).
+   A report stays visible for exactly 24 h after it is posted
+   (rolling), then drops off everywhere. ---- */
+var REPORT_TTL_MS = 24 * 3600 * 1000;
 var reportMarkers = [];
+var sharedReports = null; /* null = shared feed not loaded (yet, or failed) */
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, function(ch){
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
+  });
+}
+function pruneReports(list){
+  var now = Date.now();
+  return list.filter(function(r){ return now - r.ts < REPORT_TTL_MS; });
+}
 function loadReports(){
-  var now = Date.now(), out = [];
-  try {
-    (JSON.parse(localStorage.getItem(REPORTS_KEY) || '[]')).forEach(function(r){
-      if (now - r.ts < 4 * 3600 * 1000) out.push(r);
-    });
-  } catch(e){}
+  var out = [];
+  try { out = pruneReports(JSON.parse(localStorage.getItem(REPORTS_KEY) || '[]')); } catch(e){}
   return out;
 }
-function saveReports(list){ localStorage.setItem(REPORTS_KEY, JSON.stringify(list)); }
+function saveReports(list){ try { localStorage.setItem(REPORTS_KEY, JSON.stringify(list)); } catch(e){} }
+/* Worker rows come as {id, artery, level, comment, ts}; the page's own
+   shape is {serverId, arteryId, level, comment, ts}. */
+function sharedRow(r){
+  return { serverId: r.id, arteryId: r.artery, level: r.level, comment: r.comment || '', ts: r.ts };
+}
+/* What the map shows: the shared feed when it loaded; if the feed
+   cannot be reached, fall back to this device's own reports so the
+   site never breaks. */
+function mapReports(){
+  return sharedReports ? sharedReports : loadReports();
+}
+function arteryById(id){
+  return BOARD.arteries.features.filter(function(f){ return f.properties.id === id; })[0];
+}
+function reportListItem(r){
+  var art = arteryById(r.arteryId);
+  var li = document.createElement('li');
+  li.innerHTML = '<span class="dot lvl-' + r.level + '"></span><strong></strong> · <span></span><br><em></em>';
+  li.querySelector('strong').textContent = art ? art.properties.name : r.arteryId;
+  li.querySelector('span:not(.dot)').textContent = t(lvlKey(r.level));
+  li.querySelector('em').textContent = new Date(r.ts).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) +
+    (r.comment ? ' — ' + r.comment : '');
+  return li;
+}
+function drawReportMarker(r){
+  var art = arteryById(r.arteryId);
+  if (!art || !art.properties.centre || !COLORS[r.level]) return;
+  var c = art.properties.centre; /* stored as [lat, lon] */
+  var dot = document.createElement('div');
+  dot.style.cssText = 'width:18px;height:18px;border-radius:50%;box-sizing:border-box;cursor:pointer;' +
+    'background:' + COLORS[r.level] + '8c;border:2px solid ' + COLORS[r.level];
+  var marker = new maplibregl.Marker({ element: dot })
+    .setLngLat([c[1], c[0]])
+    .setPopup(new maplibregl.Popup({ offset: 14 }).setHTML(
+      '<strong>' + escapeHtml(art.properties.name) + '</strong><br>' + t(lvlKey(r.level)) +
+      (r.comment ? '<br>' + escapeHtml(r.comment) : '')))
+    .addTo(map);
+  reportMarkers.push(marker);
+}
 function renderReports(){
-  var list = loadReports(); saveReports(list);
-  reportMarkers.forEach(function(m){ m.remove(); });
-  reportMarkers = [];
+  /* "My reports" list: this device's own record (localStorage). */
+  var own = loadReports(); saveReports(own);
   var ul = document.getElementById('my-reports');
   ul.innerHTML = '';
-  if (!list.length){
+  if (!own.length){
     ul.innerHTML = '<li class="note">' + t('noReports') + '</li>';
-    return;
+  } else {
+    own.slice().reverse().forEach(function(r){ ul.appendChild(reportListItem(r)); });
   }
-  list.slice().reverse().forEach(function(r){
-    var art = BOARD.arteries.features.filter(function(f){ return f.properties.id === r.arteryId; })[0];
-    var name = art ? art.properties.name : r.arteryId;
-    var li = document.createElement('li');
-    li.innerHTML = '<span class="dot lvl-' + r.level + '"></span><strong></strong> · <span></span><br><em></em>';
-    li.querySelector('strong').textContent = name;
-    li.querySelector('span:not(.dot)').textContent = t(lvlKey(r.level));
-    li.querySelector('em').textContent = new Date(r.ts).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) +
-      (r.comment ? ' — ' + r.comment : '');
-    ul.appendChild(li);
-    if (art && art.properties.centre){
-      var c = art.properties.centre; /* stored as [lat, lon] */
-      var dot = document.createElement('div');
-      dot.style.cssText = 'width:18px;height:18px;border-radius:50%;box-sizing:border-box;cursor:pointer;' +
-        'background:' + COLORS[r.level] + '8c;border:2px solid ' + COLORS[r.level];
-      var marker = new maplibregl.Marker({ element: dot })
-        .setLngLat([c[1], c[0]])
-        .setPopup(new maplibregl.Popup({ offset: 14 }).setHTML('<strong>' + name + '</strong><br>' + t(lvlKey(r.level))))
-        .addTo(map);
-      reportMarkers.push(marker);
-    }
+  /* Map markers: the shared feed (fallback: own reports). A report I
+     just posted comes back in the feed with its server id — the
+     seen-check keeps it drawn exactly once. */
+  reportMarkers.forEach(function(m){ m.remove(); });
+  reportMarkers = [];
+  var seen = {};
+  pruneReports(mapReports()).forEach(function(r){
+    var key = r.serverId != null ? 's' + r.serverId : r.arteryId + '|' + r.ts + '|' + r.level;
+    if (seen[key]) return;
+    seen[key] = true;
+    drawReportMarker(r);
   });
+}
+function fetchSharedReports(){
+  fetch(REPORTS_API + '/reports')
+    .then(function(r){ if (!r.ok) throw new Error('feed ' + r.status); return r.json(); })
+    .then(function(rows){
+      if (!Array.isArray(rows)) throw new Error('feed shape');
+      sharedReports = pruneReports(rows.map(sharedRow));
+      renderReports();
+    })
+    .catch(function(){ /* feed unreachable: renderReports() falls back to local */ });
 }
 document.getElementById('report-form').addEventListener('submit', function(ev){
   ev.preventDefault();
-  var list = loadReports();
-  list.push({
-    arteryId: document.getElementById('rep-artery').value,
+  var errEl = document.getElementById('report-error');
+  var payload = {
+    artery: document.getElementById('rep-artery').value,
     level: document.getElementById('rep-level').value,
-    comment: document.getElementById('rep-comment').value.trim(),
-    ts: Date.now()
+    comment: document.getElementById('rep-comment').value.trim()
+  };
+  fetch(REPORTS_API + '/reports', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(function(r){
+    if (!r.ok) throw new Error('post ' + r.status);
+    return r.json();
+  }).then(function(data){
+    var entry = {
+      serverId: (data && data.id != null) ? data.id : null,
+      arteryId: payload.artery, level: payload.level,
+      comment: payload.comment, ts: Date.now()
+    };
+    var own = loadReports(); own.push(entry); saveReports(own);
+    if (sharedReports) sharedReports.push(entry); /* visible at once, even before the refresh lands */
+    document.getElementById('rep-comment').value = '';
+    if (errEl) errEl.style.display = 'none';
+    renderReports();
+    fetchSharedReports();
+  }).catch(function(){
+    /* Not shared — say so, and keep the typed comment for a retry. */
+    if (errEl){ errEl.textContent = t('reportError'); errEl.style.display = ''; }
   });
-  saveReports(list);
-  document.getElementById('rep-comment').value = '';
-  renderReports();
 });
+
+/* ---- Flights (live ADS-B — MapLibre port of flight-layer/flights.js,
+   which targeted the previous map library). Only four airlines are plotted:
+   Congo Airways (COG), Ethiopian (ETH), Air France (AFR), Brussels
+   Airlines (BEL). The page reads the kinshasa-flights relay
+   (FLIGHTS_API), which proxies one fixed adsb.lol query (~100 NM
+   around Kinshasa) and adds CORS; the four-airline filter runs here.
+   adsb.lol data is community ADS-B under ODbL — the attribution is in
+   the footer sources and in the flightsNote shown while the layer is
+   on. Coverage around Kinshasa is extremely thin: an empty sky is
+   normal and the flightsNone line says so. A flight missing from two
+   consecutive polls is removed; failed polls change nothing. ---- */
+var FIH = { lat: -4.385, lon: 15.444 };   /* N'djili airport (FIH) */
+var AIRLINES = {
+  COG: 'Congo Airways', ETH: 'Ethiopian Airlines',
+  AFR: 'Air France', BEL: 'Brussels Airlines'
+};
+var FLIGHT_POLL_MS = 60 * 1000;
+var flightTimer = null;
+var flightMarkers = {};      /* callsign -> maplibregl.Marker */
+var flightSpans = {};        /* callsign -> rotating inner <span> */
+var flightData = {};         /* callsign -> normalized aircraft */
+var flightMissed = {};       /* callsign -> consecutive polls absent */
+var flightsLastCount = null; /* null = no successful poll yet */
+var airportMarker = null;
+var airportChip = null;
+
+function flightPrefix(callsign){
+  return typeof callsign === 'string' ? callsign.trim().toUpperCase().slice(0, 3) : '';
+}
+function isTrackedFlight(callsign){
+  return Object.prototype.hasOwnProperty.call(AIRLINES, flightPrefix(callsign));
+}
+function isFlightNum(v){ return typeof v === 'number' && isFinite(v); }
+/* Normalize one adsb.lol aircraft object; null when unusable or not
+   one of the four tracked airlines. */
+function parseFlight(ac){
+  if (!ac || typeof ac !== 'object') return null;
+  var callsign = typeof ac.flight === 'string' ? ac.flight.trim().toUpperCase() : '';
+  if (!callsign || !isTrackedFlight(callsign)) return null;
+  if (!isFlightNum(ac.lat) || !isFlightNum(ac.lon)) return null;
+  var altFt = null;
+  if (isFlightNum(ac.alt_baro)) altFt = ac.alt_baro;
+  else if (ac.alt_baro === 'ground') altFt = 0;
+  var gsKt = isFlightNum(ac.gs) ? ac.gs : null;
+  var track = isFlightNum(ac.track) ? ((ac.track % 360) + 360) % 360 : null;
+  return {
+    callsign: callsign,
+    prefix: flightPrefix(callsign),
+    airline: AIRLINES[flightPrefix(callsign)],
+    lat: ac.lat, lon: ac.lon,
+    altFt: altFt, altM: altFt == null ? null : Math.round(altFt * 0.3048),
+    gsKt: gsKt, gsKmh: gsKt == null ? null : Math.round(gsKt * 1.852),
+    track: track
+  };
+}
+/* payload = adsb.lol /v2/point response ({ ac: [...], ... }) */
+function filterFlights(payload){
+  var out = [];
+  if (!payload || !Array.isArray(payload.ac)) return out;
+  payload.ac.forEach(function(ac){
+    var parsed = parseFlight(ac);
+    if (parsed) out.push(parsed);
+  });
+  return out;
+}
+function fmtFlightInt(n){
+  var s = String(Math.round(n));
+  var sep = lang === 'fr' ? ' ' : ',';
+  return s.replace(/\B(?=(\d{3})+(?!\d))/g, sep);
+}
+function flightCompass(deg){
+  if (deg == null) return '';
+  var pts = t('compass');
+  return pts[Math.round(deg / 45) % 8] || '';
+}
+function flightPopupHtml(a){
+  var lines = [];
+  lines.push('<strong>' + escapeHtml(a.callsign) + '</strong> — ' + escapeHtml(a.airline));
+  if (a.altFt != null) {
+    lines.push(t('flightAlt') + ' : ' + (a.altFt === 0
+      ? t('flightGround')
+      : fmtFlightInt(a.altFt) + ' ft · ' + fmtFlightInt(a.altM) + ' m'));
+  }
+  if (a.gsKt != null) {
+    lines.push(t('flightSpeed') + ' : ' + fmtFlightInt(a.gsKt) + ' kt · ' + fmtFlightInt(a.gsKmh) + ' km/h');
+  }
+  if (a.track != null) {
+    lines.push(t('flightHeading') + ' : ' + Math.round(a.track) + '° ' + flightCompass(a.track));
+  }
+  return lines.join('<br>');
+}
+/* Plane silhouette pointing UP (north); the marker's inner span is
+   rotated by the aircraft's track (0° = north, 90° = east). Rotating
+   the span — never the marker element itself, whose transform belongs
+   to MapLibre's positioning. */
+var PLANE_SVG =
+  '<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">' +
+  '<path fill="#1a56db" stroke="#ffffff" stroke-width="1" d="M12 0 L14 8 L23 15 L23 17 ' +
+  'L14 14.5 L14 19 L17.5 21.5 L17.5 23 L12 22 L6.5 23 L6.5 21.5 L10 19 L10 14.5 ' +
+  'L1 17 L1 15 L10 8 Z"/></svg>';
+function setPlaneRotation(callsign, track){
+  var span = flightSpans[callsign];
+  if (span) span.style.transform = 'rotate(' + (track == null ? 0 : track) + 'deg)';
+}
+function drawFlightMarker(a){
+  var el = document.createElement('div');
+  el.className = 'ktb-plane';
+  var span = document.createElement('span');
+  span.innerHTML = PLANE_SVG;
+  el.appendChild(span);
+  flightSpans[a.callsign] = span;
+  setPlaneRotation(a.callsign, a.track);
+  return new maplibregl.Marker({ element: el })
+    .setLngLat([a.lon, a.lat])
+    .setPopup(new maplibregl.Popup({ offset: 14 }).setHTML(flightPopupHtml(a)))
+    .addTo(map);
+}
+function renderFlights(list){
+  var seen = {};
+  list.forEach(function(a){
+    seen[a.callsign] = true;
+    flightMissed[a.callsign] = 0;
+    flightData[a.callsign] = a;
+    var m = flightMarkers[a.callsign];
+    if (m) {
+      m.setLngLat([a.lon, a.lat]);
+      setPlaneRotation(a.callsign, a.track);
+      if (typeof m.getPopup === 'function' && m.getPopup()) m.getPopup().setHTML(flightPopupHtml(a));
+    } else {
+      flightMarkers[a.callsign] = drawFlightMarker(a);
+    }
+  });
+  Object.keys(flightMarkers).forEach(function(cs){
+    if (seen[cs]) return;
+    flightMissed[cs] = (flightMissed[cs] || 0) + 1;
+    if (flightMissed[cs] >= 2) {   /* absent from two straight polls: gone */
+      flightMarkers[cs].remove();
+      delete flightMarkers[cs];
+      delete flightSpans[cs];
+      delete flightData[cs];
+      delete flightMissed[cs];
+    }
+  });
+  flightsLastCount = list.length;
+  updateFlightsUI();
+}
+function fetchFlights(){
+  if (!flightsOn) return;
+  fetch(FLIGHTS_API)
+    .then(function(r){ return r && r.ok ? r.json() : null; })
+    .then(function(payload){
+      if (!flightsOn || !payload) return; /* fail silently, keep markers */
+      renderFlights(filterFlights(payload));
+    })
+    .catch(function(){ /* relay unreachable: keep last known markers */ });
+}
+function updateFlightsUI(){
+  var note = document.getElementById('flights-note');
+  if (note) note.classList.toggle('hidden', !flightsOn);
+  var none = document.getElementById('flights-none');
+  if (none) none.classList.toggle('hidden', !(flightsOn && flightsLastCount === 0));
+}
+function drawAirportMarker(){
+  if (airportMarker) return;
+  var el = document.createElement('div');
+  el.className = 'ktb-airport';
+  airportChip = document.createElement('span');
+  airportChip.className = 'ktb-airport-chip';
+  airportChip.textContent = '🛬 ' + t('airportLabel');
+  el.appendChild(airportChip);
+  airportMarker = new maplibregl.Marker({ element: el })
+    .setLngLat([FIH.lon, FIH.lat])
+    .setPopup(new maplibregl.Popup({ offset: 14 }).setHTML(
+      '<strong>' + escapeHtml(t('airportLabel')) + '</strong>'))
+    .addTo(map);
+}
+/* Language switch: re-render open popups + the airport label in the
+   new language (markers themselves stay put). */
+function refreshFlightLabels(){
+  Object.keys(flightMarkers).forEach(function(cs){
+    var m = flightMarkers[cs], a = flightData[cs];
+    if (m && a && typeof m.getPopup === 'function' && m.getPopup()) {
+      m.getPopup().setHTML(flightPopupHtml(a));
+    }
+  });
+  if (airportChip) airportChip.textContent = '🛬 ' + t('airportLabel');
+  if (airportMarker && typeof airportMarker.getPopup === 'function' && airportMarker.getPopup()) {
+    airportMarker.getPopup().setHTML('<strong>' + escapeHtml(t('airportLabel')) + '</strong>');
+  }
+}
+function enableFlights(){
+  flightsOn = true;
+  drawAirportMarker();
+  updateFlightsUI();
+  buildLayersControl();
+  fetchFlights();
+  if (flightTimer) clearInterval(flightTimer);
+  flightTimer = setInterval(fetchFlights, FLIGHT_POLL_MS);
+}
+function disableFlights(){
+  flightsOn = false;
+  if (flightTimer) { clearInterval(flightTimer); flightTimer = null; }
+  Object.keys(flightMarkers).forEach(function(cs){ flightMarkers[cs].remove(); });
+  flightMarkers = {}; flightSpans = {}; flightData = {}; flightMissed = {};
+  flightsLastCount = null;
+  if (airportMarker) { airportMarker.remove(); airportMarker = null; airportChip = null; }
+  updateFlightsUI();
+  buildLayersControl();
+}
+
+/* ---- Accessibility options (header button + panel) ----
+   Three visitor toggles: larger text (a 120% root font-size step —
+   the layout, MapLibre popups included, is sized in rem), high
+   contrast (a palette/border boost via the CSS variables) and
+   reduced motion (animations/transitions off). Choices persist in
+   localStorage (ktb-a11y) and are reapplied on every load. Reduced
+   motion defaults ON when the OS asks for it
+   (prefers-reduced-motion) and no choice has been saved yet; a saved
+   choice always wins over the OS default. */
+var A11Y_KEY = 'ktb-a11y';
+var a11yState = { text: false, contrast: false, motion: false };
+(function loadA11yState(){
+  var saved = null;
+  try { saved = JSON.parse(localStorage.getItem(A11Y_KEY) || 'null'); } catch(e){}
+  if (saved && typeof saved === 'object') {
+    a11yState.text = !!saved.text;
+    a11yState.contrast = !!saved.contrast;
+    a11yState.motion = !!saved.motion;
+  } else {
+    try {
+      a11yState.motion = !!(window.matchMedia &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    } catch(e){}
+  }
+})();
+function saveA11y(){
+  try { localStorage.setItem(A11Y_KEY, JSON.stringify(a11yState)); } catch(e){}
+}
+function applyA11y(){
+  var root = document.documentElement;
+  var body = document.body || root;
+  if (root) {
+    root.classList.toggle('a11y-text', a11yState.text);
+    root.classList.toggle('a11y-motion', a11yState.motion);
+  }
+  if (body) {
+    body.classList.toggle('a11y-contrast', a11yState.contrast);
+    body.classList.toggle('a11y-motion', a11yState.motion);
+  }
+  var ids = { text: 'a11y-opt-text', contrast: 'a11y-opt-contrast', motion: 'a11y-opt-motion' };
+  Object.keys(ids).forEach(function(k){
+    var el = document.getElementById(ids[k]);
+    if (el) el.checked = a11yState[k];
+  });
+}
+function applyA11yLabels(){
+  var btn = document.getElementById('a11y-btn');
+  if (btn) btn.setAttribute('aria-label', t('a11yButton'));
+}
+var a11yOpen = false;
+function setA11yPanel(open){
+  a11yOpen = !!open;
+  var panel = document.getElementById('a11y-panel');
+  var btn = document.getElementById('a11y-btn');
+  if (panel) panel.classList.toggle('hidden', !a11yOpen);
+  if (btn) btn.setAttribute('aria-expanded', a11yOpen ? 'true' : 'false');
+}
+function a11yIsWithin(el, target){
+  var n = target;
+  while (n) { if (n === el) return true; n = n.parentNode; }
+  return false;
+}
+var a11yBtnEl = document.getElementById('a11y-btn');
+if (a11yBtnEl) a11yBtnEl.addEventListener('click', function(){ setA11yPanel(!a11yOpen); });
+[['a11y-opt-text', 'text'], ['a11y-opt-contrast', 'contrast'], ['a11y-opt-motion', 'motion']]
+.forEach(function(pair){
+  var el = document.getElementById(pair[0]);
+  if (el) el.addEventListener('change', function(){
+    a11yState[pair[1]] = !!this.checked;
+    saveA11y();
+    applyA11y();
+  });
+});
+if (document.addEventListener) {
+  document.addEventListener('click', function(ev){
+    if (!a11yOpen) return;
+    var wrap = document.getElementById('a11y-wrap');
+    if (wrap && !a11yIsWithin(wrap, ev.target)) setA11yPanel(false);
+  });
+  document.addEventListener('keydown', function(ev){
+    if (a11yOpen && (ev.key === 'Escape' || ev.key === 'Esc')) {
+      setA11yPanel(false);
+      var btn = document.getElementById('a11y-btn');
+      if (btn && btn.focus) btn.focus();
+    }
+  });
+}
 
 /* ---- Language ---- */
 function applyLang(){
@@ -1016,7 +1478,7 @@ function applyLang(){
   });
   document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
   document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-  renderLists(); drawArteries(); drawWorks(); renderReports(); paintGcVisits(); buildLayersControl(); updateSliderUI(); renderAirQuality(); updateLiveUI();
+  renderLists(); drawArteries(); drawWorks(); renderReports(); paintGcVisits(); buildLayersControl(); updateSliderUI(); renderAirQuality(); updateLiveUI(); updateFlightsUI(); refreshFlightLabels(); applyA11yLabels();
 }
 document.getElementById('btn-fr').addEventListener('click', function(){ lang = 'fr'; localStorage.setItem(LANG_KEY, lang); applyLang(); });
 document.getElementById('btn-en').addEventListener('click', function(){ lang = 'en'; localStorage.setItem(LANG_KEY, lang); applyLang(); });
@@ -1037,7 +1499,10 @@ fetch('https://kinshasabouge.goatcounter.com/counter/TOTAL.json')
   })
   .catch(function(){});
 
+applyA11y();
 applyLang();
+fetchSharedReports();
+setInterval(fetchSharedReports, 2 * 60 * 1000);
 loadWeather();
 loadAirQuality();
 updateClock();
