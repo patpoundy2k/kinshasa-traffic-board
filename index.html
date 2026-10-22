@@ -160,8 +160,20 @@
   .wx-big{font-size:2rem;font-weight:800;letter-spacing:-.01em}
 
   /* ---- Air quality ---- */
-  .aq-main{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  .aq-badge{display:inline-block;font-size:.85rem;font-weight:700;border-radius:999px;padding:4px 13px;color:#fff}
+  .aq-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .aq-cat{font-size:1.55rem;font-weight:800;letter-spacing:-.01em;line-height:1.15}
+  .aq-aqi-small{font-size:.88rem;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+  .aq-gauge{position:relative;margin-top:10px;padding-top:12px}
+  .aq-bar{display:flex;height:14px;border-radius:999px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(15,28,46,.14)}
+  .aq-bar i{display:block;height:100%}
+  .aq-marker{position:absolute;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none;z-index:2}
+  .aq-caret{width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid var(--ink)}
+  .aq-dot{width:16px;height:16px;border-radius:50%;border:3px solid #fff;box-shadow:0 1px 4px rgba(15,28,46,.5);margin-top:3px}
+  .aq-ticks{position:relative;height:1.05rem;margin-top:5px;font-size:.72rem;color:var(--muted);font-variant-numeric:tabular-nums}
+  .aq-ticks span{position:absolute;top:0;transform:translateX(-50%)}
+  .aq-ticks span:first-child{transform:none}
+  .aq-ticks .aq-tick-end{right:0;transform:none}
+  .aq-advice{margin:10px 0 0;font-size:1rem;line-height:1.45}
 
   /* ---- Footer ---- */
   footer{max-width:1120px;margin:0 auto;padding:14px 16px 30px;color:var(--muted);font-size:.84rem;line-height:1.55}
@@ -333,6 +345,12 @@ var I18N = {
     aqCatVeryUnhealthy: "Très mauvais",
     aqCatHazardous: "Dangereux",
     aqTime: "Relevé",
+    aqAdviceGood: "L'air est bon — aucune précaution à prendre.",
+    aqAdviceModerate: "L'air est acceptable. Les personnes très sensibles devraient limiter les longs efforts dehors.",
+    aqAdviceUsg: "Les enfants, les personnes âgées et les asthmatiques devraient limiter les efforts dehors.",
+    aqAdviceUnhealthy: "L'air est mauvais pour tout le monde — limitez les efforts prolongés dehors.",
+    aqAdviceVeryUnhealthy: "Évitez les efforts dehors et gardez les fenêtres fermées si possible.",
+    aqAdviceHazardous: "Air dangereux — restez à l'intérieur autant que possible.",
     reportTitle: "Signaler un embouteillage",
     reportNote: "Sur ce site public, votre signalement reste sur votre appareil (il n'est pas partagé avec les autres visiteurs). Le signalement partagé en direct se fait dans l'application Kinshasa Traffic Board.",
     reportArtery: "Artère",
@@ -389,6 +407,12 @@ var I18N = {
     aqCatVeryUnhealthy: "Very unhealthy",
     aqCatHazardous: "Hazardous",
     aqTime: "Reading",
+    aqAdviceGood: "The air is good — no precautions needed.",
+    aqAdviceModerate: "The air is acceptable. Very sensitive people should limit long efforts outdoors.",
+    aqAdviceUsg: "Children, older adults and people with asthma should limit efforts outdoors.",
+    aqAdviceUnhealthy: "The air is unhealthy for everyone — limit prolonged efforts outdoors.",
+    aqAdviceVeryUnhealthy: "Avoid efforts outdoors and keep windows closed if possible.",
+    aqAdviceHazardous: "Hazardous air — stay indoors as much as possible.",
     reportTitle: "Report a traffic jam",
     reportNote: "On this public website, your report stays on your device (it is not shared with other visitors). Shared live reporting is in the Kinshasa Traffic Board app.",
     reportArtery: "Artery",
@@ -694,13 +718,35 @@ var aqState = 'loading';
 var aqData = null;
 function aqBand(aqi){
   if (aqi == null || isNaN(aqi)) return null;
-  if (aqi <= 50) return { key:'aqCatGood', bg:'#16a34a', fg:'#fff' };
-  if (aqi <= 100) return { key:'aqCatModerate', bg:'#f59e0b', fg:'#1c1005' };
-  if (aqi <= 150) return { key:'aqCatUsg', bg:'#ea580c', fg:'#fff' };
-  if (aqi <= 200) return { key:'aqCatUnhealthy', bg:'#dc2626', fg:'#fff' };
-  if (aqi <= 300) return { key:'aqCatVeryUnhealthy', bg:'#7e22ce', fg:'#fff' };
-  return { key:'aqCatHazardous', bg:'#7f1d1d', fg:'#fff' };
+  if (aqi <= 50) return { key:'aqCatGood', advice:'aqAdviceGood', bg:'#16a34a', txt:'#16a34a' };
+  if (aqi <= 100) return { key:'aqCatModerate', advice:'aqAdviceModerate', bg:'#f59e0b', txt:'#b45309' };
+  if (aqi <= 150) return { key:'aqCatUsg', advice:'aqAdviceUsg', bg:'#ea580c', txt:'#ea580c' };
+  if (aqi <= 200) return { key:'aqCatUnhealthy', advice:'aqAdviceUnhealthy', bg:'#dc2626', txt:'#dc2626' };
+  if (aqi <= 300) return { key:'aqCatVeryUnhealthy', advice:'aqAdviceVeryUnhealthy', bg:'#7e22ce', txt:'#7e22ce' };
+  return { key:'aqCatHazardous', advice:'aqAdviceHazardous', bg:'#7f1d1d', txt:'#7f1d1d' };
 }
+/* Gauge geometry: AQI 0–300 maps onto the first 96% of the bar (six EPA
+   segments: 16/16/16/16/32%), the last 4% is the maroon 300+ segment.
+   The marker position is clamped so it never leaves the bar. */
+function aqMarkerPct(aqi){
+  if (aqi == null || isNaN(aqi)) return null;
+  if (aqi > 300) return 98;
+  var p = (Math.max(0, aqi) / 300) * 96;
+  p = Math.min(98, Math.max(1.5, p));
+  return Math.round(p * 10) / 10;
+}
+var AQ_BAR_HTML =
+  '<div class="aq-bar" aria-hidden="true">' +
+  '<i style="width:16%;background:#00e400"></i>' +
+  '<i style="width:16%;background:#ffff00"></i>' +
+  '<i style="width:16%;background:#ff7e00"></i>' +
+  '<i style="width:16%;background:#ff0000"></i>' +
+  '<i style="width:32%;background:#8f3f97"></i>' +
+  '<i style="width:4%;background:#7e0023"></i></div>' +
+  '<div class="aq-ticks" aria-hidden="true"><span style="left:0">0</span>' +
+  '<span style="left:16%">50</span><span style="left:32%">100</span>' +
+  '<span style="left:48%">150</span><span style="left:64%">200</span>' +
+  '<span class="aq-tick-end">300+</span></div>';
 function fmtNum(v){
   if (v == null || isNaN(v)) return '—';
   var s = String(Math.round(v * 10) / 10);
@@ -713,18 +759,25 @@ function renderAirQuality(){
     body.innerHTML = '<p class="note">' + t('aqLoading') + '</p>';
     return;
   }
-  if (aqState !== 'ok' || !aqData){
+  var band = (aqState === 'ok' && aqData) ? aqBand(aqData.us_aqi) : null;
+  if (!band){
     body.innerHTML = '<p class="note">' + t('aqError') + '</p>';
     return;
   }
-  var band = aqBand(aqData.us_aqi);
-  var badge = band ? '<span class="aq-badge" style="background:' + band.bg + ';color:' + band.fg + '">' + t(band.key) + '</span>' : '';
+  var aqi = Math.round(aqData.us_aqi);
+  var pct = aqMarkerPct(aqData.us_aqi);
   var hhmm = (aqData.time && aqData.time.length >= 16) ? aqData.time.slice(11, 16) : '';
+  var meta = 'PM2.5 : ' + fmtNum(aqData.pm2_5) + ' µg/m³ · PM10 : ' + fmtNum(aqData.pm10) + ' µg/m³';
+  if (hhmm) meta = '🕐 ' + t('aqTime') + ' : ' + hhmm + ' · ' + meta;
   body.innerHTML =
-    '<div class="aq-main"><span class="wx-big">' + (aqData.us_aqi == null ? '—' : Math.round(aqData.us_aqi)) + '</span>' + badge + '</div>' +
-    '<div class="note">' + t('aqLabel') + '</div>' +
-    '<div style="margin-top:6px">PM2.5 : ' + fmtNum(aqData.pm2_5) + ' µg/m³ · PM10 : ' + fmtNum(aqData.pm10) + ' µg/m³</div>' +
-    (hhmm ? '<div class="note" style="margin-top:4px">🕐 ' + t('aqTime') + ' : ' + hhmm + '</div>' : '');
+    '<div class="aq-head"><span class="aq-cat" style="color:' + band.txt + '">' + t(band.key) + '</span>' +
+    '<span class="aq-aqi-small">AQI ' + aqi + '</span></div>' +
+    '<div class="aq-gauge" role="img" aria-label="' + t('aqLabel') + ' : ' + aqi + ' — ' + t(band.key) + '">' +
+    '<div class="aq-marker" style="left:' + pct + '%"><span class="aq-caret"></span>' +
+    '<span class="aq-dot" style="background:' + band.bg + '"></span></div>' +
+    AQ_BAR_HTML + '</div>' +
+    '<p class="aq-advice">' + t(band.advice) + '</p>' +
+    '<div class="note" style="margin-top:8px">' + meta + '</div>';
 }
 function loadAirQuality(){
   var url = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=' + BOARD.city.lat +
