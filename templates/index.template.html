@@ -91,6 +91,11 @@
   .a11y-btn:hover{background:rgba(255,255,255,.22)}
   .a11y-btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
   @media(max-width:560px){.a11y-btn-word{display:none}.a11y-btn{padding:6px 10px}}
+  /* ---- Ko-fi support button (header pill, same weight as the a11y pill) ---- */
+  .kofi-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);color:#fff;border-radius:999px;padding:6px 13px;font:inherit;font-size:.85rem;font-weight:700;text-decoration:none;cursor:pointer;transition:background .15s ease}
+  .kofi-btn:hover{background:rgba(255,255,255,.22)}
+  .kofi-btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+  @media(max-width:560px){.kofi-btn-word{display:none}.kofi-btn{padding:6px 10px}}
   .a11y-panel{position:absolute;top:calc(100% + 8px);right:0;min-width:246px;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 36px -10px rgba(15,28,46,.45);padding:12px 15px 8px;z-index:1400;text-align:left}
   .a11y-title{margin:0 0 4px;font-size:.95rem;font-weight:800}
   .a11y-row{display:flex;align-items:center;gap:9px;font-size:.92rem;font-weight:600;margin:0;padding:8px 0;cursor:pointer}
@@ -292,6 +297,9 @@
         <button type="button" id="btn-fr">FR</button>
         <button type="button" id="btn-en">EN</button>
       </div>
+      <a class="kofi-btn" id="kofi-btn" href="https://ko-fi.com/kinshasabouge" target="_blank" rel="noopener noreferrer" aria-label="Soutenir le projet">
+        <span aria-hidden="true">❤️</span> <span class="kofi-btn-word" data-i18n="supportButton">Soutenir le projet</span>
+      </a>
       <div class="a11y-wrap" id="a11y-wrap">
         <button type="button" id="a11y-btn" class="a11y-btn" aria-label="Accessibilité" aria-haspopup="true" aria-expanded="false" aria-controls="a11y-panel">
           <span aria-hidden="true">♿</span> <span class="a11y-btn-word" data-i18n="a11yButton">Accessibilité</span>
@@ -527,6 +535,7 @@ var I18N = {
     a11yText: "Texte plus grand",
     a11yContrast: "Contraste élevé",
     a11yMotion: "Réduire les animations",
+    supportButton: "Soutenir le projet",
     status: { active:"En cours", stopped:"À l'arrêt", stalled:"Presque à l'arrêt", progressing:"En progression", degraded:"Dégradé" }
   },
   en: {
@@ -615,6 +624,7 @@ var I18N = {
     a11yText: "Larger text",
     a11yContrast: "High contrast",
     a11yMotion: "Reduce motion",
+    supportButton: "Support this project",
     status: { active:"Active", stopped:"Stopped", stalled:"Nearly stopped", progressing:"Progressing", degraded:"Degraded" }
   }
 };
@@ -1706,6 +1716,8 @@ function applyA11y(){
 function applyA11yLabels(){
   var btn = document.getElementById('a11y-btn');
   if (btn) btn.setAttribute('aria-label', t('a11yButton'));
+  var kofi = document.getElementById('kofi-btn');
+  if (kofi) kofi.setAttribute('aria-label', t('supportButton'));
 }
 var a11yOpen = false;
 function setA11yPanel(open){
