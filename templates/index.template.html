@@ -117,6 +117,49 @@
     animation:none !important;transition:none !important;
   }
 
+  /* ---- Scheduled dark mode (18:30 → 04:45, Africa/Kinshasa) ----
+     JS toggles a .dark class on <html>/<body> on the Kinshasa
+     schedule (see applyTheme below); the palette flips through the
+     same CSS variables the design already reads, exactly like the
+     high-contrast mode above. The Plan basemap swaps to OpenFreeMap's
+     dark style in step, so only the DOM chrome needs overrides:
+     every element painted with a hard-coded light colour gets a dark
+     counterpart here. Level colours are brightened one step so the
+     dots, pills, badges and gauge labels stay vivid on dark. */
+  body.dark{
+    --ink:#e9eff7; --muted:#9db0c6; --bg:#0a1120; --card:#141f33;
+    --brand:#15a37e; --brand-2:#3ea8dd;
+    --green:#22c55e; --amber:#fbbf24; --orange:#f97316; --red:#ef4444;
+    --line:#2c3e59;
+    --shadow:0 1px 2px rgba(0,0,0,.45),0 14px 34px -14px rgba(0,0,0,.7);
+  }
+  body.dark #map{background:#0c1322}
+  body.dark .hour-control{background:#101c31}
+  body.dark .honest{background:#33290f;border-color:#7a5c14}
+  body.dark .preview-chip{background:#33290f;border-color:#a97e14;color:#fcd34d}
+  body.dark .live-badge{background:#38141c;border-color:#8c2f3d;color:#fda4af}
+  body.dark input,body.dark select,body.dark textarea{background:#0d1830}
+  body.dark .ktb-layers,body.dark .ktb-layers-panel{background:var(--card);color:var(--ink)}
+  body.dark .ktb-airport-chip{background:var(--card)}
+  body.dark .maplibregl-popup-content{background:#1a2742;color:var(--ink)}
+  body.dark .maplibregl-popup-anchor-bottom .maplibregl-popup-tip,
+  body.dark .maplibregl-popup-anchor-bottom-left .maplibregl-popup-tip,
+  body.dark .maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip{border-top-color:#1a2742}
+  body.dark .maplibregl-popup-anchor-top .maplibregl-popup-tip,
+  body.dark .maplibregl-popup-anchor-top-left .maplibregl-popup-tip,
+  body.dark .maplibregl-popup-anchor-top-right .maplibregl-popup-tip{border-bottom-color:#1a2742}
+  body.dark .maplibregl-popup-anchor-left .maplibregl-popup-tip{border-right-color:#1a2742}
+  body.dark .maplibregl-popup-anchor-right .maplibregl-popup-tip{border-left-color:#1a2742}
+  body.dark .maplibregl-ctrl-attribution{background:rgba(10,17,32,.78) !important;color:var(--muted)}
+  /* Dark + high contrast together: a white-on-black palette with
+     strong lines — the visitor's explicit choice beats plain dark. */
+  body.dark.a11y-contrast{
+    --ink:#ffffff; --muted:#c3d2e4; --line:#8fa6c4; --bg:#000000; --card:#0a0f18;
+    --brand:#2ee6a8; --brand-2:#6fd3ff;
+    --green:#4ade80; --amber:#fcd34d; --orange:#fda04d; --red:#ff6b62;
+  }
+  body.dark.a11y-contrast :focus-visible{outline-color:#fff}
+
   /* ---- Layout & cards ---- */
   main{max-width:1120px;margin:0 auto;padding:18px 16px 8px}
   .tagline{margin:0 0 16px;color:var(--muted);font-size:1rem;line-height:1.5;max-width:780px}
@@ -536,8 +579,18 @@ var I18N = {
   }
 };
 
-var lang = localStorage.getItem(LANG_KEY) || 'fr';
+/* Language: EVERY visit starts in French (Pat's rule). The EN toggle
+   switches the page for the rest of the visit only: the choice is
+   kept in sessionStorage (survives in-tab reloads, dies with the
+   tab), never in localStorage. A stale ktb-lang entry left in
+   localStorage by the old behaviour is cleared and ignored. */
+try { localStorage.removeItem(LANG_KEY); } catch(e){}
+var lang = 'fr';
+try { lang = sessionStorage.getItem(LANG_KEY) || 'fr'; } catch(e){}
 if (lang !== 'fr' && lang !== 'en') lang = 'fr';
+function saveLang(){
+  try { sessionStorage.setItem(LANG_KEY, lang); } catch(e){}
+}
 function t(key){ return I18N[lang][key] || key; }
 
 var COLORS = { fluid:'#16a34a', slow:'#f59e0b', heavy:'#ea580c', blocked:'#dc2626' };
@@ -654,8 +707,55 @@ function updateClock(){
   } catch(e){ el.textContent = new Date().toLocaleTimeString(); }
 }
 
+/* ---- Scheduled dark mode (Pat's rule: dark 18:30 → 04:45) ----
+   The board dims to dark mode from 18:30 to 04:45 Kinshasa time and
+   is light the rest of the day. The clock is the same Africa/Kinshasa
+   Intl computation as the header clock above — no second time
+   source. A ?theme=dark / ?theme=light URL parameter overrides the
+   schedule for this page view only (nothing is persisted). */
+var THEME_OVERRIDE = null;
+try {
+  var themeParam = new URLSearchParams(window.location.search).get('theme');
+  if (themeParam === 'dark' || themeParam === 'light') THEME_OVERRIDE = themeParam;
+} catch(e){}
+var DARK_START_MIN = 18 * 60 + 30;   /* 18:30 */
+var DARK_END_MIN = 4 * 60 + 45;      /* 04:45 */
+function kinshasaMinutesNow(){
+  try {
+    var parts = new Intl.DateTimeFormat('en-GB',{timeZone:'Africa/Kinshasa',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());
+    var h = null, m = null;
+    for (var i = 0; i < parts.length; i++){
+      if (parts[i].type === 'hour') h = parseInt(parts[i].value, 10);
+      if (parts[i].type === 'minute') m = parseInt(parts[i].value, 10);
+    }
+    if (h == null || m == null || isNaN(h) || isNaN(m)) return null;
+    if (h === 24) h = 0;   /* some engines report midnight as 24 */
+    return h * 60 + m;
+  } catch(e){ return null; }
+}
+function scheduledDark(){
+  var mins = kinshasaMinutesNow();
+  if (mins == null){
+    /* Kinshasa is UTC+1 all year (no DST): fixed-offset fallback. */
+    var d = new Date(Date.now() + 3600 * 1000);
+    mins = d.getUTCHours() * 60 + d.getUTCMinutes();
+  }
+  return mins >= DARK_START_MIN || mins < DARK_END_MIN;
+}
+function themeIsDark(){
+  if (THEME_OVERRIDE === 'dark') return true;
+  if (THEME_OVERRIDE === 'light') return false;
+  return scheduledDark();
+}
+var darkActive = themeIsDark();
+/* Which theme the map's current Plan style matches (the style is
+   swapped only on an actual schedule flip, never on first load). */
+var mapStyleDark = darkActive;
+
 /* ---- Map (MapLibre GL + OpenFreeMap vector tiles — no key, no account) ---- */
-var MAP_STYLE_URL = 'https://tiles.openfreemap.org/styles/liberty';
+var MAP_STYLE_LIGHT = 'https://tiles.openfreemap.org/styles/liberty';
+var MAP_STYLE_DARK = 'https://tiles.openfreemap.org/styles/dark';
+var MAP_STYLE_URL = darkActive ? MAP_STYLE_DARK : MAP_STYLE_LIGHT;
 var baseMode = 'plan';      /* 'plan' = OpenFreeMap vector style | 'sat' = Esri raster */
 var cloudsOn = false;
 var flightsOn = false;      /* live flight layer (enableFlights/disableFlights below) */
@@ -781,17 +881,25 @@ function buildLayersControl(){
   layersEls.flights.input.checked = flightsOn;
 }
 
-map.on('load', function(){
-  styleLayerIds = map.getStyle().layers.map(function(l){ return l.id; });
-  map.addSource('ktb-esri-src', { type: 'raster', tiles: [ESRI_TILES], tileSize: 256, maxzoom: 18, attribution: 'Esri, Maxar, Earthstar Geographics' });
-  map.addSource('ktb-gibs-src', { type: 'raster', tiles: [GIBS_TILES], tileSize: 256, maxzoom: 9, attribution: 'NASA GIBS' });
-  map.addSource('arteries', { type: 'geojson', data: arteriesGeoJSON() });
-  map.addLayer({ id: 'ktb-esri', type: 'raster', source: 'ktb-esri-src', layout: { visibility: 'none' } });
-  map.addLayer({ id: 'ktb-gibs', type: 'raster', source: 'ktb-gibs-src', paint: { 'raster-opacity': 0.65 }, layout: { visibility: 'none' } });
-  map.addLayer({ id: 'arteries-hit', type: 'line', source: 'arteries',
+/* (Re)installs everything the page adds on top of the basemap style:
+   the Esri + GIBS raster layers and the arteries source/layers. Runs
+   on the first style load and again after every style swap (a swap
+   drops all custom sources/layers) — every step is guarded, so it is
+   safe to run more than once. The DOM markers (roadworks, reports,
+   flights) are not style-bound and survive a swap untouched; the
+   draw calls below simply re-render them. */
+function setupStyleLayers(){
+  var style = map.getStyle();
+  styleLayerIds = (style && style.layers) ? style.layers.map(function(l){ return l.id; }) : [];
+  if (!map.getSource('ktb-esri-src')) map.addSource('ktb-esri-src', { type: 'raster', tiles: [ESRI_TILES], tileSize: 256, maxzoom: 18, attribution: 'Esri, Maxar, Earthstar Geographics' });
+  if (!map.getSource('ktb-gibs-src')) map.addSource('ktb-gibs-src', { type: 'raster', tiles: [GIBS_TILES], tileSize: 256, maxzoom: 9, attribution: 'NASA GIBS' });
+  if (!map.getSource('arteries')) map.addSource('arteries', { type: 'geojson', data: arteriesGeoJSON() });
+  if (!map.getLayer('ktb-esri')) map.addLayer({ id: 'ktb-esri', type: 'raster', source: 'ktb-esri-src', layout: { visibility: 'none' } });
+  if (!map.getLayer('ktb-gibs')) map.addLayer({ id: 'ktb-gibs', type: 'raster', source: 'ktb-gibs-src', paint: { 'raster-opacity': 0.65 }, layout: { visibility: 'none' } });
+  if (!map.getLayer('arteries-hit')) map.addLayer({ id: 'arteries-hit', type: 'line', source: 'arteries',
     layout: { 'line-join': 'round', 'line-cap': 'round' },
     paint: { 'line-width': 16, 'line-opacity': 0 } });
-  map.addLayer({ id: 'arteries-line', type: 'line', source: 'arteries',
+  if (!map.getLayer('arteries-line')) map.addLayer({ id: 'arteries-line', type: 'line', source: 'arteries',
     layout: { 'line-join': 'round', 'line-cap': 'round' },
     paint: { 'line-width': 5, 'line-opacity': 0.85,
       'line-color': ['match', ['get', 'level'],
@@ -803,7 +911,27 @@ map.on('load', function(){
   drawArteries();
   drawWorks();
   renderReports();
-});
+}
+map.on('load', setupStyleLayers);
+
+/* Scheduled dark mode: toggles the .dark class (CSS palette above)
+   and, when the schedule actually flips while the page is open, swaps
+   the Plan basemap between OpenFreeMap's liberty (light) and dark
+   styles. The satellite (Esri) layer rides on top of the Plan style
+   and is left exactly as it is. Called at init, then every 60 s. */
+function applyTheme(){
+  var dark = themeIsDark();
+  if (document.body) document.body.classList.toggle('dark', dark);
+  if (document.documentElement) document.documentElement.classList.toggle('dark', dark);
+  var flipped = dark !== darkActive;
+  darkActive = dark;
+  if (dark !== mapStyleDark && mapReady){
+    mapStyleDark = dark;
+    map.setStyle(dark ? MAP_STYLE_DARK : MAP_STYLE_LIGHT);
+    map.once('style.load', setupStyleLayers);
+  }
+  if (flipped) renderAirQuality();
+}
 map.on('click', function(){
   if (layersEls.container) layersEls.container.classList.remove('open');
 });
@@ -890,6 +1018,9 @@ function aqBand(aqi){
   if (aqi <= 300) return { key:'aqCatVeryUnhealthy', advice:'aqAdviceVeryUnhealthy', bg:'#7e22ce', txt:'#7e22ce' };
   return { key:'aqCatHazardous', advice:'aqAdviceHazardous', bg:'#7f1d1d', txt:'#7f1d1d' };
 }
+/* In scheduled dark mode the band's text colour swaps to a brighter
+   variant (the gauge bar + marker keep the standard EPA colours). */
+var AQ_TXT_DARK = { aqCatGood:'#4ade80', aqCatModerate:'#fbbf24', aqCatUsg:'#fb923c', aqCatUnhealthy:'#f87171', aqCatVeryUnhealthy:'#c084fc', aqCatHazardous:'#fca5a5' };
 /* Gauge geometry: AQI 0–300 maps onto the first 96% of the bar (six EPA
    segments: 16/16/16/16/32%), the last 4% is the maroon 300+ segment.
    The marker position is clamped so it never leaves the bar. */
@@ -925,6 +1056,7 @@ function renderAirQuality(){
     return;
   }
   var band = (aqState === 'ok' && aqData) ? aqBand(aqData.us_aqi) : null;
+  if (band && darkActive && AQ_TXT_DARK[band.key]) band.txt = AQ_TXT_DARK[band.key];
   if (!band){
     body.innerHTML = '<p class="note">' + t('aqError') + '</p>';
     return;
@@ -1480,8 +1612,8 @@ function applyLang(){
   document.getElementById('btn-en').classList.toggle('active', lang === 'en');
   renderLists(); drawArteries(); drawWorks(); renderReports(); paintGcVisits(); buildLayersControl(); updateSliderUI(); renderAirQuality(); updateLiveUI(); updateFlightsUI(); refreshFlightLabels(); applyA11yLabels();
 }
-document.getElementById('btn-fr').addEventListener('click', function(){ lang = 'fr'; localStorage.setItem(LANG_KEY, lang); applyLang(); });
-document.getElementById('btn-en').addEventListener('click', function(){ lang = 'en'; localStorage.setItem(LANG_KEY, lang); applyLang(); });
+document.getElementById('btn-fr').addEventListener('click', function(){ lang = 'fr'; saveLang(); applyLang(); });
+document.getElementById('btn-en').addEventListener('click', function(){ lang = 'en'; saveLang(); applyLang(); });
 
 /* ---- GoatCounter visit count (footer) ---- */
 var gcCount = null;
@@ -1501,12 +1633,14 @@ fetch('https://kinshasabouge.goatcounter.com/counter/TOTAL.json')
 
 applyA11y();
 applyLang();
+applyTheme();
 fetchSharedReports();
 setInterval(fetchSharedReports, 2 * 60 * 1000);
 loadWeather();
 loadAirQuality();
 updateClock();
 setInterval(updateClock, 1000);
+setInterval(applyTheme, 60 * 1000);
 setInterval(function(){ updateLiveUI(); drawArteries(); if (previewHour == null) { renderArteriesList(); updateSliderUI(); } }, 15 * 60 * 1000);
 setInterval(function(){ if (previewHour == null) updateSliderUI(); }, 60 * 1000);
 })();
