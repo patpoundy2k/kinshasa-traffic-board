@@ -92,6 +92,7 @@
   .b-active{background:var(--green)} .b-stopped{background:var(--red)}
   .b-stalled{background:var(--orange)} .b-progressing{background:var(--brand2)} .b-degraded{background:#8a6d1f}
   .pill{display:inline-block;font-size:.75rem;font-weight:700;border-radius:999px;padding:2px 9px;color:#fff}
+  .p-river{background:var(--brand2)}
   label{display:block;font-size:.86rem;font-weight:600;margin:10px 0 4px}
   input,select,textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;font:inherit;background:#fff}
   button.cta{margin-top:12px;width:100%;background:var(--brand1);color:#fff;border:none;border-radius:10px;padding:11px;font-weight:700;cursor:pointer}
@@ -181,6 +182,14 @@
 {{ROADWORKS_LIST_HTML}}
         </ul>
       </section>
+
+      <section class="card">
+        <h2>🌊 <span data-i18n="riverTitle">Fleuve Congo — navigation et traversée</span></h2>
+        <p class="honest" data-i18n="riverNote">Régime du fleuve : hautes eaux vers décembre et avril–mai, basses eaux (étiage) en juillet–août. La traversée Kinshasa–Brazzaville part du Beach Ngobila. Il n'existe aucun flux en direct des niveaux du fleuve ni des bateaux : ces informations viennent de la presse et de rapports officiels, comme les chantiers.</p>
+        <ul class="clean" id="river-list">
+{{RIVER_LIST_HTML}}
+        </ul>
+      </section>
     </div>
   </div>
 </main>
@@ -223,6 +232,8 @@ var I18N = {
     arteriesTitle: "Les 10 grandes artères",
     worksTitle: "Chantiers et points signalés",
     worksNote: "Informations tirées de la presse congolaise, avec source et date — à confirmer sur place.",
+    riverTitle: "Fleuve Congo — navigation et traversée",
+    riverNote: "Régime du fleuve : hautes eaux vers décembre et avril–mai, basses eaux (étiage) en juillet–août. La traversée Kinshasa–Brazzaville part du Beach Ngobila. Il n'existe aucun flux en direct des niveaux du fleuve ni des bateaux : ces informations viennent de la presse et de rapports officiels, comme les chantiers.",
     lvlFluid: "Fluide", lvlSlow: "Ralenti", lvlHeavy: "Dense", lvlBlocked: "Bloqué",
     typicalPrefix: "Habituel à cette heure",
     sourceLabel: "Source",
@@ -261,6 +272,8 @@ var I18N = {
     arteriesTitle: "The 10 main arteries",
     worksTitle: "Roadworks and reported trouble spots",
     worksNote: "Information from the Congolese press, with source and date — confirm on site.",
+    riverTitle: "Congo River — navigation & crossing",
+    riverNote: "River regime: high water peaks around December and April–May, low water (étiage) in July–August. The Kinshasa–Brazzaville crossing leaves from Beach Ngobila. No live feed of river levels or vessels exists: these items come from press and official reports, like the roadworks.",
     lvlFluid: "Fluid", lvlSlow: "Slow", lvlHeavy: "Heavy", lvlBlocked: "Blocked",
     typicalPrefix: "Typical at this hour",
     sourceLabel: "Source",
@@ -410,6 +423,23 @@ function renderLists(){
     li.querySelector('span:not(.badge)').textContent = (lang === 'fr' ? rw.detail_fr : rw.detail_en);
     li.querySelector('em').textContent = t('sourceLabel') + ' : ' + rw.source + ' — ' + rw.date + ' (' + t('reportedLabel') + ')';
     wl.appendChild(li);
+  });
+  var rl = document.getElementById('river-list');
+  rl.innerHTML = '';
+  (BOARD.river || []).forEach(function(rv){
+    var li = document.createElement('li');
+    li.innerHTML = '<span class="pill p-river"></span> <strong></strong><br><span></span><br><em></em>';
+    li.querySelector('.pill').textContent = (lang === 'fr' ? rv.tag_fr : rv.tag_en);
+    li.querySelector('strong').textContent = (lang === 'fr' ? rv.title_fr : rv.title_en);
+    li.querySelector('span:not(.pill)').textContent = (lang === 'fr' ? rv.detail_fr : rv.detail_en);
+    var em = li.querySelector('em');
+    em.textContent = t('sourceLabel') + ' : ';
+    var a = document.createElement('a');
+    a.href = rv.source_url; a.target = '_blank'; a.rel = 'noopener';
+    a.textContent = rv.source;
+    em.appendChild(a);
+    em.appendChild(document.createTextNode(' — ' + rv.date + ' (' + t('reportedLabel') + ')'));
+    rl.appendChild(li);
   });
   var sel = document.getElementById('rep-artery');
   sel.innerHTML = '';
