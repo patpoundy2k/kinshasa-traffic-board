@@ -435,6 +435,22 @@ def load_previous_live():
         return None
 
 
+def load_previous_flights_board():
+    """The "flightsBoard" block in board.json is written by
+    scripts/flights_refresh.py (AeroDataBox FIH departures/arrivals),
+    never by this generator — carry it over verbatim, exactly like
+    the "live" block, so no rebuild (daily, live sweep or flights
+    fetch) can clobber the airport board."""
+    if not DATA_FILE.exists():
+        return None
+    try:
+        old = json.loads(DATA_FILE.read_text(encoding="utf-8"))
+        flights = old.get("flightsBoard")
+        return flights if isinstance(flights, dict) else None
+    except Exception:  # noqa: BLE001
+        return None
+
+
 def arteries_list_html(features):
     """Baked-in (French, default language) artery list for SEO/no-JS."""
     items = []
@@ -522,6 +538,11 @@ def main():
     if previous_live is not None:
         board["live"] = previous_live
         print("Preserved the existing live block from scripts/live_refresh.py.")
+
+    previous_flights = load_previous_flights_board()
+    if previous_flights is not None:
+        board["flightsBoard"] = previous_flights
+        print("Preserved the existing flightsBoard block from scripts/flights_refresh.py.")
 
     DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
     DATA_FILE.write_text(
