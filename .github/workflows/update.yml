@@ -50,9 +50,10 @@ jobs:
 
       - name: Stage the public site files
         run: |
-          mkdir -p _site/data
+          mkdir -p _site/data _site/images
           cp index.html robots.txt sitemap.xml _site/
           cp data/board.json _site/data/
+          cp -r images/. _site/images/
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
