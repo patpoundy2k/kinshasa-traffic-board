@@ -94,6 +94,22 @@
 </header>
 
 <main>
+    <section class="card" id="map-card">
+      <h2>🗺️ <span data-i18n="mapTitle">Carte des grandes artères</span></h2>
+      <div id="map" aria-label="Map of Kinshasa main arteries"></div>
+      <div class="legend">
+        <span><span class="dot lvl-fluid"></span><span data-i18n="lvlFluid">Fluide</span></span>
+        <span><span class="dot lvl-slow"></span><span data-i18n="lvlSlow">Ralenti</span></span>
+        <span><span class="dot lvl-heavy"></span><span data-i18n="lvlHeavy">Dense</span></span>
+        <span><span class="dot lvl-blocked"></span><span data-i18n="lvlBlocked">Bloqué</span></span>
+        <span>🚧 <span data-i18n="legendWorks">Chantier signalé</span></span>
+      </div>
+      <label class="toggle-row"><input type="checkbox" id="towers-toggle" style="width:auto"> <span data-i18n="towersToggle">Afficher les antennes relais (téléphonie mobile)</span></label>
+      <p class="note" id="towers-status"></p>
+      <p class="honest" style="margin-top:10px" data-i18n="typicalNote">Couleurs = congestion HABITUELLE selon l'heure à Kinshasa (modèle par heure de la journée), pas des données en temps réel : il n'existe pas de flux de trafic en direct gratuit pour Kinshasa.</p>
+    </section>
+
+
   <div class="grid">
     <div>
       <section class="card" id="weather-card">
@@ -125,21 +141,6 @@
     </div>
 
     <div>
-      <section class="card">
-        <h2>🗺️ <span data-i18n="mapTitle">Carte des grandes artères</span></h2>
-        <div id="map" aria-label="Map of Kinshasa main arteries"></div>
-        <div class="legend">
-          <span><span class="dot lvl-fluid"></span><span data-i18n="lvlFluid">Fluide</span></span>
-          <span><span class="dot lvl-slow"></span><span data-i18n="lvlSlow">Ralenti</span></span>
-          <span><span class="dot lvl-heavy"></span><span data-i18n="lvlHeavy">Dense</span></span>
-          <span><span class="dot lvl-blocked"></span><span data-i18n="lvlBlocked">Bloqué</span></span>
-          <span>🚧 <span data-i18n="legendWorks">Chantier signalé</span></span>
-        </div>
-        <label class="toggle-row"><input type="checkbox" id="towers-toggle" style="width:auto"> <span data-i18n="towersToggle">Afficher les antennes relais (téléphonie mobile)</span></label>
-        <p class="note" id="towers-status"></p>
-        <p class="honest" style="margin-top:10px" data-i18n="typicalNote">Couleurs = congestion HABITUELLE selon l'heure à Kinshasa (modèle par heure de la journée), pas des données en temps réel : il n'existe pas de flux de trafic en direct gratuit pour Kinshasa.</p>
-      </section>
-
       <section class="card">
         <h2>🛣️ <span data-i18n="arteriesTitle">Les 10 grandes artères</span></h2>
         <ul class="clean" id="arteries-list">
