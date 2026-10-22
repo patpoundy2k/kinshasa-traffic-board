@@ -20927,106 +20927,106 @@
   "towers": "Cell towers are fetched live by the page from OpenStreetMap via Overpass: community-mapped data, possibly incomplete.",
   "roadworks": "Researched from Congolese press; each item carries its source and date.",
   "river": "Researched from Congolese press and official/UN reports; each item carries its source, source URL and date. No live river-level or vessel feed exists for Kinshasa.",
-  "reports": "On this public website, reports are stored only in the visitor's own browser (localStorage). Shared live reporting is in the Kinshasa Traffic Board app."
+  "reports": "Jam reports are shared with all visitors via the kinshasa-reports Worker (Cloudflare D1, see reports-worker/) and stay visible for 24 hours; the page also keeps the visitor's own reports on-device as a fallback record."
  },
  "live": {
-  "checkedAt": "2026-10-22T17:21:19Z",
+  "checkedAt": "2026-10-22T17:47:39Z",
   "source": "Google Routes",
   "arteries": {
    "av-elengesa-bypass": {
-    "ratio": 1.23,
+    "ratio": 1.25,
     "level": "slow",
-    "mins": 34.6,
+    "mins": 35.0,
     "staticMins": 28.1
    },
    "av-huileries": {
-    "ratio": 1.71,
+    "ratio": 1.6,
     "level": "blocked",
-    "mins": 20.2,
+    "mins": 18.9,
     "staticMins": 11.8
    },
    "av-kasa-vubu": {
-    "ratio": 1.23,
-    "level": "slow",
-    "mins": 41.9,
+    "ratio": 1.27,
+    "level": "heavy",
+    "mins": 43.3,
     "staticMins": 34.0
    },
    "av-liberation": {
-    "ratio": 1.14,
+    "ratio": 1.11,
     "level": "slow",
-    "mins": 70.2,
+    "mins": 68.5,
     "staticMins": 61.8
    },
    "av-mondjiba": {
-    "ratio": 2.76,
+    "ratio": 2.72,
     "level": "blocked",
-    "mins": 28.0,
+    "mins": 27.6,
     "staticMins": 10.2
    },
    "av-nguma": {
-    "ratio": 1.73,
+    "ratio": 1.54,
     "level": "blocked",
-    "mins": 25.7,
+    "mins": 22.9,
     "staticMins": 14.9
    },
    "av-tourisme": {
-    "ratio": 1.89,
-    "level": "blocked",
-    "mins": 31.0,
+    "ratio": 1.47,
+    "level": "heavy",
+    "mins": 24.1,
     "staticMins": 16.4
    },
    "av-universite": {
-    "ratio": 1.01,
+    "ratio": 1.0,
     "level": "fluid",
-    "mins": 76.0,
+    "mins": 74.6,
     "staticMins": 74.9
    },
    "av-victoire": {
-    "ratio": 1.41,
+    "ratio": 1.37,
     "level": "heavy",
-    "mins": 23.6,
+    "mins": 23.0,
     "staticMins": 16.7
    },
    "bd-30-juin": {
-    "ratio": 1.01,
+    "ratio": 1.0,
     "level": "fluid",
-    "mins": 16.8,
+    "mins": 16.6,
     "staticMins": 16.6
    },
    "bd-lumumba": {
-    "ratio": 1.77,
+    "ratio": 1.69,
     "level": "blocked",
-    "mins": 94.4,
+    "mins": 90.2,
     "staticMins": 53.3
    },
    "bd-sendwe": {
-    "ratio": 1.25,
-    "level": "heavy",
-    "mins": 7.8,
+    "ratio": 1.08,
+    "level": "slow",
+    "mins": 6.8,
     "staticMins": 6.3
    },
    "bd-triomphal": {
-    "ratio": 1.19,
+    "ratio": 1.21,
     "level": "slow",
-    "mins": 23.7,
+    "mins": 24.2,
     "staticMins": 19.9
    },
    "bd-tshatshi": {
-    "ratio": 1.08,
-    "level": "slow",
-    "mins": 7.2,
+    "ratio": 1.02,
+    "level": "fluid",
+    "mins": 6.8,
     "staticMins": 6.6
    },
    "poids-lourds": {
-    "ratio": 1.63,
-    "level": "blocked",
-    "mins": 4.9,
+    "ratio": 1.42,
+    "level": "heavy",
+    "mins": 4.3,
     "staticMins": 3.0
    },
    "rn1-matadi": {
-    "ratio": 1.44,
+    "ratio": 1.35,
     "level": "heavy",
-    "mins": 102.0,
+    "mins": 96.0,
     "staticMins": 70.9
    }
   }
