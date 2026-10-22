@@ -56,7 +56,7 @@
   }
 }
 </script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.14.0/dist/maplibre-gl.css">
 <style>
   :root{
     --ink:#0f1c2e; --muted:#64748b; --bg:#edf1f6; --card:#ffffff;
@@ -98,9 +98,24 @@
   /* ---- Map ---- */
   #map{height:430px;border-radius:14px;z-index:0;background:#dbe7f3}
   @media(min-width:920px){#map{height:540px}}
-  .leaflet-container{font:inherit;border-radius:14px}
-  .leaflet-control-attribution{font-size:10px !important;background:rgba(255,255,255,.75) !important}
-  .leaflet-bar a{border-radius:8px !important}
+  .maplibregl-map{font:inherit;border-radius:14px}
+  .maplibregl-ctrl-attribution{font-size:10px !important;background:rgba(255,255,255,.75) !important}
+  .maplibregl-ctrl-attribution a{color:inherit}
+  .maplibregl-ctrl-group{border-radius:10px !important;box-shadow:0 1px 5px rgba(15,28,46,.25) !important;overflow:hidden}
+  .maplibregl-ctrl-group button{width:32px;height:32px}
+  .maplibregl-popup-content{font-family:inherit;font-size:.92rem;line-height:1.45;border-radius:12px;padding:12px 26px 12px 14px;box-shadow:0 6px 22px rgba(15,28,46,.25)}
+  .maplibregl-popup-close-button{font-size:17px;line-height:1;padding:3px 7px;color:var(--muted)}
+  /* Layers control (custom: radio base layers + overlay checkbox) */
+  .ktb-layers{position:relative;background:#fff;border-radius:10px;box-shadow:0 1px 5px rgba(15,28,46,.25)}
+  .ktb-layers-toggle{display:block;width:38px;height:38px;border:none;background:transparent;cursor:pointer;padding:8px;color:var(--ink)}
+  .ktb-layers-toggle svg{display:block;width:100%;height:100%}
+  .ktb-layers-panel{display:none;position:absolute;top:0;right:0;background:#fff;border-radius:10px;box-shadow:0 2px 10px rgba(15,28,46,.3);padding:9px 14px 9px 10px;min-width:195px}
+  .ktb-layers.open .ktb-layers-panel{display:block}
+  .ktb-layers.open .ktb-layers-toggle{visibility:hidden}
+  @media(hover:hover){.ktb-layers:hover .ktb-layers-panel{display:block}.ktb-layers:hover .ktb-layers-toggle{visibility:hidden}}
+  .ktb-layer-row{display:flex;align-items:center;gap:7px;font-size:.87rem;font-weight:500;margin:0;padding:3px 0;cursor:pointer;white-space:nowrap}
+  .ktb-layer-row input{width:auto;padding:0;margin:0;accent-color:var(--brand)}
+  .ktb-layers-sep{border-top:1px solid var(--line);margin:6px 0}
   .legend{display:flex;flex-wrap:wrap;gap:7px 14px;font-size:.86rem;margin-top:12px;color:var(--ink)}
   .dot{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:-1px;margin-right:5px;box-shadow:inset 0 0 0 1px rgba(15,28,46,.12)}
   .lvl-fluid{background:var(--green)} .lvl-slow{background:var(--amber)}
@@ -143,6 +158,10 @@
   button.cta{margin-top:14px;width:100%;background:linear-gradient(120deg,var(--brand),var(--brand-2));color:#fff;border:none;border-radius:12px;padding:12px;font:inherit;font-weight:700;cursor:pointer;box-shadow:0 4px 14px -4px rgba(11,94,138,.45);transition:filter .15s ease}
   button.cta:hover{filter:brightness(1.08)}
   .wx-big{font-size:2rem;font-weight:800;letter-spacing:-.01em}
+
+  /* ---- Air quality ---- */
+  .aq-main{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .aq-badge{display:inline-block;font-size:.85rem;font-weight:700;border-radius:999px;padding:4px 13px;color:#fff}
 
   /* ---- Footer ---- */
   footer{max-width:1120px;margin:0 auto;padding:14px 16px 30px;color:var(--muted);font-size:.84rem;line-height:1.55}
@@ -206,6 +225,12 @@
         <p class="note">Open-Meteo · <span data-i18n="updatedOn">Données du</span> {{GENERATED_DATE}}</p>
       </section>
 
+      <section class="card" id="air-card">
+        <h2>🌫️ <span data-i18n="aqTitle">Qualité de l'air</span></h2>
+        <div id="air-body"><p class="note" data-i18n="aqLoading">Chargement de la qualité de l'air…</p></div>
+        <p class="note" style="margin-top:8px" data-i18n="aqSource">Estimation pour Kinshasa : modèle CAMS via Open-Meteo (pas de mesure au sol en direct).</p>
+      </section>
+
       <section class="card">
         <h2>📝 <span data-i18n="reportTitle">Signaler un embouteillage</span></h2>
         <div class="honest" data-i18n="reportNote">Sur ce site public, votre signalement reste sur votre appareil (il n'est pas partagé avec les autres visiteurs). Le signalement partagé en direct se fait dans l'application Kinshasa Traffic Board.</div>
@@ -262,7 +287,7 @@
 </footer>
 
 <script id="board-data" type="application/json">{{BOARD_JSON}}</script>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/maplibre-gl@5.14.0/dist/maplibre-gl.js"></script>
 <script>
 (function(){
 "use strict";
@@ -279,6 +304,18 @@ var I18N = {
     updatedOn: "Données du",
     rainRisk: "Risque de pluie",
     floodNote: "Pluie forte possible : risque d'inondations locales et de ralentissements importants sur les artères basses.",
+    aqTitle: "Qualité de l'air",
+    aqLoading: "Chargement de la qualité de l'air…",
+    aqError: "Qualité de l'air indisponible pour le moment.",
+    aqSource: "Estimation pour Kinshasa : modèle CAMS via Open-Meteo (pas de mesure au sol en direct).",
+    aqLabel: "Indice de qualité de l'air (US)",
+    aqCatGood: "Bon",
+    aqCatModerate: "Modéré",
+    aqCatUsg: "Mauvais pour les groupes sensibles",
+    aqCatUnhealthy: "Mauvais",
+    aqCatVeryUnhealthy: "Très mauvais",
+    aqCatHazardous: "Dangereux",
+    aqTime: "Relevé",
     reportTitle: "Signaler un embouteillage",
     reportNote: "Sur ce site public, votre signalement reste sur votre appareil (il n'est pas partagé avec les autres visiteurs). Le signalement partagé en direct se fait dans l'application Kinshasa Traffic Board.",
     reportArtery: "Artère",
@@ -323,6 +360,18 @@ var I18N = {
     updatedOn: "Data as of",
     rainRisk: "Rain risk",
     floodNote: "Heavy rain possible: risk of local flooding and major slowdowns on low-lying arteries.",
+    aqTitle: "Air quality",
+    aqLoading: "Loading air quality…",
+    aqError: "Air quality unavailable right now.",
+    aqSource: "Estimate for Kinshasa: CAMS model via Open-Meteo (not a live ground measurement).",
+    aqLabel: "Air quality index (US)",
+    aqCatGood: "Good",
+    aqCatModerate: "Moderate",
+    aqCatUsg: "USG",
+    aqCatUnhealthy: "Unhealthy",
+    aqCatVeryUnhealthy: "Very unhealthy",
+    aqCatHazardous: "Hazardous",
+    aqTime: "Reading",
     reportTitle: "Report a traffic jam",
     reportNote: "On this public website, your report stays on your device (it is not shared with other visitors). Shared live reporting is in the Kinshasa Traffic Board app.",
     reportArtery: "Artery",
@@ -412,56 +461,190 @@ function updateClock(){
   } catch(e){ el.textContent = new Date().toLocaleTimeString(); }
 }
 
-/* ---- Map ---- */
-var map = L.map('map').setView([BOARD.city.lat, BOARD.city.lon], 12);
-var osmBase = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 18, attribution: '&copy; OpenStreetMap contributors'
-}).addTo(map);
-var esriBase = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-  maxZoom: 18, attribution: 'Esri, Maxar, Earthstar Geographics'
+/* ---- Map (MapLibre GL + OpenFreeMap vector tiles — no key, no account) ---- */
+var MAP_STYLE_URL = 'https://tiles.openfreemap.org/styles/liberty';
+var baseMode = 'plan';      /* 'plan' = OpenFreeMap vector style | 'sat' = Esri raster */
+var cloudsOn = false;
+var mapReady = false;
+var styleLayerIds = [];
+var coarsePointer = false;
+try { coarsePointer = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches); } catch(e){}
+
+var map = new maplibregl.Map({
+  container: 'map',
+  style: MAP_STYLE_URL,
+  center: [BOARD.city.lon, BOARD.city.lat],
+  zoom: 12,
+  maxZoom: 18,
+  dragRotate: false,
+  touchPitch: false,
+  pitchWithRotate: false,
+  /* On touch screens, one finger scrolls the page (two fingers move the
+     map) so the hero map never traps page scroll; desktop is unaffected. */
+  cooperativeGestures: coarsePointer,
+  locale: { 'CooperativeGesturesHandler.TouchHelpText': 'Utilisez deux doigts pour déplacer la carte · Use two fingers to move the map' },
+  attributionControl: false
 });
+map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-left');
+map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right');
+
 /* NASA GIBS near-live clouds: GIBS lags a few hours, so use yesterday (UTC). */
 var gibsDate = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
-var gibsLayer = L.tileLayer('https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/' + gibsDate + '/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg', {
-  maxZoom: 9, opacity: 0.65, attribution: 'NASA GIBS'
-});
-var layersControl = null;
-function buildLayersControl(){
-  if (layersControl) map.removeControl(layersControl);
-  var baseMaps = {};
-  baseMaps[t('baseStreets')] = osmBase;
-  baseMaps[t('baseSatellite')] = esriBase;
-  var overlayMaps = {};
-  overlayMaps[t('overlayClouds')] = gibsLayer;
-  layersControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
-}
-map.on('baselayerchange', function(e){
-  document.getElementById('sat-note').classList.toggle('hidden', e.layer !== esriBase);
-});
-var arteryLayers = {};
-function drawArteries(){
-  Object.keys(arteryLayers).forEach(function(id){ map.removeLayer(arteryLayers[id]); });
-  arteryLayers = {};
+var ESRI_TILES = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+var GIBS_TILES = 'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/' + gibsDate + '/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg';
+
+function arteriesGeoJSON(){
+  var fc = { type: 'FeatureCollection', features: [] };
   BOARD.arteries.features.forEach(function(f){
-    var lvl = typicalLevel(f.properties);
-    var layer = L.geoJSON(f, { style: { color: COLORS[lvl], weight: 5, opacity: 0.85 } });
-    layer.bindPopup('<strong>' + f.properties.name + '</strong><br>' +
-      (lang === 'fr' ? f.properties.zones_fr : f.properties.zones_en) + '<br>' +
-      typicalLabel() + ' : ' + t(lvlKey(lvl)));
-    layer.addTo(map);
-    arteryLayers[f.properties.id] = layer;
+    var props = {};
+    Object.keys(f.properties).forEach(function(k){ if (k !== 'centre') props[k] = f.properties[k]; });
+    props.level = typicalLevel(f.properties);
+    fc.features.push({ type: 'Feature', properties: props, geometry: f.geometry });
   });
+  return fc;
 }
-var worksLayer = L.layerGroup().addTo(map);
+function applyBaseState(){
+  var sat = baseMode === 'sat';
+  if (mapReady) {
+    styleLayerIds.forEach(function(id){
+      if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', sat ? 'none' : 'visible');
+    });
+    if (map.getLayer('ktb-esri')) map.setLayoutProperty('ktb-esri', 'visibility', sat ? 'visible' : 'none');
+  }
+  document.getElementById('sat-note').classList.toggle('hidden', !sat);
+}
+function applyCloudsState(){
+  if (!mapReady) return;
+  if (map.getLayer('ktb-gibs')) map.setLayoutProperty('ktb-gibs', 'visibility', cloudsOn ? 'visible' : 'none');
+}
+function setBase(mode){
+  baseMode = mode;
+  applyBaseState();
+  buildLayersControl();
+}
+
+/* Layers control (custom): radio base layers + a clouds checkbox, with
+   labels and checked state rebuilt on every language switch via
+   buildLayersControl(). */
+var layersEls = {};
+var LAYERS_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 3 21 8l-9 5-9-5 9-5z"/><path d="M3 12.5l9 5 9-5"/><path d="M3 17l9 5 9-5" opacity=".45"/></svg>';
+var layersControl = {
+  onAdd: function(){
+    var container = document.createElement('div');
+    container.className = 'ktb-layers maplibregl-ctrl';
+    var toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'ktb-layers-toggle';
+    toggle.setAttribute('aria-label', 'Layers');
+    toggle.innerHTML = LAYERS_ICON;
+    var panel = document.createElement('div');
+    panel.className = 'ktb-layers-panel';
+    function makeRow(inputType, name, value){
+      var lab = document.createElement('label');
+      lab.className = 'ktb-layer-row';
+      var input = document.createElement('input');
+      input.type = inputType;
+      if (name) input.name = name;
+      if (value) input.value = value;
+      var span = document.createElement('span');
+      lab.appendChild(input); lab.appendChild(span);
+      panel.appendChild(lab);
+      return { input: input, span: span };
+    }
+    var plan = makeRow('radio', 'ktb-base', 'plan');
+    var sat = makeRow('radio', 'ktb-base', 'sat');
+    var sep = document.createElement('div');
+    sep.className = 'ktb-layers-sep';
+    panel.appendChild(sep);
+    var clouds = makeRow('checkbox', null, null);
+    layersEls = { container: container, plan: plan, sat: sat, clouds: clouds };
+    toggle.addEventListener('click', function(ev){
+      ev.stopPropagation();
+      container.classList.toggle('open');
+    });
+    plan.input.addEventListener('change', function(){ if (this.checked) setBase('plan'); });
+    sat.input.addEventListener('change', function(){ if (this.checked) setBase('sat'); });
+    clouds.input.addEventListener('change', function(){ cloudsOn = this.checked; applyCloudsState(); });
+    container.appendChild(toggle);
+    container.appendChild(panel);
+    buildLayersControl();
+    return container;
+  },
+  onRemove: function(){ layersEls = {}; }
+};
+map.addControl(layersControl, 'top-right');
+function buildLayersControl(){
+  if (!layersEls.container) return;
+  layersEls.plan.span.textContent = t('baseStreets');
+  layersEls.sat.span.textContent = t('baseSatellite');
+  layersEls.clouds.span.textContent = t('overlayClouds');
+  layersEls.plan.input.checked = baseMode === 'plan';
+  layersEls.sat.input.checked = baseMode === 'sat';
+  layersEls.clouds.input.checked = cloudsOn;
+}
+
+map.on('load', function(){
+  styleLayerIds = map.getStyle().layers.map(function(l){ return l.id; });
+  map.addSource('ktb-esri-src', { type: 'raster', tiles: [ESRI_TILES], tileSize: 256, maxzoom: 18, attribution: 'Esri, Maxar, Earthstar Geographics' });
+  map.addSource('ktb-gibs-src', { type: 'raster', tiles: [GIBS_TILES], tileSize: 256, maxzoom: 9, attribution: 'NASA GIBS' });
+  map.addSource('arteries', { type: 'geojson', data: arteriesGeoJSON() });
+  map.addLayer({ id: 'ktb-esri', type: 'raster', source: 'ktb-esri-src', layout: { visibility: 'none' } });
+  map.addLayer({ id: 'ktb-gibs', type: 'raster', source: 'ktb-gibs-src', paint: { 'raster-opacity': 0.65 }, layout: { visibility: 'none' } });
+  map.addLayer({ id: 'arteries-hit', type: 'line', source: 'arteries',
+    layout: { 'line-join': 'round', 'line-cap': 'round' },
+    paint: { 'line-width': 16, 'line-opacity': 0 } });
+  map.addLayer({ id: 'arteries-line', type: 'line', source: 'arteries',
+    layout: { 'line-join': 'round', 'line-cap': 'round' },
+    paint: { 'line-width': 5, 'line-opacity': 0.85,
+      'line-color': ['match', ['get', 'level'],
+        'fluid', COLORS.fluid, 'slow', COLORS.slow,
+        'heavy', COLORS.heavy, 'blocked', COLORS.blocked, COLORS.fluid] } });
+  mapReady = true;
+  applyBaseState();
+  applyCloudsState();
+  drawArteries();
+  drawWorks();
+  renderReports();
+});
+map.on('click', function(){
+  if (layersEls.container) layersEls.container.classList.remove('open');
+});
+map.on('click', 'arteries-hit', function(e){
+  if (!e.features || !e.features.length) return;
+  var p = e.features[0].properties;
+  new maplibregl.Popup({ maxWidth: '280px' })
+    .setLngLat(e.lngLat)
+    .setHTML('<strong>' + p.name + '</strong><br>' +
+      (lang === 'fr' ? p.zones_fr : p.zones_en) + '<br>' +
+      typicalLabel() + ' : ' + t(lvlKey(p.level)))
+    .addTo(map);
+});
+map.on('mouseenter', 'arteries-hit', function(){ map.getCanvas().style.cursor = 'pointer'; });
+map.on('mouseleave', 'arteries-hit', function(){ map.getCanvas().style.cursor = ''; });
+
+function drawArteries(){
+  if (!mapReady) return;
+  var src = map.getSource('arteries');
+  if (src) src.setData(arteriesGeoJSON());
+}
+var worksMarkers = [];
 function drawWorks(){
-  worksLayer.clearLayers();
+  worksMarkers.forEach(function(m){ m.remove(); });
+  worksMarkers = [];
   BOARD.roadworks.forEach(function(rw){
     rw.points.forEach(function(pt){
-      L.marker([pt[0], pt[1]], {
-        icon: L.divIcon({ className:'', html:'<div style="font-size:20px">🚧</div>', iconSize:[22,22], iconAnchor:[11,11] })
-      }).bindPopup('<strong>' + (lang === 'fr' ? rw.title_fr : rw.title_en) + '</strong><br>' +
+      var el = document.createElement('div');
+      el.style.cssText = 'font-size:20px;line-height:22px;width:22px;height:22px;text-align:center;cursor:pointer';
+      el.textContent = '🚧';
+      var popup = new maplibregl.Popup({ offset: 14 }).setHTML(
+        '<strong>' + (lang === 'fr' ? rw.title_fr : rw.title_en) + '</strong><br>' +
         (lang === 'fr' ? rw.detail_fr : rw.detail_en) + '<br><em>' +
-        t('sourceLabel') + ' : ' + rw.source + ' — ' + rw.date + '</em>').addTo(worksLayer);
+        t('sourceLabel') + ' : ' + rw.source + ' — ' + rw.date + '</em>');
+      var marker = new maplibregl.Marker({ element: el })
+        .setLngLat([pt[1], pt[0]])
+        .setPopup(popup)
+        .addTo(map);
+      worksMarkers.push(marker);
     });
   });
 }
@@ -486,6 +669,58 @@ function loadWeather(){
     document.getElementById('weather-body').innerHTML = html;
   }).catch(function(){
     document.getElementById('weather-body').innerHTML = '<p class="note">' + t('weatherError') + '</p>';
+  });
+}
+
+/* ---- Air quality (model estimate, Open-Meteo CAMS, keyless) ---- */
+var aqState = 'loading';
+var aqData = null;
+function aqBand(aqi){
+  if (aqi == null || isNaN(aqi)) return null;
+  if (aqi <= 50) return { key:'aqCatGood', bg:'#16a34a', fg:'#fff' };
+  if (aqi <= 100) return { key:'aqCatModerate', bg:'#f59e0b', fg:'#1c1005' };
+  if (aqi <= 150) return { key:'aqCatUsg', bg:'#ea580c', fg:'#fff' };
+  if (aqi <= 200) return { key:'aqCatUnhealthy', bg:'#dc2626', fg:'#fff' };
+  if (aqi <= 300) return { key:'aqCatVeryUnhealthy', bg:'#7e22ce', fg:'#fff' };
+  return { key:'aqCatHazardous', bg:'#7f1d1d', fg:'#fff' };
+}
+function fmtNum(v){
+  if (v == null || isNaN(v)) return '—';
+  var s = String(Math.round(v * 10) / 10);
+  return lang === 'fr' ? s.replace('.', ',') : s;
+}
+function renderAirQuality(){
+  var body = document.getElementById('air-body');
+  if (!body) return;
+  if (aqState === 'loading'){
+    body.innerHTML = '<p class="note">' + t('aqLoading') + '</p>';
+    return;
+  }
+  if (aqState !== 'ok' || !aqData){
+    body.innerHTML = '<p class="note">' + t('aqError') + '</p>';
+    return;
+  }
+  var band = aqBand(aqData.us_aqi);
+  var badge = band ? '<span class="aq-badge" style="background:' + band.bg + ';color:' + band.fg + '">' + t(band.key) + '</span>' : '';
+  var hhmm = (aqData.time && aqData.time.length >= 16) ? aqData.time.slice(11, 16) : '';
+  body.innerHTML =
+    '<div class="aq-main"><span class="wx-big">' + (aqData.us_aqi == null ? '—' : Math.round(aqData.us_aqi)) + '</span>' + badge + '</div>' +
+    '<div class="note">' + t('aqLabel') + '</div>' +
+    '<div style="margin-top:6px">PM2.5 : ' + fmtNum(aqData.pm2_5) + ' µg/m³ · PM10 : ' + fmtNum(aqData.pm10) + ' µg/m³</div>' +
+    (hhmm ? '<div class="note" style="margin-top:4px">🕐 ' + t('aqTime') + ' : ' + hhmm + '</div>' : '');
+}
+function loadAirQuality(){
+  var url = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=' + BOARD.city.lat +
+    '&longitude=' + BOARD.city.lon +
+    '&current=us_aqi,pm2_5,pm10&timezone=Africa%2FKinshasa';
+  fetch(url).then(function(r){ return r.json(); }).then(function(d){
+    if (!d || !d.current) throw new Error('no air quality data');
+    aqData = d.current;
+    aqState = 'ok';
+    renderAirQuality();
+  }).catch(function(){
+    aqState = 'error';
+    renderAirQuality();
   });
 }
 
@@ -573,7 +808,7 @@ document.getElementById('hour-now').addEventListener('click', function(){
 });
 
 /* ---- Reports (this device only, localStorage, 4 h expiry) ---- */
-var reportMarkers = L.layerGroup().addTo(map);
+var reportMarkers = [];
 function loadReports(){
   var now = Date.now(), out = [];
   try {
@@ -586,7 +821,8 @@ function loadReports(){
 function saveReports(list){ localStorage.setItem(REPORTS_KEY, JSON.stringify(list)); }
 function renderReports(){
   var list = loadReports(); saveReports(list);
-  reportMarkers.clearLayers();
+  reportMarkers.forEach(function(m){ m.remove(); });
+  reportMarkers = [];
   var ul = document.getElementById('my-reports');
   ul.innerHTML = '';
   if (!list.length){
@@ -604,8 +840,15 @@ function renderReports(){
       (r.comment ? ' — ' + r.comment : '');
     ul.appendChild(li);
     if (art && art.properties.centre){
-      L.circleMarker(art.properties.centre, { radius:9, color:COLORS[r.level], fillColor:COLORS[r.level], fillOpacity:0.55 })
-        .bindPopup('<strong>' + name + '</strong><br>' + t(lvlKey(r.level))).addTo(reportMarkers);
+      var c = art.properties.centre; /* stored as [lat, lon] */
+      var dot = document.createElement('div');
+      dot.style.cssText = 'width:18px;height:18px;border-radius:50%;box-sizing:border-box;cursor:pointer;' +
+        'background:' + COLORS[r.level] + '8c;border:2px solid ' + COLORS[r.level];
+      var marker = new maplibregl.Marker({ element: dot })
+        .setLngLat([c[1], c[0]])
+        .setPopup(new maplibregl.Popup({ offset: 14 }).setHTML('<strong>' + name + '</strong><br>' + t(lvlKey(r.level))))
+        .addTo(map);
+      reportMarkers.push(marker);
     }
   });
 }
@@ -632,7 +875,7 @@ function applyLang(){
   });
   document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
   document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-  renderLists(); drawArteries(); drawWorks(); renderReports(); paintGcVisits(); buildLayersControl(); updateSliderUI();
+  renderLists(); drawArteries(); drawWorks(); renderReports(); paintGcVisits(); buildLayersControl(); updateSliderUI(); renderAirQuality();
 }
 document.getElementById('btn-fr').addEventListener('click', function(){ lang = 'fr'; localStorage.setItem(LANG_KEY, lang); applyLang(); });
 document.getElementById('btn-en').addEventListener('click', function(){ lang = 'en'; localStorage.setItem(LANG_KEY, lang); applyLang(); });
@@ -655,6 +898,7 @@ fetch('https://kinshasabouge.goatcounter.com/counter/TOTAL.json')
 
 applyLang();
 loadWeather();
+loadAirQuality();
 updateClock();
 setInterval(updateClock, 1000);
 setInterval(function(){ drawArteries(); if (previewHour == null) { renderArteriesList(); updateSliderUI(); } }, 15 * 60 * 1000);
