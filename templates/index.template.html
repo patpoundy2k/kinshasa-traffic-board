@@ -256,6 +256,20 @@
   .aq-ticks .aq-tick-end{right:0;transform:none}
   .aq-advice{margin:10px 0 0;font-size:1rem;line-height:1.45}
 
+  /* ---- FIH flights board (AeroDataBox departures/arrivals) ---- */
+  .fih-row{display:flex;align-items:baseline;gap:6px 12px;flex-wrap:wrap}
+  .fih-time{font-variant-numeric:tabular-nums;font-weight:800;white-space:nowrap}
+  .fih-time s{color:var(--muted);font-weight:600}
+  .fih-revised{font-weight:800}
+  .fih-delay{display:inline-block;font-size:.72rem;font-weight:700;border-radius:999px;padding:2px 9px;color:#fff;background:#b45309;vertical-align:1px;white-space:nowrap}
+  .fih-delay.late{background:var(--red)}
+  .fih-flight{font-weight:700}
+  .fih-route{color:var(--muted)}
+  .fb-chip{margin-left:auto;display:inline-block;font-size:.72rem;font-weight:700;border-radius:999px;padding:2px 9px;color:#fff;background:var(--brand-2);vertical-align:1px;white-space:nowrap}
+  .fb-chip.fb-done{background:var(--green)}
+  .fb-chip.fb-bad{background:var(--red)}
+  .fb-chip.fb-sched{background:transparent;color:var(--muted);border:1px solid var(--line)}
+
   /* ---- Footer ---- */
   footer{max-width:1120px;margin:0 auto;padding:14px 16px 30px;color:var(--muted);font-size:.84rem;line-height:1.55}
   footer p{margin:6px 0}
@@ -324,6 +338,18 @@
     <p class="note live-links" style="margin-top:8px">🛰️ <a href="https://zoom.earth/maps/satellite/#view=-4.32,15.32,9z" target="_blank" rel="noopener" data-i18n="zoomEarthLink">Satellite en direct (Zoom Earth)</a></p>
   </section>
 
+  <section class="card" id="flights-board-card">
+    <h2>✈ <span data-i18n="fihTitle">Aéroport de N'djili (FIH) — départs et arrivées du jour</span></h2>
+    <p class="note" id="flights-board-updated"></p>
+    <div id="flights-board-body" class="hidden">
+      <h3>🛫 <span data-i18n="fihDepartures">Départs</span></h3>
+      <ul class="clean" id="fih-departures"></ul>
+      <h3>🛬 <span data-i18n="fihArrivals">Arrivées</span></h3>
+      <ul class="clean" id="fih-arrivals"></ul>
+    </div>
+    <p class="note" id="flights-board-empty" data-i18n="fihUnavailable">Données vols indisponibles pour le moment.</p>
+  </section>
+
   <div class="grid">
     <div>
       <section class="card" id="weather-card">
@@ -389,7 +415,7 @@
 </main>
 
 <footer>
-  <p data-i18n="footerNote">Sources : OpenStreetMap (géométrie des routes, données communautaires pouvant être incomplètes), Open-Meteo (météo), Google (trafic en direct, lorsqu'il est récent), presse congolaise (chantiers), adsb.lol (vols suivis, ADS-B communautaire, ODbL). À défaut de données en direct récentes, la congestion affichée est un modèle habituel par heure.</p>
+  <p data-i18n="footerNote">Sources : OpenStreetMap (géométrie des routes, données communautaires pouvant être incomplètes), Open-Meteo (météo), Google (trafic en direct, lorsqu'il est récent), presse congolaise (chantiers), adsb.lol (vols suivis, ADS-B communautaire, ODbL), AeroDataBox (départs et arrivées de l'aéroport de N'djili). À défaut de données en direct récentes, la congestion affichée est un modèle habituel par heure.</p>
   <p>Kinshasa Traffic Board — <span data-i18n="generatedOn">Page générée le</span> {{GENERATED_DATE}}</p>
   <p class="owner-line">© 2026 Patpound Corporation · <span data-i18n="supportLabel">Assistance</span> : <a href="mailto:patpoundy2kb@gmail.com">patpoundy2kb@gmail.com</a><span id="gc-visits"></span></p>
 </footer>
@@ -471,7 +497,7 @@ var I18N = {
     typicalPrefix: "Habituel à cette heure",
     sourceLabel: "Source",
     reportedLabel: "signalé",
-    footerNote: "Sources : OpenStreetMap (géométrie des routes, données communautaires pouvant être incomplètes), Open-Meteo (météo), Google (trafic en direct, lorsqu'il est récent), presse congolaise (chantiers), adsb.lol (vols suivis, ADS-B communautaire, ODbL). À défaut de données en direct récentes, la congestion affichée est un modèle habituel par heure.",
+    footerNote: "Sources : OpenStreetMap (géométrie des routes, données communautaires pouvant être incomplètes), Open-Meteo (météo), Google (trafic en direct, lorsqu'il est récent), presse congolaise (chantiers), adsb.lol (vols suivis, ADS-B communautaire, ODbL), AeroDataBox (départs et arrivées de l'aéroport de N'djili). À défaut de données en direct récentes, la congestion affichée est un modèle habituel par heure.",
     supportLabel: "Assistance",
     visitsLabel: "visites",
     baseStreets: "Plan",
@@ -481,6 +507,13 @@ var I18N = {
     flightsNone: "Aucun avion suivi pour le moment (couverture limitée autour de Kinshasa).",
     flightsNote: "Données de vol : adsb.lol — ADS-B communautaire (ODbL). Vols en direct — Congo Airways (COG), Ethiopian (ETH), Air France (AFR), Brussels Airlines (BEL). Couverture limitée autour de Kinshasa : l'absence d'avion ne signifie pas l'absence de vol.",
     airportLabel: "Aéroport de N'djili (FIH)",
+    fihTitle: "Aéroport de N'djili (FIH) — départs et arrivées du jour",
+    fihDepartures: "Départs",
+    fihArrivals: "Arrivées",
+    fihUpdated: "Mis à jour à {T} · Source : AeroDataBox",
+    fihScheduled: "Horaire prévu",
+    fihUnavailable: "Données vols indisponibles pour le moment.",
+    fihNone: "Aucun vol dans la fenêtre affichée.",
     flightAlt: "Altitude",
     flightSpeed: "Vitesse sol",
     flightHeading: "Cap",
@@ -552,7 +585,7 @@ var I18N = {
     typicalPrefix: "Typical at this hour",
     sourceLabel: "Source",
     reportedLabel: "reported",
-    footerNote: "Sources: OpenStreetMap (road geometry, community data that may be incomplete), Open-Meteo (weather), Google (live traffic, when recent), Congolese press (roadworks), adsb.lol (tracked flights, community ADS-B, ODbL). When no fresh live data is available, the congestion shown is a typical hourly pattern model.",
+    footerNote: "Sources: OpenStreetMap (road geometry, community data that may be incomplete), Open-Meteo (weather), Google (live traffic, when recent), Congolese press (roadworks), adsb.lol (tracked flights, community ADS-B, ODbL), AeroDataBox (N'djili airport departures and arrivals). When no fresh live data is available, the congestion shown is a typical hourly pattern model.",
     supportLabel: "Support",
     visitsLabel: "visits",
     baseStreets: "Streets",
@@ -562,6 +595,13 @@ var I18N = {
     flightsNone: "No tracked flights right now (limited coverage around Kinshasa).",
     flightsNote: "Flight data: adsb.lol — community ADS-B (ODbL). Live flights — Congo Airways (COG), Ethiopian (ETH), Air France (AFR), Brussels Airlines (BEL). Coverage around Kinshasa is sparse: no aircraft shown does not mean no flight is operating.",
     airportLabel: "N'djili Airport (FIH)",
+    fihTitle: "N'djili Airport (FIH) — today's departures & arrivals",
+    fihDepartures: "Departures",
+    fihArrivals: "Arrivals",
+    fihUpdated: "Updated at {T} · Source: AeroDataBox",
+    fihScheduled: "Scheduled only",
+    fihUnavailable: "Flight data unavailable right now.",
+    fihNone: "No flights in the displayed window.",
     flightAlt: "Altitude",
     flightSpeed: "Ground speed",
     flightHeading: "Heading",
@@ -1507,6 +1547,117 @@ function disableFlights(){
   buildLayersControl();
 }
 
+/* ---- FIH departures/arrivals board (AeroDataBox, baked into
+   BOARD.flightsBoard by scripts/flights_refresh.py — 3 server-side
+   fetches/day on the free plan; the API key never reaches this
+   page). Each row shows the FIH-side scheduled time; only when the
+   feed has live data for that flight (quality "Live") may a revised
+   time appear: the scheduled time is then struck through, the
+   revised time shown bold, and a "+N min" badge appears from
+   10 minutes of delay. "Basic" rows are schedule-only and carry the
+   "Horaire prévu" chip — never dressed up as live. The header line
+   carries the mandatory free-plan attribution ("Source :
+   AeroDataBox"). An absent block, an empty block, or a block older
+   than 24 h renders the honest unavailable line instead of rows. ---- */
+var FLIGHTS_BOARD_MAX_AGE_MS = 24 * 3600 * 1000;
+var FIH_STATUS_LABELS = {
+  Departed:  { fr: 'Départi', en: 'Departed' },
+  Expected:  { fr: 'Attendu', en: 'Expected' },
+  Arrived:   { fr: 'Arrivé',  en: 'Arrived' },
+  Landed:    { fr: 'Arrivé',  en: 'Arrived' },
+  Cancelled: { fr: 'Annulé',  en: 'Cancelled' }
+};
+function flightsBoardBlock(){
+  var fb = BOARD.flightsBoard;
+  if (!fb || !fb.checkedAt) return null;
+  var d = new Date(fb.checkedAt);
+  if (isNaN(d.getTime())) return null;
+  var age = Date.now() - d.getTime();
+  if (age > FLIGHTS_BOARD_MAX_AGE_MS || age < -3600 * 1000) return null;
+  return fb;
+}
+function fihTimeHM(iso){
+  var d = new Date(iso);
+  if (isNaN(d.getTime())) {
+    var m = String(iso || '').match(/T(\d{2}:\d{2})/);
+    return m ? m[1] : '--:--';
+  }
+  return kinshasaHM(d);
+}
+function fihDelayMins(row){
+  if (!row || !row.sched || !row.revised) return 0;
+  var a = new Date(row.sched).getTime(), b = new Date(row.revised).getTime();
+  if (isNaN(a) || isNaN(b)) return 0;
+  return Math.round((b - a) / 60000);
+}
+function fihChip(row){
+  if (row.quality !== 'Live') {
+    return '<span class="fb-chip fb-sched">' + escapeHtml(t('fihScheduled')) + '</span>';
+  }
+  var label = FIH_STATUS_LABELS[row.status] ? FIH_STATUS_LABELS[row.status][lang] : (row.status || '');
+  if (!label) return '';
+  var cls = 'fb-live';
+  if (row.status === 'Cancelled') cls = 'fb-bad';
+  else if (row.status === 'Departed' || row.status === 'Arrived' || row.status === 'Landed') cls = 'fb-done';
+  return '<span class="fb-chip ' + cls + '">' + escapeHtml(label) + '</span>';
+}
+function fihRow(row, dirKey){
+  var li = document.createElement('li');
+  li.className = 'fih-row';
+  var delay = fihDelayMins(row);
+  var timeHtml = '<span class="fih-time">';
+  if (row.revised && Math.abs(delay) >= 1) {
+    timeHtml += '<s>' + fihTimeHM(row.sched) + '</s> <span class="fih-revised">' + fihTimeHM(row.revised) + '</span>';
+  } else {
+    timeHtml += fihTimeHM(row.sched);
+  }
+  timeHtml += '</span>';
+  if (delay >= 10) {
+    timeHtml += '<span class="fih-delay' + (delay >= 30 ? ' late' : '') + '">+' + delay + ' min</span>';
+  }
+  li.innerHTML = timeHtml + '<span class="fih-flight"></span><span class="fih-route"></span>' + fihChip(row);
+  li.querySelector('.fih-flight').textContent =
+    (row.airline ? row.airline + ' ' : '') + (row.flight || '');
+  var place = row[dirKey] || {};
+  li.querySelector('.fih-route').textContent =
+    (place.name || '') + (place.iata ? ' (' + place.iata + ')' : '');
+  return li;
+}
+function fihFillList(ul, rows, dirKey){
+  ul.innerHTML = '';
+  var sorted = rows.slice().sort(function(a, b){
+    return new Date(a.sched).getTime() - new Date(b.sched).getTime();
+  });
+  if (!sorted.length) {
+    var li = document.createElement('li');
+    li.className = 'note';
+    li.textContent = t('fihNone');
+    ul.appendChild(li);
+    return;
+  }
+  sorted.forEach(function(r){ ul.appendChild(fihRow(r, dirKey)); });
+}
+function renderFlightsBoard(){
+  var body = document.getElementById('flights-board-body');
+  var empty = document.getElementById('flights-board-empty');
+  var upd = document.getElementById('flights-board-updated');
+  if (!body || !empty || !upd) return;
+  var fb = flightsBoardBlock();
+  var deps = fb && Array.isArray(fb.departures) ? fb.departures : [];
+  var arrs = fb && Array.isArray(fb.arrivals) ? fb.arrivals : [];
+  if (!fb || (!deps.length && !arrs.length)) {
+    body.classList.add('hidden');
+    empty.classList.remove('hidden');
+    upd.textContent = '';
+    return;
+  }
+  body.classList.remove('hidden');
+  empty.classList.add('hidden');
+  upd.textContent = t('fihUpdated').replace('{T}', kinshasaHM(new Date(fb.checkedAt)));
+  fihFillList(document.getElementById('fih-departures'), deps, 'to');
+  fihFillList(document.getElementById('fih-arrivals'), arrs, 'from');
+}
+
 /* ---- Accessibility options (header button + panel) ----
    Three visitor toggles: larger text (a 120% root font-size step —
    the layout, MapLibre popups included, is sized in rem), high
@@ -1604,7 +1755,7 @@ function applyLang(){
   });
   document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
   document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-  renderLists(); drawArteries(); drawWorks(); renderReports(); paintGcVisits(); buildLayersControl(); updateSliderUI(); renderAirQuality(); updateLiveUI(); updateFlightsUI(); refreshFlightLabels(); applyA11yLabels();
+  renderLists(); drawArteries(); drawWorks(); renderReports(); paintGcVisits(); buildLayersControl(); updateSliderUI(); renderAirQuality(); updateLiveUI(); updateFlightsUI(); refreshFlightLabels(); applyA11yLabels(); renderFlightsBoard();
 }
 document.getElementById('btn-fr').addEventListener('click', function(){ lang = 'fr'; saveLang(); applyLang(); });
 document.getElementById('btn-en').addEventListener('click', function(){ lang = 'en'; saveLang(); applyLang(); });
