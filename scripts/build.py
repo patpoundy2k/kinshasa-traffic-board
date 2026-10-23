@@ -319,6 +319,26 @@ RIVER = [
 ]
 
 
+# Official fuel prices — set nationally by ministerial arrêté per
+# supply zone (Ministère de l'Économie nationale, on the advice of
+# the Comité de suivi des prix des produits pétroliers, CSPPP).
+# Kinshasa is in zone Ouest, where by law every station charges the
+# same price, so there is no per-station price to display: the board
+# shows the official zonal price with its arrêté date, cross-checked
+# weekly against GlobalPetrolPrices' DRC page. Curated like the
+# roadworks/river items — update by hand when a new arrêté is
+# reported in the press (a handful of times a year).
+FUEL = {
+    "essence": 2640,
+    "gasoil": 2635,
+    "unit": "FC/L",
+    "zone": "Ouest",
+    "decree_date": "2026-04-16",
+    "source": "Ministère de l'Économie nationale (CSPPP)",
+    "crosscheck_url": "https://www.globalpetrolprices.com/Democratic-Republic-of-the-Congo/",
+}
+
+
 def overpass_query(regex):
     """Return the list of OSM ways whose name matches `regex` in the bbox."""
     ql = (
@@ -488,6 +508,30 @@ def river_list_html():
     return "\n".join(items)
 
 
+def fuel_html():
+    """Baked-in (French, default language) official fuel-price panel
+    for SEO/no-JS; the page re-renders it from BOARD.fuel in the
+    active language (renderFuel in the template)."""
+    def fr_num(n):
+        return f"{n:,}".replace(",", " ")
+
+    months_fr = ["janvier", "février", "mars", "avril", "mai", "juin",
+                 "juillet", "août", "septembre", "octobre", "novembre",
+                 "décembre"]
+    year, month, day = FUEL["decree_date"].split("-")
+    date_fr = f"{int(day)} {months_fr[int(month) - 1]} {year}"
+    return (
+        f'        <div class="fuel-row"><span>Essence</span>'
+        f'<strong>{fr_num(FUEL["essence"])} {FUEL["unit"]}</strong></div>\n'
+        f'        <div class="fuel-row"><span>Gasoil</span>'
+        f'<strong>{fr_num(FUEL["gasoil"])} {FUEL["unit"]}</strong></div>\n'
+        f'        <p class="note fuel-note">Prix officiel par zone — '
+        f'arrêté du {date_fr}. Source : {FUEL["source"]} · '
+        f'<a href="{FUEL["crosscheck_url"]}" target="_blank" rel="noopener">'
+        f'Vérification hebdomadaire (GlobalPetrolPrices)</a></p>'
+    )
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--skip-overpass", action="store_true",
@@ -525,11 +569,13 @@ def main():
         "arteries": {"type": "FeatureCollection", "features": features},
         "roadworks": ROADWORKS,
         "river": RIVER,
+        "fuel": FUEL,
         "dataNotes": {
             "congestion": "Typical pattern model by time of day (Africa/Kinshasa). When board.json carries a recent 'live' block (Google Routes sweep by scripts/live_refresh.py, key held server-side only), the page shows those live levels instead and falls back to the typical model when the block is stale or absent.",
             "towers": "Cell towers are fetched live by the page from OpenStreetMap via Overpass: community-mapped data, possibly incomplete.",
             "roadworks": "Researched from Congolese press; each item carries its source and date.",
             "river": "Researched from Congolese press and official/UN reports; each item carries its source, source URL and date. No live river-level or vessel feed exists for Kinshasa.",
+            "fuel": "Official zone Ouest price set by ministerial arrêté (Ministère de l'Économie nationale / CSPPP), uniform at every station in the zone; curated in scripts/build.py (FUEL) and cross-checked against GlobalPetrolPrices' DRC page (weekly). No per-station prices exist in the DRC.",
             "reports": "Jam reports are shared with all visitors via the kinshasa-reports Worker (Cloudflare D1, see reports-worker/) and stay visible for 24 hours; the page also keeps the visitor's own reports on-device as a fallback record.",
         },
     }
@@ -557,6 +603,7 @@ def main():
         .replace("{{ARTERIES_LIST_HTML}}", arteries_list_html(features))
         .replace("{{ROADWORKS_LIST_HTML}}", roadworks_list_html())
         .replace("{{RIVER_LIST_HTML}}", river_list_html())
+        .replace("{{FUEL_HTML}}", fuel_html())
         .replace("{{BOARD_JSON}}", json.dumps(board, ensure_ascii=False))
     )
     INDEX_FILE.write_text(page, encoding="utf-8")
