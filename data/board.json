@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-22",
+ "generated": "2026-10-23",
  "city": {
   "name": "Kinshasa",
   "lat": -4.325,
@@ -20922,111 +20922,121 @@
    "date": "2026-10-10"
   }
  ],
+ "fuel": {
+  "essence": 2640,
+  "gasoil": 2635,
+  "unit": "FC/L",
+  "zone": "Ouest",
+  "decree_date": "2026-04-16",
+  "source": "Ministère de l'Économie nationale (CSPPP)",
+  "crosscheck_url": "https://www.globalpetrolprices.com/Democratic-Republic-of-the-Congo/"
+ },
  "dataNotes": {
   "congestion": "Typical pattern model by time of day (Africa/Kinshasa). When board.json carries a recent 'live' block (Google Routes sweep by scripts/live_refresh.py, key held server-side only), the page shows those live levels instead and falls back to the typical model when the block is stale or absent.",
   "towers": "Cell towers are fetched live by the page from OpenStreetMap via Overpass: community-mapped data, possibly incomplete.",
   "roadworks": "Researched from Congolese press; each item carries its source and date.",
   "river": "Researched from Congolese press and official/UN reports; each item carries its source, source URL and date. No live river-level or vessel feed exists for Kinshasa.",
+  "fuel": "Official zone Ouest price set by ministerial arrêté (Ministère de l'Économie nationale / CSPPP), uniform at every station in the zone; curated in scripts/build.py (FUEL) and cross-checked against GlobalPetrolPrices' DRC page (weekly). No per-station prices exist in the DRC.",
   "reports": "Jam reports are shared with all visitors via the kinshasa-reports Worker (Cloudflare D1, see reports-worker/) and stay visible for 24 hours; the page also keeps the visitor's own reports on-device as a fallback record."
  },
  "live": {
-  "checkedAt": "2026-10-22T23:52:38Z",
+  "checkedAt": "2026-10-23T05:11:46Z",
   "source": "Google Routes",
   "arteries": {
    "av-elengesa-bypass": {
-    "ratio": 0.95,
+    "ratio": 1.02,
     "level": "fluid",
-    "mins": 26.5,
+    "mins": 28.7,
     "staticMins": 28.1
    },
    "av-huileries": {
-    "ratio": 0.79,
+    "ratio": 0.76,
     "level": "fluid",
-    "mins": 9.3,
+    "mins": 9.0,
     "staticMins": 11.8
    },
    "av-kasa-vubu": {
-    "ratio": 0.78,
+    "ratio": 1.06,
     "level": "fluid",
-    "mins": 26.7,
+    "mins": 36.0,
     "staticMins": 34.0
    },
    "av-liberation": {
-    "ratio": 0.75,
+    "ratio": 1.07,
     "level": "fluid",
-    "mins": 46.3,
+    "mins": 66.3,
     "staticMins": 61.8
    },
    "av-mondjiba": {
-    "ratio": 0.61,
-    "level": "fluid",
-    "mins": 6.2,
+    "ratio": 1.26,
+    "level": "heavy",
+    "mins": 12.8,
     "staticMins": 10.2
    },
    "av-nguma": {
-    "ratio": 0.81,
+    "ratio": 1.06,
     "level": "fluid",
-    "mins": 12.0,
+    "mins": 15.7,
     "staticMins": 14.9
    },
    "av-tourisme": {
-    "ratio": 0.82,
-    "level": "fluid",
-    "mins": 13.5,
+    "ratio": 1.36,
+    "level": "heavy",
+    "mins": 22.3,
     "staticMins": 16.4
    },
    "av-universite": {
-    "ratio": 0.85,
+    "ratio": 1.05,
     "level": "fluid",
-    "mins": 64.0,
+    "mins": 78.4,
     "staticMins": 74.9
    },
    "av-victoire": {
-    "ratio": 0.81,
+    "ratio": 1.07,
     "level": "fluid",
-    "mins": 13.6,
+    "mins": 17.9,
     "staticMins": 16.7
    },
    "bd-30-juin": {
-    "ratio": 0.61,
-    "level": "fluid",
-    "mins": 10.1,
+    "ratio": 1.53,
+    "level": "blocked",
+    "mins": 25.5,
     "staticMins": 16.6
    },
    "bd-lumumba": {
-    "ratio": 0.71,
-    "level": "fluid",
-    "mins": 37.7,
+    "ratio": 1.56,
+    "level": "blocked",
+    "mins": 83.1,
     "staticMins": 53.3
    },
    "bd-sendwe": {
-    "ratio": 0.7,
-    "level": "fluid",
-    "mins": 4.4,
+    "ratio": 2.38,
+    "level": "blocked",
+    "mins": 14.9,
     "staticMins": 6.3
    },
    "bd-triomphal": {
-    "ratio": 0.72,
+    "ratio": 0.94,
     "level": "fluid",
-    "mins": 14.4,
+    "mins": 18.8,
     "staticMins": 19.9
    },
    "bd-tshatshi": {
-    "ratio": 0.78,
+    "ratio": 0.85,
     "level": "fluid",
-    "mins": 5.2,
+    "mins": 5.7,
     "staticMins": 6.6
    },
    "poids-lourds": {
-    "ratio": 0.71,
-    "level": "fluid",
-    "mins": 2.1,
+    "ratio": 1.08,
+    "level": "slow",
+    "mins": 3.2,
     "staticMins": 3.0
    },
    "rn1-matadi": {
-    "ratio": 0.96,
-    "level": "fluid",
-    "mins": 68.3,
+    "ratio": 1.3,
+    "level": "heavy",
+    "mins": 92.4,
     "staticMins": 70.9
    }
   }
