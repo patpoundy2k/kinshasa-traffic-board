@@ -288,7 +288,6 @@
   .aq-advice{margin:10px 0 0;font-size:1rem;line-height:1.45}
 
   /* ---- Trip planner (Google Maps deep link — no API) ---- */
-  .pl-preset{margin-top:8px}
   .pl-swap-row{display:flex;justify-content:flex-end;margin-top:6px}
   .pl-swap{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--brand-2);font-size:1.1rem;line-height:1;cursor:pointer;transition:background .15s ease}
   .pl-swap:hover{background:var(--bg)}
@@ -400,14 +399,14 @@
         <h2>🧭 <span data-i18n="plannerTitle">Planificateur de trajet</span></h2>
         <form id="planner-form">
           <label for="pl-from" data-i18n="plannerFrom">Départ</label>
-          <input type="text" id="pl-from" autocomplete="off" data-i18n-ph="plannerFromPh" placeholder="Adresse ou lieu de départ (optionnel)">
-          <select id="pl-from-preset" class="pl-preset" aria-label="Lieux fréquents — départ"></select>
+          <input type="text" id="pl-from" list="pl-from-list" autocomplete="off" data-i18n-ph="plannerFromPh" placeholder="Adresse ou lieu de départ (optionnel)">
+          <datalist id="pl-from-list"></datalist>
           <div class="pl-swap-row">
             <button type="button" id="pl-swap" class="pl-swap" aria-label="Inverser départ et destination">⇅</button>
           </div>
           <label for="pl-to" data-i18n="plannerTo">Destination</label>
-          <input type="text" id="pl-to" autocomplete="off" data-i18n-ph="plannerToPh" placeholder="Adresse ou lieu de destination">
-          <select id="pl-to-preset" class="pl-preset" aria-label="Lieux fréquents — destination"></select>
+          <input type="text" id="pl-to" list="pl-to-list" autocomplete="off" data-i18n-ph="plannerToPh" placeholder="Adresse ou lieu de destination">
+          <datalist id="pl-to-list"></datalist>
           <p class="note pl-error hidden" id="pl-error" role="alert"></p>
           <div class="pl-actions">
             <a class="pl-btn pl-btn-primary" id="pl-google" href="#" target="_blank" rel="noopener noreferrer">🗺️ <span data-i18n="plannerGoogle">Ouvrir dans Google Maps</span></a>
@@ -620,7 +619,6 @@ var I18N = {
     plannerTo: "Destination",
     plannerFromPh: "Adresse ou lieu de départ (optionnel)",
     plannerToPh: "Adresse ou lieu de destination",
-    plannerPreset: "— Lieux fréquents —",
     plannerSwap: "Inverser départ et destination",
     plannerGoogle: "Ouvrir dans Google Maps",
     plannerHint: "Google Maps utilise le départ indiqué — ou votre position actuelle s'il est vide.",
@@ -725,7 +723,6 @@ var I18N = {
     plannerTo: "To",
     plannerFromPh: "Departure address or place (optional)",
     plannerToPh: "Destination address or place",
-    plannerPreset: "— Frequent places —",
     plannerSwap: "Swap origin and destination",
     plannerGoogle: "Open in Google Maps",
     plannerHint: "Google Maps uses the origin you entered — or your current position if it is empty.",
@@ -1782,12 +1779,13 @@ function renderFlightsBoard(){
 /* ---- Trip planner (Google Maps deep link) ----
    No routing API, no key, no quota: the button builds the
    official Google Maps deep-link URL and the navigation itself
-   happens in Google Maps. Each field pairs a free-text input
-   with a preset picker of well-known Kinshasa places. The preset
-   coordinates below are APPROXIMATE landmark coordinates, used
-   only to build the link. Picking a preset fills the input and
-   pins its coordinates; typing in the input drops the coordinates
-   (the typed text is then used as-is). Google Maps: an empty
+   happens in Google Maps. Each side is ONE text input backed by
+   a <datalist> of well-known Kinshasa places: typing filters the
+   suggestions, and free text still works. The preset coordinates
+   below are APPROXIMATE landmark coordinates, used only to build
+   the link. When a field's value exactly matches a preset name,
+   the link uses that preset's coordinates; otherwise the typed
+   text is used as-is. Google Maps: an empty
    origin omits the parameter, so Google starts from the visitor's
    current position — the hint under the button says so. */
 var PLANNER_PLACES = [
@@ -1802,28 +1800,17 @@ var PLANNER_PLACES = [
   { fr: "Rond-Point Ngaba", en: "Rond-Point Ngaba", lat: -4.3867, lon: 15.3186 },
   { fr: "Matete", en: "Matete", lat: -4.3889, lon: 15.3486 }
 ];
-var plannerState = {
-  from: { text: '', coord: null },
-  to: { text: '', coord: null }
-};
 function plannerPlaceLabel(p){ return lang === 'fr' ? p.fr : p.en; }
-function buildPlannerPresets(){
+function buildPlannerLists(){
   ['from', 'to'].forEach(function(which){
-    var sel = document.getElementById('pl-' + which + '-preset');
-    if (!sel) return;
-    var current = sel.value;
-    sel.innerHTML = '';
-    var opt0 = document.createElement('option');
-    opt0.value = ''; opt0.textContent = t('plannerPreset');
-    sel.appendChild(opt0);
-    PLANNER_PLACES.forEach(function(p, i){
+    var list = document.getElementById('pl-' + which + '-list');
+    if (!list) return;
+    list.innerHTML = '';
+    PLANNER_PLACES.forEach(function(p){
       var o = document.createElement('option');
-      o.value = String(i);
-      o.textContent = plannerPlaceLabel(p);
-      sel.appendChild(o);
+      o.value = plannerPlaceLabel(p);
+      list.appendChild(o);
     });
-    sel.value = current;
-    sel.setAttribute('aria-label', t('plannerPreset') + ' — ' + t(which === 'from' ? 'plannerFrom' : 'plannerTo'));
   });
   var swap = document.getElementById('pl-swap');
   if (swap) swap.setAttribute('aria-label', t('plannerSwap'));
@@ -1834,28 +1821,23 @@ function hidePlannerError(){
 }
 function plannerBind(which){
   var input = document.getElementById('pl-' + which);
-  var sel = document.getElementById('pl-' + which + '-preset');
-  if (!input || !sel) return;
-  sel.addEventListener('change', function(){
-    var st = plannerState[which];
-    if (this.value === '') { st.coord = null; return; }
-    var p = PLANNER_PLACES[parseInt(this.value, 10)];
-    if (!p) return;
-    st.coord = p.lat + ',' + p.lon;
-    st.text = plannerPlaceLabel(p);
-    input.value = st.text;
-    hidePlannerError();
-  });
-  input.addEventListener('input', function(){
-    plannerState[which].text = this.value;
-    plannerState[which].coord = null;
-    sel.value = '';
-    hidePlannerError();
-  });
+  if (!input) return;
+  input.addEventListener('input', hidePlannerError);
 }
+/* Resolve a field to what goes in the Google Maps link: the
+   preset's coordinates when the value exactly matches a preset
+   name (in either language's labelling), otherwise the typed
+   text itself. An exact match is how a datalist pick is told
+   apart from free typing — no separate control state to keep. */
 function plannerValue(which){
-  var st = plannerState[which];
-  return st.coord || st.text.trim();
+  var input = document.getElementById('pl-' + which);
+  var text = input ? input.value.trim() : '';
+  if (!text) return '';
+  for (var i = 0; i < PLANNER_PLACES.length; i++) {
+    var p = PLANNER_PLACES[i];
+    if (text === p.fr || text === p.en) return p.lat + ',' + p.lon;
+  }
+  return text;
 }
 function plannerValidate(){
   if (plannerValue('to')) { hidePlannerError(); return true; }
@@ -1872,22 +1854,15 @@ if (plannerFormEl) plannerFormEl.addEventListener('submit', function(ev){
 });
 var plSwapBtn = document.getElementById('pl-swap');
 if (plSwapBtn) plSwapBtn.addEventListener('click', function(){
-  var tmp = plannerState.from;
-  plannerState.from = plannerState.to;
-  plannerState.to = tmp;
-  ['from', 'to'].forEach(function(which){
-    document.getElementById('pl-' + which).value = plannerState[which].text;
-    var sel = document.getElementById('pl-' + which + '-preset');
-    sel.value = '';
-    if (plannerState[which].coord) {
-      for (var i = 0; i < PLANNER_PLACES.length; i++) {
-        if (PLANNER_PLACES[i].lat + ',' + PLANNER_PLACES[i].lon === plannerState[which].coord) {
-          sel.value = String(i);
-          break;
-        }
-      }
-    }
-  });
+  /* Swapping the two fields' values also swaps their resolved
+     coordinates, since resolution follows the value (exact
+     preset-name match → that preset's coordinates). */
+  var fromInput = document.getElementById('pl-from');
+  var toInput = document.getElementById('pl-to');
+  if (!fromInput || !toInput) return;
+  var tmp = fromInput.value;
+  fromInput.value = toInput.value;
+  toInput.value = tmp;
   hidePlannerError();
 });
 var plGoogleBtn = document.getElementById('pl-google');
@@ -2049,7 +2024,7 @@ function applyLang(){
   });
   document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
   document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-  renderLists(); drawArteries(); drawWorks(); renderReports(); paintGcVisits(); buildLayersControl(); updateSliderUI(); renderAirQuality(); updateLiveUI(); updateFlightsUI(); refreshFlightLabels(); applyA11yLabels(); renderFlightsBoard(); buildPlannerPresets(); renderFuel();
+  renderLists(); drawArteries(); drawWorks(); renderReports(); paintGcVisits(); buildLayersControl(); updateSliderUI(); renderAirQuality(); updateLiveUI(); updateFlightsUI(); refreshFlightLabels(); applyA11yLabels(); renderFlightsBoard(); buildPlannerLists(); renderFuel();
 }
 document.getElementById('btn-fr').addEventListener('click', function(){ lang = 'fr'; saveLang(); applyLang(); });
 document.getElementById('btn-en').addEventListener('click', function(){ lang = 'en'; saveLang(); applyLang(); });
