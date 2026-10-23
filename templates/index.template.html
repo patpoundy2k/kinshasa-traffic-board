@@ -287,7 +287,7 @@
   .aq-ticks .aq-tick-end{right:0;transform:none}
   .aq-advice{margin:10px 0 0;font-size:1rem;line-height:1.45}
 
-  /* ---- Trip planner (Google Maps / Waze deep links — no API) ---- */
+  /* ---- Trip planner (Google Maps deep link — no API) ---- */
   .pl-preset{margin-top:8px}
   .pl-swap-row{display:flex;justify-content:flex-end;margin-top:6px}
   .pl-swap{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--brand-2);font-size:1.1rem;line-height:1;cursor:pointer;transition:background .15s ease}
@@ -297,8 +297,6 @@
   .pl-btn{flex:1 1 150px;display:inline-flex;align-items:center;justify-content:center;gap:7px;text-align:center;text-decoration:none;border-radius:12px;padding:12px 10px;font-weight:700;font-size:.95rem;transition:filter .15s ease,background .15s ease}
   .pl-btn-primary{background:linear-gradient(120deg,var(--brand),var(--brand-2));color:#fff;box-shadow:0 4px 14px -4px rgba(11,94,138,.45)}
   .pl-btn-primary:hover{filter:brightness(1.08)}
-  .pl-btn-ghost{border:1.5px solid var(--brand-2);color:var(--brand-2);background:transparent}
-  .pl-btn-ghost:hover{background:rgba(11,94,138,.08)}
   .pl-btn:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px}
   .pl-error{color:#b91c1c;margin-top:10px}
   body.dark .pl-error{color:#fca5a5}
@@ -413,9 +411,8 @@
           <p class="note pl-error hidden" id="pl-error" role="alert"></p>
           <div class="pl-actions">
             <a class="pl-btn pl-btn-primary" id="pl-google" href="#" target="_blank" rel="noopener noreferrer">🗺️ <span data-i18n="plannerGoogle">Ouvrir dans Google Maps</span></a>
-            <a class="pl-btn pl-btn-ghost" id="pl-waze" href="#" target="_blank" rel="noopener noreferrer">🚗 <span data-i18n="plannerWaze">Ouvrir dans Waze</span></a>
           </div>
-          <p class="note" style="margin-top:10px" data-i18n="plannerHint">Waze démarre la navigation depuis votre position actuelle. Google Maps utilise le départ indiqué — ou votre position s'il est vide.</p>
+          <p class="note" style="margin-top:10px" data-i18n="plannerHint">Google Maps utilise le départ indiqué — ou votre position actuelle s'il est vide.</p>
         </form>
       </section>
 
@@ -626,8 +623,7 @@ var I18N = {
     plannerPreset: "— Lieux fréquents —",
     plannerSwap: "Inverser départ et destination",
     plannerGoogle: "Ouvrir dans Google Maps",
-    plannerWaze: "Ouvrir dans Waze",
-    plannerHint: "Waze démarre la navigation depuis votre position actuelle. Google Maps utilise le départ indiqué — ou votre position s'il est vide.",
+    plannerHint: "Google Maps utilise le départ indiqué — ou votre position actuelle s'il est vide.",
     plannerNeedDest: "Indiquez une destination (texte ou lieu fréquent) pour ouvrir l'itinéraire.",
     fuelTitle: "Prix du carburant — zone Ouest (officiel)",
     fuelEssence: "Essence",
@@ -732,8 +728,7 @@ var I18N = {
     plannerPreset: "— Frequent places —",
     plannerSwap: "Swap origin and destination",
     plannerGoogle: "Open in Google Maps",
-    plannerWaze: "Open in Waze",
-    plannerHint: "Waze starts navigation from your current position. Google Maps uses the origin you entered — or your position if it is empty.",
+    plannerHint: "Google Maps uses the origin you entered — or your current position if it is empty.",
     plannerNeedDest: "Enter a destination (typed text or a frequent place) to open the route.",
     fuelTitle: "Fuel prices — West zone (official)",
     fuelEssence: "Petrol",
@@ -1784,18 +1779,17 @@ function renderFlightsBoard(){
   fihFillList(document.getElementById('fih-arrivals'), arrs, 'from');
 }
 
-/* ---- Trip planner (Google Maps / Waze deep links) ----
-   No routing API, no key, no quota: the two buttons build the
-   official deep-link URLs and the navigation itself happens in
-   Google Maps / Waze. Each field pairs a free-text input with a
-   preset picker of well-known Kinshasa places. The preset
+/* ---- Trip planner (Google Maps deep link) ----
+   No routing API, no key, no quota: the button builds the
+   official Google Maps deep-link URL and the navigation itself
+   happens in Google Maps. Each field pairs a free-text input
+   with a preset picker of well-known Kinshasa places. The preset
    coordinates below are APPROXIMATE landmark coordinates, used
-   only to build the links. Picking a preset fills the input and
+   only to build the link. Picking a preset fills the input and
    pins its coordinates; typing in the input drops the coordinates
    (the typed text is then used as-is). Google Maps: an empty
    origin omits the parameter, so Google starts from the visitor's
-   current position. Waze always navigates from the current
-   position — the hint under the buttons says so. */
+   current position — the hint under the button says so. */
 var PLANNER_PLACES = [
   { fr: "Aéroport de N'djili (FIH)", en: "N'djili Airport (FIH)", lat: -4.385, lon: 15.444 },
   { fr: "Gare Centrale", en: "Gare Centrale (central station)", lat: -4.3022, lon: 15.3108 },
@@ -1904,14 +1898,6 @@ if (plGoogleBtn) plGoogleBtn.addEventListener('click', function(ev){
   if (origin) url += '&origin=' + encodeURIComponent(origin);
   url += '&destination=' + encodeURIComponent(plannerValue('to')) + '&travelmode=driving';
   this.href = url;
-});
-var plWazeBtn = document.getElementById('pl-waze');
-if (plWazeBtn) plWazeBtn.addEventListener('click', function(ev){
-  if (!plannerValidate()) { ev.preventDefault(); return; }
-  var st = plannerState.to;
-  this.href = st.coord
-    ? 'https://waze.com/ul?ll=' + st.coord + '&navigate=yes'
-    : 'https://waze.com/ul?q=' + encodeURIComponent(st.text.trim()) + '&navigate=yes';
 });
 
 /* ---- Official fuel prices (zone Ouest) ----
