@@ -21042,7 +21042,7 @@
   }
  },
  "flightsBoard": {
-  "checkedAt": "2026-10-23T16:07:49Z",
+  "checkedAt": "2026-10-23T19:08:56Z",
   "source": "AeroDataBox",
   "departures": [
    {
@@ -21318,7 +21318,7 @@
     },
     "sched": "2026-10-24T00:50+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21330,7 +21330,7 @@
     },
     "sched": "2026-10-24T00:55+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21353,6 +21353,30 @@
      "name": "Cairo"
     },
     "sched": "2026-10-24T03:50+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "BU 1161",
+    "airline": "CAA",
+    "to": {
+     "iata": "MDK",
+     "name": "Mbandaka"
+    },
+    "sched": "2026-10-24T08:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 60",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-10-24T08:00+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
@@ -21608,7 +21632,7 @@
     },
     "sched": "2026-10-23T23:50+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21620,7 +21644,7 @@
     },
     "sched": "2026-10-24T00:05+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21643,6 +21667,30 @@
      "name": "Cairo"
     },
     "sched": "2026-10-24T02:50+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 98",
+    "airline": "Ethiopian",
+    "from": {
+     "iata": "CDG",
+     "name": "Paris"
+    },
+    "sched": "2026-10-24T06:10+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "QR 1491",
+    "airline": "Qatar",
+    "from": {
+     "iata": "DOH",
+     "name": "Doha"
+    },
+    "sched": "2026-10-24T07:40+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
