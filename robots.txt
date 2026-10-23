@@ -57,4 +57,4 @@ Allow: /
 User-agent: YouBot
 Allow: /
 
-Sitemap: https://patpoundy2k.github.io/kinshasa-traffic-board/sitemap.xml
+Sitemap: https://kinshasabouge.com/sitemap.xml
