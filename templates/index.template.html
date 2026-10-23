@@ -72,7 +72,7 @@
 
   /* ---- Sticky slim header ---- */
   header.site-head{position:sticky;top:0;z-index:1300;background:linear-gradient(120deg,var(--header-1),var(--header-2));color:#fff;box-shadow:0 2px 14px rgba(10,30,55,.28)}
-  .head-in{max-width:1120px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;justify-content:space-between}
+  .head-in{max-width:1540px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;justify-content:space-between}
   .brand{display:flex;align-items:center;gap:9px;min-width:0}
   .brand-icon{font-size:1.35rem;line-height:1}
   h1.brand-name{margin:0;font-size:1.08rem;font-weight:800;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -166,18 +166,44 @@
   body.dark.a11y-contrast :focus-visible{outline-color:#fff}
 
   /* ---- Layout & cards ---- */
-  main{max-width:1120px;margin:0 auto;padding:18px 16px 8px}
-  .tagline{margin:0 0 16px;color:var(--muted);font-size:1rem;line-height:1.5;max-width:780px}
-  .grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px}
-  @media(min-width:920px){.grid{grid-template-columns:350px 1fr}}
-  .grid>div{display:flex;flex-direction:column;gap:16px;min-width:0}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+  main{max-width:1540px;margin:0 auto;padding:18px 16px 8px}
+  .tagline{margin:0 0 16px;color:var(--muted);font-size:1rem;line-height:1.5;max-width:880px}
+
+  /* ---- Wide app shell (2026-10-23) ----
+     Pat's layout direction: the page is WIDE so everything fits,
+     and long content lives in scrolling panels so the page itself
+     is not too long. Desktop: the map is the hero (2fr) beside a
+     rail (1fr) of info cards — trip planner, weather, air quality,
+     fuel; below, the arteries sit in a scrolling panel beside the
+     report form; roadworks, flights and river follow in a clean
+     responsive grid. Mobile: the same content stacks in the same
+     order, with no horizontal overflow and no clipped controls. */
+  .hero{display:grid;grid-template-columns:1fr;gap:16px}
+  .rail{display:flex;flex-direction:column;gap:16px;min-width:0}
+  @media(min-width:1024px){.hero{grid-template-columns:2fr 1fr}}
+  .mid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px}
+  @media(min-width:1024px){.mid{grid-template-columns:2fr 1fr}}
+  .sections{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px}
+  @media(min-width:820px){.sections{grid-template-columns:1fr 1fr}}
+  @media(min-width:820px) and (max-width:1279px){#river-card{grid-column:1/-1}}
+  @media(min-width:1280px){.sections{grid-template-columns:repeat(3,1fr)}}
+  /* Scrolling panel: the list scrolls inside its card while the
+     card header stays put. overscroll-behavior:contain keeps the
+     panel from trapping or chaining page scroll on touch. */
+  .panel-scroll{overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+  .panel-scroll::-webkit-scrollbar{width:8px}
+  .panel-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
+  #arteries-card{display:flex;flex-direction:column;min-height:0}
+  #arteries-card .panel-scroll{flex:1 1 auto;min-height:0;max-height:440px}
+  @media(min-width:1024px){#arteries-card .panel-scroll{max-height:600px}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);transition:border-color .2s ease,box-shadow .2s ease}
   .card h2{margin:0 0 12px;font-size:1.06rem;font-weight:750;letter-spacing:.01em;display:flex;align-items:center;gap:8px}
   .card h3{margin:16px 0 8px;font-size:.97rem;font-weight:700}
 
   /* ---- Map ---- */
-  #map{height:430px;border-radius:14px;z-index:0;background:#dbe7f3}
-  @media(min-width:920px){#map{height:540px}}
+  #map-card{display:flex;flex-direction:column}
+  #map{height:430px;flex:1 1 auto;border-radius:14px;z-index:0;background:#dbe7f3}
+  @media(min-width:1024px){#map{min-height:560px}}
   .maplibregl-map{font:inherit;border-radius:14px}
   .maplibregl-ctrl-attribution{font-size:10px !important;background:rgba(255,255,255,.75) !important}
   .maplibregl-ctrl-attribution a{color:inherit}
@@ -261,6 +287,30 @@
   .aq-ticks .aq-tick-end{right:0;transform:none}
   .aq-advice{margin:10px 0 0;font-size:1rem;line-height:1.45}
 
+  /* ---- Trip planner (Google Maps / Waze deep links — no API) ---- */
+  .pl-preset{margin-top:8px}
+  .pl-swap-row{display:flex;justify-content:flex-end;margin-top:6px}
+  .pl-swap{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--brand-2);font-size:1.1rem;line-height:1;cursor:pointer;transition:background .15s ease}
+  .pl-swap:hover{background:var(--bg)}
+  .pl-swap:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px}
+  .pl-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  .pl-btn{flex:1 1 150px;display:inline-flex;align-items:center;justify-content:center;gap:7px;text-align:center;text-decoration:none;border-radius:12px;padding:12px 10px;font-weight:700;font-size:.95rem;transition:filter .15s ease,background .15s ease}
+  .pl-btn-primary{background:linear-gradient(120deg,var(--brand),var(--brand-2));color:#fff;box-shadow:0 4px 14px -4px rgba(11,94,138,.45)}
+  .pl-btn-primary:hover{filter:brightness(1.08)}
+  .pl-btn-ghost{border:1.5px solid var(--brand-2);color:var(--brand-2);background:transparent}
+  .pl-btn-ghost:hover{background:rgba(11,94,138,.08)}
+  .pl-btn:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px}
+  .pl-error{color:#b91c1c;margin-top:10px}
+  body.dark .pl-error{color:#fca5a5}
+
+  /* ---- Official fuel prices (zone Ouest) ---- */
+  .fuel-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:1rem}
+  .fuel-row span{font-weight:600}
+  .fuel-row strong{font-size:1.3rem;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .fuel-note{margin-top:9px}
+  .fuel-note a{color:var(--brand-2);font-weight:600;text-decoration:none}
+  .fuel-note a:hover{text-decoration:underline}
+
   /* ---- FIH flights board (AeroDataBox departures/arrivals) ---- */
   .fih-row{display:flex;align-items:baseline;gap:6px 12px;flex-wrap:wrap}
   .fih-time{font-variant-numeric:tabular-nums;font-weight:800;white-space:nowrap}
@@ -276,7 +326,7 @@
   .fb-chip.fb-sched{background:transparent;color:var(--muted);border:1px solid var(--line)}
 
   /* ---- Footer ---- */
-  footer{max-width:1120px;margin:0 auto;padding:14px 16px 30px;color:var(--muted);font-size:.84rem;line-height:1.55}
+  footer{max-width:1540px;margin:0 auto;padding:14px 16px 30px;color:var(--muted);font-size:.84rem;line-height:1.55}
   footer p{margin:6px 0}
   .owner-line{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
   .owner-line a{color:inherit;text-decoration:underline}
@@ -318,6 +368,7 @@
 <main>
   <p class="tagline" data-i18n="tagline">Circulation à Kinshasa : grandes artères, congestion habituelle, chantiers, météo en direct et signalements d'embouteillages.</p>
 
+  <div class="hero">
   <section class="card" id="map-card">
     <h2>🗺️ <span data-i18n="mapTitle">Carte des grandes artères</span></h2>
     <p class="live-badge hidden" id="live-badge" role="status"></p>
@@ -346,8 +397,28 @@
     <p class="note live-links" style="margin-top:8px">🛰️ <a href="https://zoom.earth/maps/satellite/#view=-4.32,15.32,9z" target="_blank" rel="noopener" data-i18n="zoomEarthLink">Satellite en direct (Zoom Earth)</a></p>
   </section>
 
-  <div class="grid">
-    <div>
+    <div class="rail">
+      <section class="card" id="planner-card">
+        <h2>🧭 <span data-i18n="plannerTitle">Planificateur de trajet</span></h2>
+        <form id="planner-form">
+          <label for="pl-from" data-i18n="plannerFrom">Départ</label>
+          <input type="text" id="pl-from" autocomplete="off" data-i18n-ph="plannerFromPh" placeholder="Adresse ou lieu de départ (optionnel)">
+          <select id="pl-from-preset" class="pl-preset" aria-label="Lieux fréquents — départ"></select>
+          <div class="pl-swap-row">
+            <button type="button" id="pl-swap" class="pl-swap" aria-label="Inverser départ et destination">⇅</button>
+          </div>
+          <label for="pl-to" data-i18n="plannerTo">Destination</label>
+          <input type="text" id="pl-to" autocomplete="off" data-i18n-ph="plannerToPh" placeholder="Adresse ou lieu de destination">
+          <select id="pl-to-preset" class="pl-preset" aria-label="Lieux fréquents — destination"></select>
+          <p class="note pl-error hidden" id="pl-error" role="alert"></p>
+          <div class="pl-actions">
+            <a class="pl-btn pl-btn-primary" id="pl-google" href="#" target="_blank" rel="noopener noreferrer">🗺️ <span data-i18n="plannerGoogle">Ouvrir dans Google Maps</span></a>
+            <a class="pl-btn pl-btn-ghost" id="pl-waze" href="#" target="_blank" rel="noopener noreferrer">🚗 <span data-i18n="plannerWaze">Ouvrir dans Waze</span></a>
+          </div>
+          <p class="note" style="margin-top:10px" data-i18n="plannerHint">Waze démarre la navigation depuis votre position actuelle. Google Maps utilise le départ indiqué — ou votre position s'il est vide.</p>
+        </form>
+      </section>
+
       <section class="card" id="weather-card">
         <h2>🌦️ <span data-i18n="weatherTitle">Météo à Kinshasa (en direct)</span></h2>
         <div id="weather-body"><p class="note" data-i18n="weatherLoading">Chargement de la météo…</p></div>
@@ -360,39 +431,51 @@
         <p class="note" style="margin-top:8px" data-i18n="aqSource">Estimation pour Kinshasa : modèle CAMS via Open-Meteo (pas de mesure au sol en direct).</p>
       </section>
 
-      <section class="card">
-        <h2>📝 <span data-i18n="reportTitle">Signaler un embouteillage</span></h2>
-        <div class="honest" data-i18n="reportNote">Votre signalement est partagé avec tous les visiteurs et reste visible 24 heures.</div>
-        <form id="report-form">
-          <label for="rep-artery" data-i18n="reportArtery">Artère</label>
-          <select id="rep-artery" required></select>
-          <label for="rep-level" data-i18n="reportLevel">Niveau</label>
-          <select id="rep-level" required>
-            <option value="fluid" data-i18n="lvlFluid">Fluide</option>
-            <option value="slow" data-i18n="lvlSlow">Ralenti</option>
-            <option value="heavy" data-i18n="lvlHeavy">Dense</option>
-            <option value="blocked" data-i18n="lvlBlocked">Bloqué</option>
-          </select>
-          <label for="rep-comment" data-i18n="reportComment">Commentaire (optionnel)</label>
-          <textarea id="rep-comment" rows="2" maxlength="140"></textarea>
-          <button type="submit" class="cta" data-i18n="reportSubmit">Ajouter mon signalement</button>
-        </form>
-        <p id="report-error" class="note" role="alert" style="display:none;color:#b91c1c" data-i18n="reportError">Envoi impossible pour le moment — réessayez dans un instant.</p>
-        <h3 data-i18n="myReports">Mes signalements (cet appareil)</h3>
-        <ul class="clean" id="my-reports"><li class="note" data-i18n="noReports">Aucun signalement pour le moment.</li></ul>
+      <section class="card" id="fuel-card">
+        <h2>⛽ <span data-i18n="fuelTitle">Prix du carburant — zone Ouest (officiel)</span></h2>
+        <div id="fuel-body">
+{{FUEL_HTML}}
+        </div>
       </section>
     </div>
+  </div>
 
-    <div>
-      <section class="card">
-        <h2>🛣️ <span data-i18n="arteriesTitle">Les grandes artères</span></h2>
+  <div class="mid">
+    <section class="card" id="arteries-card">
+      <h2>🛣️ <span data-i18n="arteriesTitle">Les grandes artères</span></h2>
+      <div class="panel-scroll">
         <ul class="clean" id="arteries-list">
 {{ARTERIES_LIST_HTML}}
         </ul>
-      </section>
+      </div>
+    </section>
 
-      <section class="card">
-        <h2>🚧 <span data-i18n="worksTitle">Chantiers et points signalés</span></h2>
+    <section class="card" id="report-card">
+      <h2>📝 <span data-i18n="reportTitle">Signaler un embouteillage</span></h2>
+      <div class="honest" data-i18n="reportNote">Votre signalement est partagé avec tous les visiteurs et reste visible 24 heures.</div>
+      <form id="report-form">
+        <label for="rep-artery" data-i18n="reportArtery">Artère</label>
+        <select id="rep-artery" required></select>
+        <label for="rep-level" data-i18n="reportLevel">Niveau</label>
+        <select id="rep-level" required>
+          <option value="fluid" data-i18n="lvlFluid">Fluide</option>
+          <option value="slow" data-i18n="lvlSlow">Ralenti</option>
+          <option value="heavy" data-i18n="lvlHeavy">Dense</option>
+          <option value="blocked" data-i18n="lvlBlocked">Bloqué</option>
+        </select>
+        <label for="rep-comment" data-i18n="reportComment">Commentaire (optionnel)</label>
+        <textarea id="rep-comment" rows="2" maxlength="140"></textarea>
+        <button type="submit" class="cta" data-i18n="reportSubmit">Ajouter mon signalement</button>
+      </form>
+      <p id="report-error" class="note" role="alert" style="display:none;color:#b91c1c" data-i18n="reportError">Envoi impossible pour le moment — réessayez dans un instant.</p>
+      <h3 data-i18n="myReports">Mes signalements (cet appareil)</h3>
+      <ul class="clean" id="my-reports"><li class="note" data-i18n="noReports">Aucun signalement pour le moment.</li></ul>
+    </section>
+  </div>
+
+  <div class="sections">
+    <section class="card" id="works-card">
+      <h2>🚧 <span data-i18n="worksTitle">Chantiers et points signalés</span></h2>
         <p class="note" data-i18n="worksNote">Informations tirées de la presse congolaise, avec source et date — à confirmer sur place.</p>
         <ul class="clean" id="works-list">
 {{ROADWORKS_LIST_HTML}}
@@ -411,14 +494,13 @@
         <p class="note" id="flights-board-empty" data-i18n="fihUnavailable">Données vols indisponibles pour le moment.</p>
       </section>
 
-      <section class="card">
-        <h2>🌊 <span data-i18n="riverTitle">Fleuve Congo — navigation et traversée</span></h2>
+    <section class="card" id="river-card">
+      <h2>🌊 <span data-i18n="riverTitle">Fleuve Congo — navigation et traversée</span></h2>
         <p class="honest" data-i18n="riverNote">Régime du fleuve : hautes eaux vers décembre et avril–mai, basses eaux (étiage) en juillet–août. La traversée Kinshasa–Brazzaville part du Beach Ngobila. Il n'existe aucun flux en direct des niveaux du fleuve ni des bateaux : ces informations viennent de la presse et de rapports officiels, comme les chantiers.</p>
         <ul class="clean" id="river-list">
 {{RIVER_LIST_HTML}}
         </ul>
-      </section>
-    </div>
+    </section>
   </div>
 </main>
 
@@ -536,6 +618,23 @@ var I18N = {
     a11yContrast: "Contraste élevé",
     a11yMotion: "Réduire les animations",
     supportButton: "Soutenir le projet",
+    plannerTitle: "Planificateur de trajet",
+    plannerFrom: "Départ",
+    plannerTo: "Destination",
+    plannerFromPh: "Adresse ou lieu de départ (optionnel)",
+    plannerToPh: "Adresse ou lieu de destination",
+    plannerPreset: "— Lieux fréquents —",
+    plannerSwap: "Inverser départ et destination",
+    plannerGoogle: "Ouvrir dans Google Maps",
+    plannerWaze: "Ouvrir dans Waze",
+    plannerHint: "Waze démarre la navigation depuis votre position actuelle. Google Maps utilise le départ indiqué — ou votre position s'il est vide.",
+    plannerNeedDest: "Indiquez une destination (texte ou lieu fréquent) pour ouvrir l'itinéraire.",
+    fuelTitle: "Prix du carburant — zone Ouest (officiel)",
+    fuelEssence: "Essence",
+    fuelGasoil: "Gasoil",
+    fuelNote: "Prix officiel par zone — arrêté du {D}. Source : Ministère de l'Économie nationale (CSPPP). Le même prix s'applique dans toutes les stations de la zone.",
+    fuelCheck: "Vérification hebdomadaire (GlobalPetrolPrices)",
+    fuelUnavailable: "Prix du carburant indisponible pour le moment.",
     status: { active:"En cours", stopped:"À l'arrêt", stalled:"Presque à l'arrêt", progressing:"En progression", degraded:"Dégradé" }
   },
   en: {
@@ -625,6 +724,23 @@ var I18N = {
     a11yContrast: "High contrast",
     a11yMotion: "Reduce motion",
     supportButton: "Support this project",
+    plannerTitle: "Trip planner",
+    plannerFrom: "From",
+    plannerTo: "To",
+    plannerFromPh: "Departure address or place (optional)",
+    plannerToPh: "Destination address or place",
+    plannerPreset: "— Frequent places —",
+    plannerSwap: "Swap origin and destination",
+    plannerGoogle: "Open in Google Maps",
+    plannerWaze: "Open in Waze",
+    plannerHint: "Waze starts navigation from your current position. Google Maps uses the origin you entered — or your position if it is empty.",
+    plannerNeedDest: "Enter a destination (typed text or a frequent place) to open the route.",
+    fuelTitle: "Fuel prices — West zone (official)",
+    fuelEssence: "Petrol",
+    fuelGasoil: "Diesel",
+    fuelNote: "Official zonal price — decree of {D}. Source: Ministry of National Economy (CSPPP). The same price applies at every station in the zone.",
+    fuelCheck: "Weekly cross-check (GlobalPetrolPrices)",
+    fuelUnavailable: "Fuel price unavailable right now.",
     status: { active:"Active", stopped:"Stopped", stalled:"Nearly stopped", progressing:"Progressing", degraded:"Degraded" }
   }
 };
@@ -1668,6 +1784,182 @@ function renderFlightsBoard(){
   fihFillList(document.getElementById('fih-arrivals'), arrs, 'from');
 }
 
+/* ---- Trip planner (Google Maps / Waze deep links) ----
+   No routing API, no key, no quota: the two buttons build the
+   official deep-link URLs and the navigation itself happens in
+   Google Maps / Waze. Each field pairs a free-text input with a
+   preset picker of well-known Kinshasa places. The preset
+   coordinates below are APPROXIMATE landmark coordinates, used
+   only to build the links. Picking a preset fills the input and
+   pins its coordinates; typing in the input drops the coordinates
+   (the typed text is then used as-is). Google Maps: an empty
+   origin omits the parameter, so Google starts from the visitor's
+   current position. Waze always navigates from the current
+   position — the hint under the buttons says so. */
+var PLANNER_PLACES = [
+  { fr: "Aéroport de N'djili (FIH)", en: "N'djili Airport (FIH)", lat: -4.385, lon: 15.444 },
+  { fr: "Gare Centrale", en: "Gare Centrale (central station)", lat: -4.3022, lon: 15.3108 },
+  { fr: "Beach Ngobila (traversée Brazzaville)", en: "Beach Ngobila (Brazzaville crossing)", lat: -4.2975, lon: 15.32056 },
+  { fr: "Port de Kinshasa", en: "Port of Kinshasa", lat: -4.29861, lon: 15.30694 },
+  { fr: "Marché Central (Zando)", en: "Central Market (Zando)", lat: -4.3239, lon: 15.3094 },
+  { fr: "Stade des Martyrs", en: "Stade des Martyrs (stadium)", lat: -4.3317, lon: 15.31 },
+  { fr: "Université de Kinshasa (UNIKIN)", en: "University of Kinshasa (UNIKIN)", lat: -4.4194, lon: 15.3103 },
+  { fr: "Kintambo Magasin", en: "Kintambo Magasin", lat: -4.3233, lon: 15.2733 },
+  { fr: "Rond-Point Ngaba", en: "Rond-Point Ngaba", lat: -4.3867, lon: 15.3186 },
+  { fr: "Matete", en: "Matete", lat: -4.3889, lon: 15.3486 }
+];
+var plannerState = {
+  from: { text: '', coord: null },
+  to: { text: '', coord: null }
+};
+function plannerPlaceLabel(p){ return lang === 'fr' ? p.fr : p.en; }
+function buildPlannerPresets(){
+  ['from', 'to'].forEach(function(which){
+    var sel = document.getElementById('pl-' + which + '-preset');
+    if (!sel) return;
+    var current = sel.value;
+    sel.innerHTML = '';
+    var opt0 = document.createElement('option');
+    opt0.value = ''; opt0.textContent = t('plannerPreset');
+    sel.appendChild(opt0);
+    PLANNER_PLACES.forEach(function(p, i){
+      var o = document.createElement('option');
+      o.value = String(i);
+      o.textContent = plannerPlaceLabel(p);
+      sel.appendChild(o);
+    });
+    sel.value = current;
+    sel.setAttribute('aria-label', t('plannerPreset') + ' — ' + t(which === 'from' ? 'plannerFrom' : 'plannerTo'));
+  });
+  var swap = document.getElementById('pl-swap');
+  if (swap) swap.setAttribute('aria-label', t('plannerSwap'));
+}
+function hidePlannerError(){
+  var err = document.getElementById('pl-error');
+  if (err) err.classList.add('hidden');
+}
+function plannerBind(which){
+  var input = document.getElementById('pl-' + which);
+  var sel = document.getElementById('pl-' + which + '-preset');
+  if (!input || !sel) return;
+  sel.addEventListener('change', function(){
+    var st = plannerState[which];
+    if (this.value === '') { st.coord = null; return; }
+    var p = PLANNER_PLACES[parseInt(this.value, 10)];
+    if (!p) return;
+    st.coord = p.lat + ',' + p.lon;
+    st.text = plannerPlaceLabel(p);
+    input.value = st.text;
+    hidePlannerError();
+  });
+  input.addEventListener('input', function(){
+    plannerState[which].text = this.value;
+    plannerState[which].coord = null;
+    sel.value = '';
+    hidePlannerError();
+  });
+}
+function plannerValue(which){
+  var st = plannerState[which];
+  return st.coord || st.text.trim();
+}
+function plannerValidate(){
+  if (plannerValue('to')) { hidePlannerError(); return true; }
+  var err = document.getElementById('pl-error');
+  if (err) { err.textContent = t('plannerNeedDest'); err.classList.remove('hidden'); }
+  return false;
+}
+plannerBind('from');
+plannerBind('to');
+var plannerFormEl = document.getElementById('planner-form');
+if (plannerFormEl) plannerFormEl.addEventListener('submit', function(ev){
+  ev.preventDefault();
+  plannerValidate();
+});
+var plSwapBtn = document.getElementById('pl-swap');
+if (plSwapBtn) plSwapBtn.addEventListener('click', function(){
+  var tmp = plannerState.from;
+  plannerState.from = plannerState.to;
+  plannerState.to = tmp;
+  ['from', 'to'].forEach(function(which){
+    document.getElementById('pl-' + which).value = plannerState[which].text;
+    var sel = document.getElementById('pl-' + which + '-preset');
+    sel.value = '';
+    if (plannerState[which].coord) {
+      for (var i = 0; i < PLANNER_PLACES.length; i++) {
+        if (PLANNER_PLACES[i].lat + ',' + PLANNER_PLACES[i].lon === plannerState[which].coord) {
+          sel.value = String(i);
+          break;
+        }
+      }
+    }
+  });
+  hidePlannerError();
+});
+var plGoogleBtn = document.getElementById('pl-google');
+if (plGoogleBtn) plGoogleBtn.addEventListener('click', function(ev){
+  if (!plannerValidate()) { ev.preventDefault(); return; }
+  var url = 'https://www.google.com/maps/dir/?api=1';
+  var origin = plannerValue('from');
+  if (origin) url += '&origin=' + encodeURIComponent(origin);
+  url += '&destination=' + encodeURIComponent(plannerValue('to')) + '&travelmode=driving';
+  this.href = url;
+});
+var plWazeBtn = document.getElementById('pl-waze');
+if (plWazeBtn) plWazeBtn.addEventListener('click', function(ev){
+  if (!plannerValidate()) { ev.preventDefault(); return; }
+  var st = plannerState.to;
+  this.href = st.coord
+    ? 'https://waze.com/ul?ll=' + st.coord + '&navigate=yes'
+    : 'https://waze.com/ul?q=' + encodeURIComponent(st.text.trim()) + '&navigate=yes';
+});
+
+/* ---- Official fuel prices (zone Ouest) ----
+   Curated in scripts/build.py (FUEL), like the roadworks/river
+   items: the price is set nationally by ministerial arrêté per
+   supply zone and is identical at every Kinshasa station, so the
+   panel shows the official zone price with its arrêté date and
+   source — never a per-station figure, which does not exist. */
+var FUEL_MONTHS = {
+  fr: ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'],
+  en: ['January','February','March','April','May','June','July','August','September','October','November','December']
+};
+function fmtFuelPrice(v){
+  var s = String(Math.round(v));
+  var sep = lang === 'fr' ? ' ' : ',';
+  return s.replace(/\B(?=(\d{3})+(?!\d))/g, sep);
+}
+function fmtFuelDate(iso){
+  var p = String(iso || '').split('-');
+  if (p.length !== 3) return iso || '';
+  var m = parseInt(p[1], 10), d = parseInt(p[2], 10);
+  if (!FUEL_MONTHS[lang] || !FUEL_MONTHS[lang][m - 1]) return iso;
+  return lang === 'fr'
+    ? d + ' ' + FUEL_MONTHS.fr[m - 1] + ' ' + p[0]
+    : FUEL_MONTHS.en[m - 1] + ' ' + d + ', ' + p[0];
+}
+function renderFuel(){
+  var body = document.getElementById('fuel-body');
+  if (!body) return;
+  var f = BOARD.fuel;
+  if (!f || f.essence == null || f.gasoil == null) {
+    body.innerHTML = '<p class="note">' + t('fuelUnavailable') + '</p>';
+    return;
+  }
+  body.innerHTML =
+    '<div class="fuel-row"><span>' + t('fuelEssence') + '</span><strong>' +
+      fmtFuelPrice(f.essence) + ' ' + escapeHtml(f.unit || 'FC/L') + '</strong></div>' +
+    '<div class="fuel-row"><span>' + t('fuelGasoil') + '</span><strong>' +
+      fmtFuelPrice(f.gasoil) + ' ' + escapeHtml(f.unit || 'FC/L') + '</strong></div>' +
+    '<p class="note fuel-note">' +
+      escapeHtml(t('fuelNote').replace('{D}', fmtFuelDate(f.decree_date))) +
+      (f.crosscheck_url
+        ? ' · <a href="' + f.crosscheck_url + '" target="_blank" rel="noopener">' +
+          escapeHtml(t('fuelCheck')) + '</a>'
+        : '') +
+    '</p>';
+}
+
 /* ---- Accessibility options (header button + panel) ----
    Three visitor toggles: larger text (a 120% root font-size step —
    the layout, MapLibre popups included, is sized in rem), high
@@ -1765,9 +2057,13 @@ function applyLang(){
     var k = el.getAttribute('data-i18n');
     if (I18N[lang][k]) el.textContent = I18N[lang][k];
   });
+  document.querySelectorAll('[data-i18n-ph]').forEach(function(el){
+    var k = el.getAttribute('data-i18n-ph');
+    if (I18N[lang][k]) el.setAttribute('placeholder', I18N[lang][k]);
+  });
   document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
   document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-  renderLists(); drawArteries(); drawWorks(); renderReports(); paintGcVisits(); buildLayersControl(); updateSliderUI(); renderAirQuality(); updateLiveUI(); updateFlightsUI(); refreshFlightLabels(); applyA11yLabels(); renderFlightsBoard();
+  renderLists(); drawArteries(); drawWorks(); renderReports(); paintGcVisits(); buildLayersControl(); updateSliderUI(); renderAirQuality(); updateLiveUI(); updateFlightsUI(); refreshFlightLabels(); applyA11yLabels(); renderFlightsBoard(); buildPlannerPresets(); renderFuel();
 }
 document.getElementById('btn-fr').addEventListener('click', function(){ lang = 'fr'; saveLang(); applyLang(); });
 document.getElementById('btn-en').addEventListener('click', function(){ lang = 'en'; saveLang(); applyLang(); });
