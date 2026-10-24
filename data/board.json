@@ -21042,273 +21042,9 @@
   }
  },
  "flightsBoard": {
-  "checkedAt": "2026-10-23T21:58:45Z",
+  "checkedAt": "2026-10-24T15:56:36Z",
   "source": "AeroDataBox",
   "departures": [
-   {
-    "flight": "ET 842",
-    "airline": "Ethiopian",
-    "to": {
-     "iata": "ADD",
-     "name": "Addis Ababa"
-    },
-    "sched": "2026-10-23T00:55+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "DT 544",
-    "airline": "TAAG",
-    "to": {
-     "iata": "BZV",
-     "name": "Brazzaville"
-    },
-    "sched": "2026-10-23T01:45+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "ET 60",
-    "airline": "Ethiopian",
-    "to": {
-     "iata": "FBM",
-     "name": "Lubumbashi"
-    },
-    "sched": "2026-10-23T08:00+01:00",
-    "revised": null,
-    "status": "Expected",
-    "quality": "Basic"
-   },
-   {
-    "flight": "ET 96",
-    "airline": "Ethiopian",
-    "to": {
-     "iata": "",
-     "name": "Moanda"
-    },
-    "sched": "2026-10-23T08:30+01:00",
-    "revised": null,
-    "status": "Expected",
-    "quality": "Basic"
-   },
-   {
-    "flight": "BU 1257",
-    "airline": "CAA",
-    "to": {
-     "iata": "KND",
-     "name": "Kindu"
-    },
-    "sched": "2026-10-23T09:00+01:00",
-    "revised": null,
-    "status": "Expected",
-    "quality": "Basic"
-   },
-   {
-    "flight": "ET 66",
-    "airline": "Ethiopian",
-    "to": {
-     "iata": "MJM",
-     "name": "Mbuji Mayi"
-    },
-    "sched": "2026-10-23T09:00+01:00",
-    "revised": null,
-    "status": "Expected",
-    "quality": "Basic"
-   },
-   {
-    "flight": "KP 71",
-    "airline": "ASKY",
-    "to": {
-     "iata": "LFW",
-     "name": "Lomé"
-    },
-    "sched": "2026-10-23T09:05+01:00",
-    "revised": null,
-    "status": "Expected",
-    "quality": "Basic"
-   },
-   {
-    "flight": "BU 1424",
-    "airline": "CAA",
-    "to": {
-     "iata": "KGA",
-     "name": "Kananga"
-    },
-    "sched": "2026-10-23T09:15+01:00",
-    "revised": null,
-    "status": "Expected",
-    "quality": "Basic"
-   },
-   {
-    "flight": "QR 1491",
-    "airline": "Qatar",
-    "to": {
-     "iata": "NBJ",
-     "name": "Luanda"
-    },
-    "sched": "2026-10-23T09:15+01:00",
-    "revised": null,
-    "status": "Expected",
-    "quality": "Basic"
-   },
-   {
-    "flight": "ET 70",
-    "airline": "Ethiopian",
-    "to": {
-     "iata": "FKI",
-     "name": "Kisangani"
-    },
-    "sched": "2026-10-23T10:00+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "ET 98",
-    "airline": "Ethiopian",
-    "to": {
-     "iata": "BRU",
-     "name": "Brussels"
-    },
-    "sched": "2026-10-23T10:00+01:00",
-    "revised": null,
-    "status": "Expected",
-    "quality": "Basic"
-   },
-   {
-    "flight": "BU 1634",
-    "airline": "CAA",
-    "to": {
-     "iata": "KWZ",
-     "name": "Lubumbashi"
-    },
-    "sched": "2026-10-23T11:45+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "ET 92",
-    "airline": "Ethiopian",
-    "to": {
-     "iata": "BDT",
-     "name": "Gbadolite"
-    },
-    "sched": "2026-10-23T12:20+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "TC 225",
-    "airline": "Air Tanzania",
-    "to": {
-     "iata": "DAR",
-     "name": "Dar es Salaam"
-    },
-    "sched": "2026-10-23T12:50+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "ET 840",
-    "airline": "Ethiopian",
-    "to": {
-     "iata": "ADD",
-     "name": "Addis Ababa"
-    },
-    "sched": "2026-10-23T13:25+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "BU 1611",
-    "airline": "CAA",
-    "to": {
-     "iata": "FBM",
-     "name": "Lubumbashi"
-    },
-    "sched": "2026-10-23T13:45+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "ET 62",
-    "airline": "Ethiopian",
-    "to": {
-     "iata": "FBM",
-     "name": "Lubumbashi"
-    },
-    "sched": "2026-10-23T15:00+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "ET 64",
-    "airline": "Ethiopian",
-    "to": {
-     "iata": "FBM",
-     "name": "Lubumbashi"
-    },
-    "sched": "2026-10-23T16:00+01:00",
-    "revised": null,
-    "status": "Expected",
-    "quality": "Basic"
-   },
-   {
-    "flight": "BU 21",
-    "airline": "CAA",
-    "to": {
-     "iata": "NBJ",
-     "name": "Luanda"
-    },
-    "sched": "2026-10-23T17:00+01:00",
-    "revised": null,
-    "status": "Expected",
-    "quality": "Basic"
-   },
-   {
-    "flight": "KP 44",
-    "airline": "ASKY",
-    "to": {
-     "iata": "BZV",
-     "name": "Brazzaville"
-    },
-    "sched": "2026-10-23T18:45+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "AF 722",
-    "airline": "Air France",
-    "to": {
-     "iata": "BZV",
-     "name": "Brazzaville"
-    },
-    "sched": "2026-10-23T19:20+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "SN 358",
-    "airline": "Brussels",
-    "to": {
-     "iata": "BRU",
-     "name": "Brussels"
-    },
-    "sched": "2026-10-23T21:15+01:00",
-    "revised": null,
-    "status": "Expected",
-    "quality": "Basic"
-   },
    {
     "flight": "SA 59",
     "airline": "South African",
@@ -21464,261 +21200,117 @@
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
-   }
-  ],
-  "arrivals": [
+   },
    {
-    "flight": "ET 843",
+    "flight": "BU 1671",
+    "airline": "CAA",
+    "to": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-10-24T18:00+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KP 70",
+    "airline": "ASKY",
+    "to": {
+     "iata": "JNB",
+     "name": "Jo'anna"
+    },
+    "sched": "2026-10-24T18:45+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "HF 836",
+    "airline": "Air Cote D'Ivoire",
+    "to": {
+     "iata": "BZV",
+     "name": "Brazzaville"
+    },
+    "sched": "2026-10-24T20:10+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "J7 375",
+    "airline": "Afrijet",
+    "to": {
+     "iata": "LBV",
+     "name": "Libreville"
+    },
+    "sched": "2026-10-24T20:15+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "SN 358",
+    "airline": "Brussels",
+    "to": {
+     "iata": "BRU",
+     "name": "Brussels"
+    },
+    "sched": "2026-10-24T21:15+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "AF 754",
+    "airline": "Air France",
+    "to": {
+     "iata": "CDG",
+     "name": "Paris"
+    },
+    "sched": "2026-10-24T21:30+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "SA 59",
+    "airline": "South African",
+    "to": {
+     "iata": "JNB",
+     "name": "Jo'anna"
+    },
+    "sched": "2026-10-25T00:50+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 842",
     "airline": "Ethiopian",
-    "from": {
+    "to": {
      "iata": "ADD",
      "name": "Addis Ababa"
     },
-    "sched": "2026-10-23T00:05+01:00",
+    "sched": "2026-10-25T01:00+01:00",
     "revised": null,
-    "status": "Unknown",
+    "status": "Expected",
     "quality": "Basic"
    },
    {
     "flight": "DT 544",
     "airline": "TAAG",
-    "from": {
-     "iata": "NBJ",
-     "name": "Luanda"
+    "to": {
+     "iata": "BZV",
+     "name": "Brazzaville"
     },
-    "sched": "2026-10-23T00:45+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "QR 1491",
-    "airline": "Qatar",
-    "from": {
-     "iata": "DOH",
-     "name": "Doha"
-    },
-    "sched": "2026-10-23T07:40+01:00",
+    "sched": "2026-10-25T01:45+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
-   },
-   {
-    "flight": "KP 71",
-    "airline": "ASKY",
-    "from": {
-     "iata": "JNB",
-     "name": "Jo'anna"
-    },
-    "sched": "2026-10-23T08:25+01:00",
-    "revised": null,
-    "status": "Expected",
-    "quality": "Basic"
-   },
-   {
-    "flight": "ET 65",
-    "airline": "Ethiopian",
-    "from": {
-     "iata": "FBM",
-     "name": "Lubumbashi"
-    },
-    "sched": "2026-10-23T09:00+01:00",
-    "revised": null,
-    "status": "Expected",
-    "quality": "Basic"
-   },
-   {
-    "flight": "BU 1633",
-    "airline": "CAA",
-    "from": {
-     "iata": "KWZ",
-     "name": "Lubumbashi"
-    },
-    "sched": "2026-10-23T10:30+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "BU 1612",
-    "airline": "CAA",
-    "from": {
-     "iata": "FBM",
-     "name": "Lubumbashi"
-    },
-    "sched": "2026-10-23T11:30+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "ET 97",
-    "airline": "Ethiopian",
-    "from": {
-     "iata": "",
-     "name": "Moanda"
-    },
-    "sched": "2026-10-23T11:50+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "TC 224",
-    "airline": "Air Tanzania",
-    "from": {
-     "iata": "DAR",
-     "name": "Dar es Salaam"
-    },
-    "sched": "2026-10-23T11:50+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "ET 841",
-    "airline": "Ethiopian",
-    "from": {
-     "iata": "ADD",
-     "name": "Addis Ababa"
-    },
-    "sched": "2026-10-23T12:10+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "BU 1423",
-    "airline": "CAA",
-    "from": {
-     "iata": "KGA",
-     "name": "Kananga"
-    },
-    "sched": "2026-10-23T13:00+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "ET 67",
-    "airline": "Ethiopian",
-    "from": {
-     "iata": "MJM",
-     "name": "Mbuji Mayi"
-    },
-    "sched": "2026-10-23T13:10+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "ET 61",
-    "airline": "Ethiopian",
-    "from": {
-     "iata": "FBM",
-     "name": "Lubumbashi"
-    },
-    "sched": "2026-10-23T14:00+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "ET 71",
-    "airline": "Ethiopian",
-    "from": {
-     "iata": "FKI",
-     "name": "Kisangani"
-    },
-    "sched": "2026-10-23T15:00+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "AF 722",
-    "airline": "Air France",
-    "from": {
-     "iata": "CDG",
-     "name": "Paris"
-    },
-    "sched": "2026-10-23T17:40+01:00",
-    "revised": null,
-    "status": "Expected",
-    "quality": "Basic"
-   },
-   {
-    "flight": "KP 44",
-    "airline": "ASKY",
-    "from": {
-     "iata": "LFW",
-     "name": "Lomé"
-    },
-    "sched": "2026-10-23T18:05+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "ET 93",
-    "airline": "Ethiopian",
-    "from": {
-     "iata": "BDT",
-     "name": "Gbadolite"
-    },
-    "sched": "2026-10-23T19:10+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "SN 357",
-    "airline": "Brussels",
-    "from": {
-     "iata": "BRU",
-     "name": "Brussels"
-    },
-    "sched": "2026-10-23T19:20+01:00",
-    "revised": null,
-    "status": "Expected",
-    "quality": "Basic"
-   },
-   {
-    "flight": "BU 22",
-    "airline": "CAA",
-    "from": {
-     "iata": "NBJ",
-     "name": "Luanda"
-    },
-    "sched": "2026-10-23T19:55+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "ET 63",
-    "airline": "Ethiopian",
-    "from": {
-     "iata": "FBM",
-     "name": "Lubumbashi"
-    },
-    "sched": "2026-10-23T21:00+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "SA 58",
-    "airline": "South African",
-    "from": {
-     "iata": "JNB",
-     "name": "Jo'anna"
-    },
-    "sched": "2026-10-23T23:50+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
+   }
+  ],
+  "arrivals": [
    {
     "flight": "ET 843",
     "airline": "Ethiopian",
@@ -21823,6 +21415,138 @@
      "name": "Mbuji Mayi"
     },
     "sched": "2026-10-24T10:45+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 89",
+    "airline": "Ethiopian",
+    "from": {
+     "iata": "",
+     "name": "Beni"
+    },
+    "sched": "2026-10-24T17:20+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KP 70",
+    "airline": "ASKY",
+    "from": {
+     "iata": "LFW",
+     "name": "Lomé"
+    },
+    "sched": "2026-10-24T18:05+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 71",
+    "airline": "Ethiopian",
+    "from": {
+     "iata": "FKI",
+     "name": "Kisangani"
+    },
+    "sched": "2026-10-24T19:00+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "J7 374",
+    "airline": "Afrijet",
+    "from": {
+     "iata": "PNR",
+     "name": "Pointe Noire"
+    },
+    "sched": "2026-10-24T19:20+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "SN 357",
+    "airline": "Brussels",
+    "from": {
+     "iata": "BRU",
+     "name": "Brussels"
+    },
+    "sched": "2026-10-24T19:20+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "HF 836",
+    "airline": "Air Cote D'Ivoire",
+    "from": {
+     "iata": "ABJ",
+     "name": "Abidjan"
+    },
+    "sched": "2026-10-24T19:30+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "AF 754",
+    "airline": "Air France",
+    "from": {
+     "iata": "BZV",
+     "name": "Brazzaville"
+    },
+    "sched": "2026-10-24T19:50+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 63",
+    "airline": "Ethiopian",
+    "from": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-10-24T21:00+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "SA 58",
+    "airline": "South African",
+    "from": {
+     "iata": "JNB",
+     "name": "Jo'anna"
+    },
+    "sched": "2026-10-24T23:50+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 843",
+    "airline": "Ethiopian",
+    "from": {
+     "iata": "ADD",
+     "name": "Addis Ababa"
+    },
+    "sched": "2026-10-25T00:05+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "DT 544",
+    "airline": "TAAG",
+    "from": {
+     "iata": "NBJ",
+     "name": "Luanda"
+    },
+    "sched": "2026-10-25T00:45+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
