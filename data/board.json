@@ -21042,7 +21042,7 @@
   }
  },
  "flightsBoard": {
-  "checkedAt": "2026-10-24T15:56:36Z",
+  "checkedAt": "2026-10-24T18:59:20Z",
   "source": "AeroDataBox",
   "departures": [
    {
@@ -21282,7 +21282,7 @@
     },
     "sched": "2026-10-25T00:50+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21294,7 +21294,7 @@
     },
     "sched": "2026-10-25T01:00+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21306,7 +21306,7 @@
     },
     "sched": "2026-10-25T01:45+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    }
   ],
@@ -21524,7 +21524,7 @@
     },
     "sched": "2026-10-24T23:50+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21536,7 +21536,7 @@
     },
     "sched": "2026-10-25T00:05+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21547,6 +21547,18 @@
      "name": "Luanda"
     },
     "sched": "2026-10-25T00:45+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 98",
+    "airline": "Ethiopian",
+    "from": {
+     "iata": "CDG",
+     "name": "Paris"
+    },
+    "sched": "2026-10-25T06:10+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
