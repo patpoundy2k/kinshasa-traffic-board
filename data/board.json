@@ -21042,7 +21042,7 @@
   }
  },
  "flightsBoard": {
-  "checkedAt": "2026-10-25T19:00:28Z",
+  "checkedAt": "2026-10-25T21:53:34Z",
   "source": "AeroDataBox",
   "departures": [
    {
@@ -21294,6 +21294,114 @@
     },
     "sched": "2026-10-26T03:30+01:00",
     "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "BU 1641",
+    "airline": "CAA",
+    "to": {
+     "iata": "FKI",
+     "name": "Kisangani"
+    },
+    "sched": "2026-10-26T08:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 60",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-10-26T08:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 74",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "",
+     "name": "Kinshasa"
+    },
+    "sched": "2026-10-26T08:30+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "BU 1414",
+    "airline": "CAA",
+    "to": {
+     "iata": "MJM",
+     "name": "Mbuji Mayi"
+    },
+    "sched": "2026-10-26T09:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 66",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "MJM",
+     "name": "Mbuji Mayi"
+    },
+    "sched": "2026-10-26T09:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KP 71",
+    "airline": "ASKY",
+    "to": {
+     "iata": "LFW",
+     "name": "Lomé"
+    },
+    "sched": "2026-10-26T09:05+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "QR 1491",
+    "airline": "Qatar",
+    "to": {
+     "iata": "NBJ",
+     "name": "Luanda"
+    },
+    "sched": "2026-10-26T09:50+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 70",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "FKI",
+     "name": "Kisangani"
+    },
+    "sched": "2026-10-26T10:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KQ 555",
+    "airline": "Kenya",
+    "to": {
+     "iata": "NBO",
+     "name": "Nairobi"
+    },
+    "sched": "2026-10-26T10:00+01:00",
+    "revised": null,
     "status": "Expected",
     "quality": "Basic"
    }
@@ -21500,7 +21608,7 @@
     },
     "sched": "2026-10-26T02:30+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21511,6 +21619,66 @@
      "name": "Paris"
     },
     "sched": "2026-10-26T06:10+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "QR 1491",
+    "airline": "Qatar",
+    "from": {
+     "iata": "DOH",
+     "name": "Doha"
+    },
+    "sched": "2026-10-26T08:15+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KP 71",
+    "airline": "ASKY",
+    "from": {
+     "iata": "JNB",
+     "name": "Jo'anna"
+    },
+    "sched": "2026-10-26T08:25+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 65",
+    "airline": "Ethiopian",
+    "from": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-10-26T09:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KQ 554",
+    "airline": "Kenya",
+    "from": {
+     "iata": "NBO",
+     "name": "Nairobi"
+    },
+    "sched": "2026-10-26T09:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "BU 1633",
+    "airline": "CAA",
+    "from": {
+     "iata": "KWZ",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-10-26T10:30+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
