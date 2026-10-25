@@ -21042,7 +21042,7 @@
   }
  },
  "flightsBoard": {
-  "checkedAt": "2026-10-25T15:56:58Z",
+  "checkedAt": "2026-10-25T19:00:28Z",
   "source": "AeroDataBox",
   "departures": [
    {
@@ -21270,7 +21270,7 @@
     },
     "sched": "2026-10-26T00:50+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21282,7 +21282,7 @@
     },
     "sched": "2026-10-26T01:00+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21476,7 +21476,7 @@
     },
     "sched": "2026-10-25T23:50+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21488,7 +21488,7 @@
     },
     "sched": "2026-10-26T00:05+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21499,6 +21499,18 @@
      "name": "Kampala"
     },
     "sched": "2026-10-26T02:30+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 98",
+    "airline": "Ethiopian",
+    "from": {
+     "iata": "CDG",
+     "name": "Paris"
+    },
+    "sched": "2026-10-26T06:10+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
