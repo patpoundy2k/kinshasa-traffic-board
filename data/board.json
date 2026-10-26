@@ -21042,7 +21042,7 @@
   }
  },
  "flightsBoard": {
-  "checkedAt": "2026-10-26T16:22:38Z",
+  "checkedAt": "2026-10-26T19:17:17Z",
   "source": "AeroDataBox",
   "departures": [
    {
@@ -21234,7 +21234,7 @@
     },
     "sched": "2026-10-27T01:00+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21245,6 +21245,18 @@
      "name": "Brazzaville"
     },
     "sched": "2026-10-27T01:45+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 60",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-10-27T08:00+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
@@ -21428,7 +21440,7 @@
     },
     "sched": "2026-10-27T00:05+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21440,7 +21452,7 @@
     },
     "sched": "2026-10-27T00:45+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    }
   ]
