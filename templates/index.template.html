@@ -402,25 +402,27 @@
   </section>
 
     <div class="rail">
-      <section class="card" id="planner-card">
-        <h2>🧭 <span data-i18n="plannerTitle">Planificateur de trajet</span></h2>
-        <form id="planner-form">
-          <label for="pl-from" data-i18n="plannerFrom">Départ</label>
-          <input type="text" id="pl-from" list="pl-from-list" autocomplete="off" data-i18n-ph="plannerFromPh" placeholder="Adresse ou lieu de départ (optionnel)">
-          <datalist id="pl-from-list"></datalist>
-          <div class="pl-swap-row">
-            <button type="button" id="pl-swap" class="pl-swap" aria-label="Inverser départ et destination">⇅</button>
-          </div>
-          <label for="pl-to" data-i18n="plannerTo">Destination</label>
-          <input type="text" id="pl-to" list="pl-to-list" autocomplete="off" data-i18n-ph="plannerToPh" placeholder="Adresse ou lieu de destination">
-          <datalist id="pl-to-list"></datalist>
-          <p class="note pl-error hidden" id="pl-error" role="alert"></p>
-          <div class="pl-actions">
-            <a class="pl-btn pl-btn-primary" id="pl-google" href="#" target="_blank" rel="noopener noreferrer">🗺️ <span data-i18n="plannerGoogle">Ouvrir dans Google Maps</span></a>
-          </div>
-          <p class="note" style="margin-top:10px" data-i18n="plannerHint">Google Maps utilise le départ indiqué — ou votre position actuelle s'il est vide.</p>
-        </form>
-      </section>
+    <section class="card" id="report-card">
+      <h2>📝 <span data-i18n="reportTitle">Signaler un embouteillage</span></h2>
+      <div class="honest" data-i18n="reportNote">Votre signalement est partagé avec tous les visiteurs et reste visible 24 heures.</div>
+      <form id="report-form">
+        <label for="rep-artery" data-i18n="reportArtery">Artère</label>
+        <select id="rep-artery" required></select>
+        <label for="rep-level" data-i18n="reportLevel">Niveau</label>
+        <select id="rep-level" required>
+          <option value="fluid" data-i18n="lvlFluid">Fluide</option>
+          <option value="slow" data-i18n="lvlSlow">Ralenti</option>
+          <option value="heavy" data-i18n="lvlHeavy">Dense</option>
+          <option value="blocked" data-i18n="lvlBlocked">Bloqué</option>
+        </select>
+        <label for="rep-comment" data-i18n="reportComment">Commentaire (optionnel)</label>
+        <textarea id="rep-comment" rows="2" maxlength="140"></textarea>
+        <button type="submit" class="cta" data-i18n="reportSubmit">Ajouter mon signalement</button>
+      </form>
+      <p id="report-error" class="note" role="alert" style="display:none;color:#b91c1c" data-i18n="reportError">Envoi impossible pour le moment — réessayez dans un instant.</p>
+      <h3 data-i18n="myReports">Mes signalements (cet appareil)</h3>
+      <ul class="clean" id="my-reports"><li class="note" data-i18n="noReports">Aucun signalement pour le moment.</li></ul>
+    </section>
 
       <section class="card" id="weather-card">
         <h2>🌦️ <span data-i18n="weatherTitle">Météo à Kinshasa (en direct)</span></h2>
@@ -453,27 +455,25 @@
       </div>
     </section>
 
-    <section class="card" id="report-card">
-      <h2>📝 <span data-i18n="reportTitle">Signaler un embouteillage</span></h2>
-      <div class="honest" data-i18n="reportNote">Votre signalement est partagé avec tous les visiteurs et reste visible 24 heures.</div>
-      <form id="report-form">
-        <label for="rep-artery" data-i18n="reportArtery">Artère</label>
-        <select id="rep-artery" required></select>
-        <label for="rep-level" data-i18n="reportLevel">Niveau</label>
-        <select id="rep-level" required>
-          <option value="fluid" data-i18n="lvlFluid">Fluide</option>
-          <option value="slow" data-i18n="lvlSlow">Ralenti</option>
-          <option value="heavy" data-i18n="lvlHeavy">Dense</option>
-          <option value="blocked" data-i18n="lvlBlocked">Bloqué</option>
-        </select>
-        <label for="rep-comment" data-i18n="reportComment">Commentaire (optionnel)</label>
-        <textarea id="rep-comment" rows="2" maxlength="140"></textarea>
-        <button type="submit" class="cta" data-i18n="reportSubmit">Ajouter mon signalement</button>
-      </form>
-      <p id="report-error" class="note" role="alert" style="display:none;color:#b91c1c" data-i18n="reportError">Envoi impossible pour le moment — réessayez dans un instant.</p>
-      <h3 data-i18n="myReports">Mes signalements (cet appareil)</h3>
-      <ul class="clean" id="my-reports"><li class="note" data-i18n="noReports">Aucun signalement pour le moment.</li></ul>
-    </section>
+      <section class="card" id="planner-card">
+        <h2>🧭 <span data-i18n="plannerTitle">Planificateur de trajet</span></h2>
+        <form id="planner-form">
+          <label for="pl-from" data-i18n="plannerFrom">Départ</label>
+          <input type="text" id="pl-from" list="pl-from-list" autocomplete="off" data-i18n-ph="plannerFromPh" placeholder="Adresse ou lieu de départ (optionnel)">
+          <datalist id="pl-from-list"></datalist>
+          <div class="pl-swap-row">
+            <button type="button" id="pl-swap" class="pl-swap" aria-label="Inverser départ et destination">⇅</button>
+          </div>
+          <label for="pl-to" data-i18n="plannerTo">Destination</label>
+          <input type="text" id="pl-to" list="pl-to-list" autocomplete="off" data-i18n-ph="plannerToPh" placeholder="Adresse ou lieu de destination">
+          <datalist id="pl-to-list"></datalist>
+          <p class="note pl-error hidden" id="pl-error" role="alert"></p>
+          <div class="pl-actions">
+            <a class="pl-btn pl-btn-primary" id="pl-google" href="#" target="_blank" rel="noopener noreferrer">🗺️ <span data-i18n="plannerGoogle">Ouvrir dans Google Maps</span></a>
+          </div>
+          <p class="note" style="margin-top:10px" data-i18n="plannerHint">Google Maps utilise le départ indiqué — ou votre position actuelle s'il est vide.</p>
+        </form>
+      </section>
   </div>
 
   <div class="sections">
