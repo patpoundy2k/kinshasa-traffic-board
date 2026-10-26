@@ -21042,7 +21042,7 @@
   }
  },
  "flightsBoard": {
-  "checkedAt": "2026-10-26T19:17:17Z",
+  "checkedAt": "2026-10-26T22:01:38Z",
   "source": "AeroDataBox",
   "departures": [
    {
@@ -21260,6 +21260,102 @@
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
+   },
+   {
+    "flight": "ET 92",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "BDT",
+     "name": "Gbadolite"
+    },
+    "sched": "2026-10-27T08:30+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "BU 1433",
+    "airline": "CAA",
+    "to": {
+     "iata": "MJM",
+     "name": "Mbuji Mayi"
+    },
+    "sched": "2026-10-27T09:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "BU 1671",
+    "airline": "CAA",
+    "to": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-10-27T09:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 72",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "GMA",
+     "name": "Gemena"
+    },
+    "sched": "2026-10-27T09:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KP 45",
+    "airline": "ASKY",
+    "to": {
+     "iata": "LFW",
+     "name": "Lomé"
+    },
+    "sched": "2026-10-27T09:05+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "BU 1424",
+    "airline": "CAA",
+    "to": {
+     "iata": "KGA",
+     "name": "Kananga"
+    },
+    "sched": "2026-10-27T10:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 70",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "FKI",
+     "name": "Kisangani"
+    },
+    "sched": "2026-10-27T10:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "UR 883",
+    "airline": "Uganda",
+    "to": {
+     "iata": "EBB",
+     "name": "Kampala"
+    },
+    "sched": "2026-10-27T10:30+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
    }
   ],
   "arrivals": [
@@ -21453,6 +21549,42 @@
     "sched": "2026-10-27T00:45+01:00",
     "revised": null,
     "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KP 45",
+    "airline": "ASKY",
+    "from": {
+     "iata": "BZV",
+     "name": "Brazzaville"
+    },
+    "sched": "2026-10-27T08:25+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 65",
+    "airline": "Ethiopian",
+    "from": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-10-27T09:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "UR 882",
+    "airline": "Uganda",
+    "from": {
+     "iata": "EBB",
+     "name": "Kampala"
+    },
+    "sched": "2026-10-27T09:30+01:00",
+    "revised": null,
+    "status": "Expected",
     "quality": "Basic"
    }
   ]
