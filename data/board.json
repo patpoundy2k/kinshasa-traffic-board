@@ -21066,7 +21066,7 @@
   }
  },
  "flightsBoard": {
-  "checkedAt": "2026-10-27T16:12:49Z",
+  "checkedAt": "2026-10-27T19:17:48Z",
   "source": "AeroDataBox",
   "departures": [
    {
@@ -21246,7 +21246,7 @@
     },
     "sched": "2026-10-28T00:50+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21258,7 +21258,7 @@
     },
     "sched": "2026-10-28T01:00+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21269,6 +21269,18 @@
      "name": "Kampala"
     },
     "sched": "2026-10-28T03:30+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 60",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-10-28T08:00+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
@@ -21452,7 +21464,7 @@
     },
     "sched": "2026-10-27T23:50+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21464,7 +21476,7 @@
     },
     "sched": "2026-10-28T00:05+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
