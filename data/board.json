@@ -21094,7 +21094,7 @@
   }
  },
  "flightsBoard": {
-  "checkedAt": "2026-10-28T16:20:46Z",
+  "checkedAt": "2026-10-28T19:23:58Z",
   "source": "AeroDataBox",
   "departures": [
    {
@@ -21286,7 +21286,7 @@
     },
     "sched": "2026-10-29T00:50+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21298,7 +21298,7 @@
     },
     "sched": "2026-10-29T01:00+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21321,6 +21321,18 @@
      "name": "Cairo"
     },
     "sched": "2026-10-29T05:05+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 60",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-10-29T08:00+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
@@ -21492,7 +21504,7 @@
     },
     "sched": "2026-10-28T23:50+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21504,7 +21516,7 @@
     },
     "sched": "2026-10-29T00:05+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21527,6 +21539,18 @@
      "name": "Cairo"
     },
     "sched": "2026-10-29T04:05+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 98",
+    "airline": "Ethiopian",
+    "from": {
+     "iata": "CDG",
+     "name": "Paris"
+    },
+    "sched": "2026-10-29T06:10+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
