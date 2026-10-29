@@ -21042,7 +21042,7 @@
   }
  },
  "flightsBoard": {
-  "checkedAt": "2026-10-29T16:22:24Z",
+  "checkedAt": "2026-10-29T19:24:41Z",
   "source": "AeroDataBox",
   "departures": [
    {
@@ -21258,7 +21258,7 @@
     },
     "sched": "2026-10-30T01:00+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21269,6 +21269,18 @@
      "name": "Brazzaville"
     },
     "sched": "2026-10-30T01:45+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 60",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-10-30T08:00+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
@@ -21488,7 +21500,7 @@
     },
     "sched": "2026-10-30T00:05+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21499,6 +21511,18 @@
      "name": "Luanda"
     },
     "sched": "2026-10-30T00:45+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "QR 1491",
+    "airline": "Qatar",
+    "from": {
+     "iata": "DOH",
+     "name": "Doha"
+    },
+    "sched": "2026-10-30T08:15+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
