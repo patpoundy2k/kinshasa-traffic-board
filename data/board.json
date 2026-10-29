@@ -21042,7 +21042,7 @@
   }
  },
  "flightsBoard": {
-  "checkedAt": "2026-10-29T19:24:41Z",
+  "checkedAt": "2026-10-29T22:09:52Z",
   "source": "AeroDataBox",
   "departures": [
    {
@@ -21281,6 +21281,102 @@
      "name": "Lubumbashi"
     },
     "sched": "2026-10-30T08:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 96",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "",
+     "name": "Moanda"
+    },
+    "sched": "2026-10-30T08:30+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "BU 1257",
+    "airline": "CAA",
+    "to": {
+     "iata": "KND",
+     "name": "Kindu"
+    },
+    "sched": "2026-10-30T09:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 66",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "MJM",
+     "name": "Mbuji Mayi"
+    },
+    "sched": "2026-10-30T09:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KP 71",
+    "airline": "ASKY",
+    "to": {
+     "iata": "LFW",
+     "name": "Lomé"
+    },
+    "sched": "2026-10-30T09:05+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "BU 1424",
+    "airline": "CAA",
+    "to": {
+     "iata": "KGA",
+     "name": "Kananga"
+    },
+    "sched": "2026-10-30T09:15+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "QR 1491",
+    "airline": "Qatar",
+    "to": {
+     "iata": "NBJ",
+     "name": "Luanda"
+    },
+    "sched": "2026-10-30T09:50+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 70",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "FKI",
+     "name": "Kisangani"
+    },
+    "sched": "2026-10-30T10:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 98",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "BRU",
+     "name": "Brussels"
+    },
+    "sched": "2026-10-30T10:00+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
@@ -21523,6 +21619,42 @@
      "name": "Doha"
     },
     "sched": "2026-10-30T08:15+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KP 71",
+    "airline": "ASKY",
+    "from": {
+     "iata": "JNB",
+     "name": "Jo'anna"
+    },
+    "sched": "2026-10-30T08:25+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 65",
+    "airline": "Ethiopian",
+    "from": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-10-30T09:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "BU 1633",
+    "airline": "CAA",
+    "from": {
+     "iata": "KWZ",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-10-30T10:30+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
