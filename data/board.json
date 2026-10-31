@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-30",
+ "generated": "2026-10-31",
  "city": {
   "name": "Kinshasa",
   "lat": -4.325,
@@ -17,8 +17,8 @@
      "zones_en": "Gombe — downtown, ministries and embassies",
      "peak": 0.85,
      "centre": [
-      -4.32932,
-      15.30233
+      -4.32922,
+      15.30231
      ]
     },
     "geometry": {
@@ -852,6 +852,10 @@
         -4.30612
        ],
        [
+        15.29911,
+        -4.30618
+       ],
+       [
         15.29767,
         -4.30644
        ],
@@ -1403,8 +1407,8 @@
      "zones_en": "Limete, Kingabwa, Masina — eastern axis toward Ndjili Airport",
      "peak": 0.95,
      "centre": [
-      -4.37859,
-      15.39279
+      -4.37854,
+      15.39272
      ]
     },
     "geometry": {
@@ -1434,6 +1438,10 @@
        [
         15.3251,
         -4.33088
+       ],
+       [
+        15.32528,
+        -4.33146
        ],
        [
         15.32531,
