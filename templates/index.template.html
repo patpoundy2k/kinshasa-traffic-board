@@ -354,6 +354,9 @@
       <a class="kofi-btn" id="kofi-btn" href="https://buy.stripe.com/00w7sN8fWeqCbeF0Qp3ks00" target="_blank" rel="noopener noreferrer" aria-label="Soutenir le projet">
         <span aria-hidden="true">❤️</span> <span class="kofi-btn-word" data-i18n="supportButton">Donate</span>
       </a>
+      <button type="button" id="listen-btn" class="kofi-btn" aria-label="Écouter la page">
+        <span aria-hidden="true">🔊</span> <span class="kofi-btn-word" data-i18n="listenButton">Écouter</span>
+      </button>
       <div class="a11y-wrap" id="a11y-wrap">
         <button type="button" id="a11y-btn" class="a11y-btn" aria-label="Accessibilité" aria-haspopup="true" aria-expanded="false" aria-controls="a11y-panel">
           <span aria-hidden="true">♿</span> <span class="a11y-btn-word" data-i18n="a11yButton">Accessibilité</span>
@@ -504,6 +507,15 @@
 {{RIVER_LIST_HTML}}
         </ul>
     </section>
+    <section class="card" id="radio-card">
+      <h2>📻 <span data-i18n="radioTitle">Radio — Kinshasa en direct</span></h2>
+      <p class="note" data-i18n="radioNote">La radio locale en direct, en français et en lingala — à écouter pendant que vous consultez le trafic.</p>
+      <p><strong>Top Congo FM — 88.4 FM, Kinshasa</strong></p>
+      <p class="pl-actions">
+        <a class="pl-btn pl-btn-primary" href="https://zeno.fm/radio/top-congo-fm-88-4/" target="_blank" rel="noopener noreferrer">▶ <span data-i18n="radioListen">Écouter en direct</span></a>
+      </p>
+      <p class="note" data-i18n="radioPlayerNote">Le lecteur s'ouvre sur le site de diffusion ; la station émet en continu.</p>
+    </section>
   </div>
 </main>
 
@@ -627,6 +639,12 @@ var I18N = {
     a11yContrast: "Contraste élevé",
     a11yMotion: "Réduire les animations",
     supportButton: "Donate",
+    listenButton: "Écouter",
+    listenStop: "Arrêter",
+    radioTitle: "Radio — Kinshasa en direct",
+    radioNote: "La radio locale en direct, en français et en lingala — à écouter pendant que vous consultez le trafic.",
+    radioListen: "Écouter en direct",
+    radioPlayerNote: "Le lecteur s'ouvre sur le site de diffusion ; la station émet en continu.",
     plannerTitle: "Planificateur de trajet",
     plannerFrom: "Départ",
     plannerTo: "Destination",
@@ -732,6 +750,12 @@ var I18N = {
     a11yContrast: "High contrast",
     a11yMotion: "Reduce motion",
     supportButton: "Donate",
+    listenButton: "Listen",
+    listenStop: "Stop",
+    radioTitle: "Radio — Kinshasa live",
+    radioNote: "Local radio live, in French and Lingala — listen while you check traffic.",
+    radioListen: "Listen live",
+    radioPlayerNote: "The player opens on the streaming site; the station broadcasts around the clock.",
     plannerTitle: "Trip planner",
     plannerFrom: "From",
     plannerTo: "To",
@@ -2040,9 +2064,77 @@ function applyLang(){
   document.getElementById('btn-en').classList.toggle('active', lang === 'en');
   renderLists(); drawArteries(); drawWorks(); renderReports(); paintGcVisits(); buildLayersControl(); updateSliderUI(); renderAirQuality(); updateLiveUI(); updateFlightsUI(); refreshFlightLabels(); applyA11yLabels(); renderFlightsBoard(); buildPlannerLists(); renderFuel();
 }
-document.getElementById('btn-fr').addEventListener('click', function(){ lang = 'fr'; saveLang(); applyLang(); });
-document.getElementById('btn-en').addEventListener('click', function(){ lang = 'en'; saveLang(); applyLang(); });
+document.getElementById('btn-fr').addEventListener('click', function(){ listenStop(); lang = 'fr'; saveLang(); applyLang(); });
+document.getElementById('btn-en').addEventListener('click', function(){ listenStop(); lang = 'en'; saveLang(); applyLang(); });
 
+/* ---- Lecture à voix haute (Web Speech API — gratuit, 100 % navigateur) ---- */
+var listenBtn = document.getElementById('listen-btn');
+var listenSpeaking = false;
+function listenSupported(){ try { return ('speechSynthesis' in window) && ('SpeechSynthesisUtterance' in window); } catch(e){ return false; } }
+function listenSetLabel(){
+  if (!listenBtn) return;
+  var word = listenBtn.querySelector('.kofi-btn-word');
+  var label = listenSpeaking ? t('listenStop') : t('listenButton');
+  if (word) word.textContent = label;
+  listenBtn.setAttribute('aria-label', label);
+}
+function listenStop(){
+  if (!listenSupported()) return;
+  try { window.speechSynthesis.cancel(); } catch(e){}
+  listenSpeaking = false;
+  listenSetLabel();
+}
+function listenCollect(){
+  function txt(id){ var el = document.getElementById(id); if (!el) return ''; return (el.innerText || '').replace(/\s+/g, ' ').trim(); }
+  var blocks = [];
+  var tag = document.querySelector('.tagline');
+  if (tag && tag.innerText) blocks.push(tag.innerText.trim());
+  blocks.push(t('arteriesTitle') + '. ' + txt('arteries-list'));
+  blocks.push(t('worksTitle') + '. ' + txt('works-list'));
+  var fb = document.getElementById('flights-board-body');
+  if (fb && !fb.classList.contains('hidden')) blocks.push(t('fihTitle') + '. ' + txt('flights-board-body'));
+  blocks.push(t('riverTitle') + '. ' + txt('river-list'));
+  blocks.push(t('weatherTitle') + '. ' + txt('weather-body'));
+  blocks.push(t('fuelTitle') + '. ' + txt('fuel-body'));
+  var sentences = [];
+  blocks.forEach(function(b){
+    if (!b) return;
+    var parts = b.match(/[^.!?…]+[.!?…]+|[^.!?…]+$/g) || [];
+    parts.forEach(function(p){ var s = p.trim(); if (s) sentences.push(s); });
+  });
+  return sentences;
+}
+function listenStart(){
+  if (!listenSupported()) return;
+  try { window.speechSynthesis.cancel(); } catch(e){}
+  var sentences = listenCollect();
+  if (!sentences.length) return;
+  var voices = [];
+  try { voices = window.speechSynthesis.getVoices() || []; } catch(e){}
+  var want = lang === 'fr' ? 'fr' : 'en';
+  var voice = null;
+  for (var i = 0; i < voices.length; i++){
+    if (voices[i].lang && voices[i].lang.toLowerCase().indexOf(want) === 0){ voice = voices[i]; break; }
+  }
+  listenSpeaking = true;
+  listenSetLabel();
+  var idx = 0;
+  function next(){
+    if (!listenSpeaking || idx >= sentences.length){ listenSpeaking = false; listenSetLabel(); return; }
+    var u = new SpeechSynthesisUtterance(sentences[idx++]);
+    if (voice) u.voice = voice;
+    u.lang = lang === 'fr' ? 'fr-FR' : 'en-US';
+    u.rate = 1;
+    u.onend = next;
+    u.onerror = function(){ listenSpeaking = false; listenSetLabel(); };
+    try { window.speechSynthesis.speak(u); } catch(e){ listenSpeaking = false; listenSetLabel(); }
+  }
+  next();
+}
+if (listenBtn){
+  if (!listenSupported()){ listenBtn.style.display = 'none'; }
+  else listenBtn.addEventListener('click', function(){ if (listenSpeaking) listenStop(); else listenStart(); });
+}
 /* ---- GoatCounter visit count (footer) ---- */
 var gcCount = null;
 function paintGcVisits(){
