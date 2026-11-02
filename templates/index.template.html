@@ -346,7 +346,7 @@
       <h1 class="brand-name">Kinshasa Traffic Board</h1>
     </div>
     <div class="head-right">
-      <span class="clock-chip" aria-label="Heure de Kinshasa / Kinshasa time">🕐 <span id="kin-clock">--:--:--</span><span class="clock-city">Kinshasa</span></span>
+      <span class="clock-chip" aria-label="Heure de Kinshasa / Kinshasa time">🕐 <span id="kin-date">--</span> <span id="kin-clock">--:--:--</span><span class="clock-city">Kinshasa</span></span>
       <div class="lang-switch" role="group" aria-label="Language / Langue">
         <button type="button" id="btn-fr">FR</button>
         <button type="button" id="btn-en">EN</button>
@@ -510,9 +510,9 @@
     <section class="card" id="radio-card">
       <h2>📻 <span data-i18n="radioTitle">Radio — Kinshasa en direct</span></h2>
       <p class="note" data-i18n="radioNote">La radio locale en direct, en français et en lingala — à écouter pendant que vous consultez le trafic.</p>
-      <p><strong>Top Congo FM — 88.4 FM, Kinshasa</strong></p>
+      <p><strong>Radio Okapi — 103.5 FM, Kinshasa</strong></p>
       <p class="pl-actions">
-        <a class="pl-btn pl-btn-primary" href="https://zeno.fm/radio/top-congo-fm-88-4/" target="_blank" rel="noopener noreferrer">▶ <span data-i18n="radioListen">Écouter en direct</span></a>
+        <a class="pl-btn pl-btn-primary" href="https://www.radiookapi.net/" target="_blank" rel="noopener noreferrer">▶ <span data-i18n="radioListen">Écouter en direct</span></a>
       </p>
       <p class="note" data-i18n="radioPlayerNote">Le lecteur s'ouvre sur le site de diffusion ; la station émet en continu.</p>
     </section>
@@ -642,7 +642,7 @@ var I18N = {
     listenButton: "Écouter",
     listenStop: "Arrêter",
     radioTitle: "Radio — Kinshasa en direct",
-    radioNote: "La radio locale en direct, en français et en lingala — à écouter pendant que vous consultez le trafic.",
+    radioNote: "La radio des Nations unies en RDC, en français et en langues nationales — à écouter pendant que vous consultez le trafic.",
     radioListen: "Écouter en direct",
     radioPlayerNote: "Le lecteur s'ouvre sur le site de diffusion ; la station émet en continu.",
     plannerTitle: "Planificateur de trajet",
@@ -753,7 +753,7 @@ var I18N = {
     listenButton: "Listen",
     listenStop: "Stop",
     radioTitle: "Radio — Kinshasa live",
-    radioNote: "Local radio live, in French and Lingala — listen while you check traffic.",
+    radioNote: "The United Nations radio in the DRC, in French and national languages — listen while you check traffic.",
     radioListen: "Listen live",
     radioPlayerNote: "The player opens on the streaming site; the station broadcasts around the clock.",
     plannerTitle: "Trip planner",
@@ -900,7 +900,7 @@ function updateClock(){
   if (!el) return;
   try {
     el.textContent = new Intl.DateTimeFormat('en-GB',{timeZone:'Africa/Kinshasa',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(new Date());
-  } catch(e){ el.textContent = new Date().toLocaleTimeString(); }
+  } catch(e){ el.textContent = new Date().toLocaleTimeString(); } var dEl = document.getElementById('kin-date'); if (dEl){ try { dEl.textContent = new Intl.DateTimeFormat(lang === 'fr' ? 'fr-FR' : 'en-US',{timeZone:'Africa/Kinshasa',weekday:'short',day:'numeric',month:'short'}).format(new Date()); } catch(e){ dEl.textContent = ''; } }
 }
 
 /* ---- Scheduled dark mode (Pat's rule: dark 18:30 → 04:45) ----
