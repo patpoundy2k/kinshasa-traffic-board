@@ -21102,7 +21102,7 @@
   }
  },
  "flightsBoard": {
-  "checkedAt": "2026-11-03T16:23:03Z",
+  "checkedAt": "2026-11-03T19:24:57Z",
   "source": "AeroDataBox",
   "departures": [
    {
@@ -21294,7 +21294,7 @@
     },
     "sched": "2026-11-04T00:50+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21305,6 +21305,18 @@
      "name": "Addis Ababa"
     },
     "sched": "2026-11-04T01:00+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 60",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-11-04T08:00+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
@@ -21499,6 +21511,18 @@
      "name": "Addis Ababa"
     },
     "sched": "2026-11-04T00:05+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 98",
+    "airline": "Ethiopian",
+    "from": {
+     "iata": "CDG",
+     "name": "Paris"
+    },
+    "sched": "2026-11-04T06:10+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
