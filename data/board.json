@@ -1407,8 +1407,8 @@
      "zones_en": "Limete, Kingabwa, Masina — eastern axis toward Ndjili Airport",
      "peak": 0.95,
      "centre": [
-      -4.37854,
-      15.39272
+      -4.37851,
+      15.39266
      ]
     },
     "geometry": {
@@ -4748,6 +4748,10 @@
        [
         15.33754,
         -4.35728
+       ],
+       [
+        15.33688,
+        -4.356
        ],
        [
         15.33686,
