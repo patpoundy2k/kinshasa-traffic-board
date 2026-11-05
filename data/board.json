@@ -21120,7 +21120,7 @@
   }
  },
  "flightsBoard": {
-  "checkedAt": "2026-11-05T16:32:05Z",
+  "checkedAt": "2026-11-05T19:25:27Z",
   "source": "AeroDataBox",
   "departures": [
    {
@@ -21324,7 +21324,7 @@
     },
     "sched": "2026-11-06T01:00+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21335,6 +21335,30 @@
      "name": "Brazzaville"
     },
     "sched": "2026-11-06T01:45+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "UR 881",
+    "airline": "Uganda",
+    "to": {
+     "iata": "EBB",
+     "name": "Kampala"
+    },
+    "sched": "2026-11-06T07:15+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 60",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-11-06T08:00+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
@@ -21542,7 +21566,7 @@
     },
     "sched": "2026-11-06T00:05+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21553,6 +21577,30 @@
      "name": "Luanda"
     },
     "sched": "2026-11-06T00:45+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "UR 880",
+    "airline": "Uganda",
+    "from": {
+     "iata": "EBB",
+     "name": "Kampala"
+    },
+    "sched": "2026-11-06T06:30+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "QR 1491",
+    "airline": "Qatar",
+    "from": {
+     "iata": "DOH",
+     "name": "Doha"
+    },
+    "sched": "2026-11-06T08:15+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
