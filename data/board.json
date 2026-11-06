@@ -21120,7 +21120,7 @@
   }
  },
  "flightsBoard": {
-  "checkedAt": "2026-11-06T19:25:16Z",
+  "checkedAt": "2026-11-06T22:09:42Z",
   "source": "AeroDataBox",
   "departures": [
    {
@@ -21336,7 +21336,7 @@
     },
     "sched": "2026-11-07T05:05+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21359,6 +21359,78 @@
      "name": "Lubumbashi"
     },
     "sched": "2026-11-07T08:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 88",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "",
+     "name": "Beni"
+    },
+    "sched": "2026-11-07T08:30+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 72",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "GMA",
+     "name": "Gemena"
+    },
+    "sched": "2026-11-07T09:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KP 45",
+    "airline": "ASKY",
+    "to": {
+     "iata": "LFW",
+     "name": "Lomé"
+    },
+    "sched": "2026-11-07T09:05+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 80",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "MDK",
+     "name": "Mbandaka"
+    },
+    "sched": "2026-11-07T10:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 98",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "BRU",
+     "name": "Brussels"
+    },
+    "sched": "2026-11-07T10:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KQ 555",
+    "airline": "Kenya",
+    "to": {
+     "iata": "NBO",
+     "name": "Nairobi"
+    },
+    "sched": "2026-11-07T10:00+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
@@ -21554,7 +21626,7 @@
     },
     "sched": "2026-11-07T04:05+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21565,6 +21637,54 @@
      "name": "Paris"
     },
     "sched": "2026-11-07T06:10+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KP 45",
+    "airline": "ASKY",
+    "from": {
+     "iata": "BZV",
+     "name": "Brazzaville"
+    },
+    "sched": "2026-11-07T08:25+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 65",
+    "airline": "Ethiopian",
+    "from": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-11-07T09:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KQ 554",
+    "airline": "Kenya",
+    "from": {
+     "iata": "NBO",
+     "name": "Nairobi"
+    },
+    "sched": "2026-11-07T09:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "BU 1413",
+    "airline": "CAA",
+    "from": {
+     "iata": "MJM",
+     "name": "Mbuji Mayi"
+    },
+    "sched": "2026-11-07T10:45+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
