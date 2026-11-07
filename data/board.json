@@ -21004,103 +21004,103 @@
   "reports": "Jam reports are shared with all visitors via the kinshasa-reports Worker (Cloudflare D1, see reports-worker/) and stay visible for 24 hours; the page also keeps the visitor's own reports on-device as a fallback record."
  },
  "live": {
-  "checkedAt": "2026-11-07T07:52:02Z",
+  "checkedAt": "2026-11-07T08:42:04Z",
   "source": "Google Routes",
   "arteries": {
    "av-elengesa-bypass": {
     "ratio": 1.19,
     "level": "slow",
-    "mins": 34.1,
+    "mins": 34.0,
     "staticMins": 28.6
    },
    "av-huileries": {
-    "ratio": 0.95,
-    "level": "fluid",
-    "mins": 11.2,
+    "ratio": 1.1,
+    "level": "slow",
+    "mins": 13.1,
     "staticMins": 11.8
    },
    "av-kasa-vubu": {
-    "ratio": 1.29,
+    "ratio": 1.37,
     "level": "heavy",
-    "mins": 43.9,
+    "mins": 46.6,
     "staticMins": 34.0
    },
    "av-liberation": {
-    "ratio": 1.07,
-    "level": "fluid",
-    "mins": 66.1,
+    "ratio": 1.13,
+    "level": "slow",
+    "mins": 69.7,
     "staticMins": 61.9
    },
    "av-mondjiba": {
-    "ratio": 0.82,
+    "ratio": 0.93,
     "level": "fluid",
-    "mins": 8.3,
+    "mins": 9.4,
     "staticMins": 10.1
    },
    "av-nguma": {
-    "ratio": 1.1,
+    "ratio": 1.16,
     "level": "slow",
-    "mins": 16.3,
+    "mins": 17.3,
     "staticMins": 14.9
    },
    "av-tourisme": {
-    "ratio": 1.2,
-    "level": "slow",
-    "mins": 19.8,
+    "ratio": 1.43,
+    "level": "heavy",
+    "mins": 23.7,
     "staticMins": 16.6
    },
    "av-universite": {
-    "ratio": 1.14,
+    "ratio": 1.13,
     "level": "slow",
-    "mins": 85.4,
+    "mins": 84.0,
     "staticMins": 74.7
    },
    "av-victoire": {
-    "ratio": 1.18,
-    "level": "slow",
-    "mins": 19.9,
+    "ratio": 1.38,
+    "level": "heavy",
+    "mins": 23.1,
     "staticMins": 16.8
    },
    "bd-30-juin": {
-    "ratio": 0.97,
-    "level": "fluid",
-    "mins": 16.2,
+    "ratio": 1.19,
+    "level": "slow",
+    "mins": 19.8,
     "staticMins": 16.7
    },
    "bd-lumumba": {
-    "ratio": 1.4,
+    "ratio": 1.43,
     "level": "heavy",
-    "mins": 101.1,
+    "mins": 103.1,
     "staticMins": 72.0
    },
    "bd-sendwe": {
-    "ratio": 1.67,
+    "ratio": 1.91,
     "level": "blocked",
-    "mins": 10.5,
+    "mins": 12.0,
     "staticMins": 6.3
    },
    "bd-triomphal": {
-    "ratio": 1.11,
+    "ratio": 1.17,
     "level": "slow",
-    "mins": 22.2,
+    "mins": 23.4,
     "staticMins": 20.0
    },
    "bd-tshatshi": {
-    "ratio": 0.89,
+    "ratio": 0.92,
     "level": "fluid",
-    "mins": 5.9,
+    "mins": 6.1,
     "staticMins": 6.6
    },
    "poids-lourds": {
-    "ratio": 1.21,
+    "ratio": 1.17,
     "level": "slow",
-    "mins": 3.8,
+    "mins": 3.7,
     "staticMins": 3.1
    },
    "rn1-matadi": {
-    "ratio": 1.38,
+    "ratio": 1.41,
     "level": "heavy",
-    "mins": 98.4,
+    "mins": 100.0,
     "staticMins": 71.1
    }
   }
