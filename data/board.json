@@ -21106,7 +21106,7 @@
   }
  },
  "flightsBoard": {
-  "checkedAt": "2026-11-07T19:16:13Z",
+  "checkedAt": "2026-11-07T22:04:27Z",
   "source": "AeroDataBox",
   "departures": [
    {
@@ -21360,6 +21360,138 @@
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
+   },
+   {
+    "flight": "ET 85",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "FMI",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-11-08T08:30+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "BU 1671",
+    "airline": "CAA",
+    "to": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-11-08T09:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 76",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "KGA",
+     "name": "Kananga"
+    },
+    "sched": "2026-11-08T09:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KP 71",
+    "airline": "ASKY",
+    "to": {
+     "iata": "LFW",
+     "name": "Lomé"
+    },
+    "sched": "2026-11-08T09:05+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "HF 837",
+    "airline": "Air Cote D'Ivoire",
+    "to": {
+     "iata": "ABJ",
+     "name": "Abidjan"
+    },
+    "sched": "2026-11-08T09:45+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "BU 1257",
+    "airline": "CAA",
+    "to": {
+     "iata": "KND",
+     "name": "Kindu"
+    },
+    "sched": "2026-11-08T10:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 78",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "KND",
+     "name": "Kindu"
+    },
+    "sched": "2026-11-08T10:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 80",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "MDK",
+     "name": "Mbandaka"
+    },
+    "sched": "2026-11-08T10:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 98",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "BRU",
+     "name": "Brussels"
+    },
+    "sched": "2026-11-08T10:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KQ 555",
+    "airline": "Kenya",
+    "to": {
+     "iata": "NBO",
+     "name": "Nairobi"
+    },
+    "sched": "2026-11-08T10:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "BU 1611",
+    "airline": "CAA",
+    "to": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-11-08T10:55+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
    }
   ],
   "arrivals": [
@@ -21587,6 +21719,66 @@
      "name": "Paris"
     },
     "sched": "2026-11-08T06:10+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KP 71",
+    "airline": "ASKY",
+    "from": {
+     "iata": "JNB",
+     "name": "Jo'anna"
+    },
+    "sched": "2026-11-08T08:25+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 65",
+    "airline": "Ethiopian",
+    "from": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-11-08T09:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KQ 554",
+    "airline": "Kenya",
+    "from": {
+     "iata": "NBO",
+     "name": "Nairobi"
+    },
+    "sched": "2026-11-08T09:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "HF 837",
+    "airline": "Air Cote D'Ivoire",
+    "from": {
+     "iata": "BZV",
+     "name": "Brazzaville"
+    },
+    "sched": "2026-11-08T09:05+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "BU 1612",
+    "airline": "CAA",
+    "from": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-11-08T09:30+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
