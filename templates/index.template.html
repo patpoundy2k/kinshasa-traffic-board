@@ -296,7 +296,7 @@
   .pl-btn{flex:1 1 150px;display:inline-flex;align-items:center;justify-content:center;gap:7px;text-align:center;text-decoration:none;border-radius:12px;padding:12px 10px;font-weight:700;font-size:.95rem;transition:filter .15s ease,background .15s ease}
   .pl-btn-primary{background:linear-gradient(120deg,var(--brand),var(--brand-2));color:#fff;box-shadow:0 4px 14px -4px rgba(11,94,138,.45)}
   .pl-btn-primary:hover{filter:brightness(1.08)}
-  .pl-btn:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px}
+  .pl-btn:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px} .radio-live{color:var(--red);font-weight:800;font-size:.8rem;letter-spacing:.04em;white-space:nowrap}
   .pl-error{color:#b91c1c;margin-top:10px}
   body.dark .pl-error{color:#fca5a5}
 
@@ -510,11 +510,11 @@
     <section class="card" id="radio-card">
       <h2>📻 <span data-i18n="radioTitle">Radio — Kinshasa en direct</span></h2>
       <p class="note" data-i18n="radioNote">La radio locale en direct, en français et en lingala — à écouter pendant que vous consultez le trafic.</p>
-      <p><strong>Radio Okapi — 103.5 FM, Kinshasa</strong></p>
+      <p><strong>Radio Okapi — 103.5 FM, Kinshasa</strong> <span id="radio-live" class="radio-live" hidden>● <span data-i18n="radioLive">EN DIRECT</span></span></p>
       <p class="pl-actions">
-        <a class="pl-btn pl-btn-primary" href="https://www.radiookapi.net/page/ecouter-radio-okapi-en-ligne" target="_blank" rel="noopener noreferrer">▶ <span data-i18n="radioListen">Écouter en direct</span></a>
+        <button type="button" class="pl-btn pl-btn-primary" id="radio-toggle" aria-pressed="false"><span id="radio-toggle-icon">▶</span> <span id="radio-toggle-label" data-i18n="radioListen">Écouter en direct</span></button><a class="pl-btn" href="https://www.radiookapi.net/page/ecouter-radio-okapi-en-ligne" target="_blank" rel="noopener noreferrer">radiookapi.net ↗</a><audio id="radio-audio" preload="none" src="https://servidor30-5.brlogic.com:7090/live"></audio>
       </p>
-      <p class="note" data-i18n="radioPlayerNote">Le lecteur s'ouvre sur le site de diffusion ; la station émet en continu.</p>
+      <p class="note" id="radio-error" hidden><span data-i18n="radioError">Le flux direct est indisponible pour le moment — écoutez sur le site de Radio Okapi.</span> <a href="https://www.radiookapi.net/page/ecouter-radio-okapi-en-ligne" target="_blank" rel="noopener noreferrer">radiookapi.net</a></p><p class="note" data-i18n="radioPlayerNote">Lecteur intégré — la station émet en continu.</p>
     </section>
   </div>
 </main>
@@ -643,8 +643,8 @@ var I18N = {
     listenStop: "Arrêter",
     radioTitle: "Radio — Kinshasa en direct",
     radioNote: "La radio des Nations unies en RDC, en français et en langues nationales — à écouter pendant que vous consultez le trafic.",
-    radioListen: "Écouter en direct",
-    radioPlayerNote: "Le lecteur s'ouvre sur le site de diffusion ; la station émet en continu.",
+    radioListen: "Écouter en direct", radioPause: "Pause", radioLive: "EN DIRECT", radioError: "Le flux direct est indisponible pour le moment — écoutez sur le site de Radio Okapi.",
+    radioPlayerNote: "Lecteur intégré — la station émet en continu.",
     plannerTitle: "Planificateur de trajet",
     plannerFrom: "Départ",
     plannerTo: "Destination",
@@ -754,7 +754,7 @@ var I18N = {
     listenStop: "Stop",
     radioTitle: "Radio — Kinshasa live",
     radioNote: "The United Nations radio in the DRC, in French and national languages — listen while you check traffic.",
-    radioListen: "Listen live",
+    radioListen: "Listen live", radioPause: "Pause", radioLive: "LIVE", radioError: "The live stream is unavailable right now — listen on the Radio Okapi site.",
     radioPlayerNote: "The player opens on the streaming site; the station broadcasts around the clock.",
     plannerTitle: "Trip planner",
     plannerFrom: "From",
@@ -2065,7 +2065,7 @@ function applyLang(){
   renderLists(); drawArteries(); drawWorks(); renderReports(); paintGcVisits(); buildLayersControl(); updateSliderUI(); renderAirQuality(); updateLiveUI(); updateFlightsUI(); refreshFlightLabels(); applyA11yLabels(); renderFlightsBoard(); buildPlannerLists(); renderFuel();
 }
 document.getElementById('btn-fr').addEventListener('click', function(){ listenStop(); lang = 'fr'; saveLang(); applyLang(); });
-document.getElementById('btn-en').addEventListener('click', function(){ listenStop(); lang = 'en'; saveLang(); applyLang(); });
+document.getElementById('btn-en').addEventListener('click', function(){ listenStop(); lang = 'en'; saveLang(); applyLang(); }); /* Radio Okapi in-page player: no autoplay - the stream starts only when the user taps the button. */ var radioAudio = document.getElementById('radio-audio'), radioToggle = document.getElementById('radio-toggle'), radioToggleIcon = document.getElementById('radio-toggle-icon'), radioToggleLabel = document.getElementById('radio-toggle-label'), radioLive = document.getElementById('radio-live'), radioError = document.getElementById('radio-error'); function radioSetLabel(){ var playing = radioAudio && !radioAudio.paused; if (radioToggleLabel) radioToggleLabel.textContent = playing ? ((I18N[lang] && I18N[lang].radioPause) || 'Pause') : ((I18N[lang] && I18N[lang].radioListen) || 'Écouter en direct'); if (radioToggleIcon) radioToggleIcon.textContent = playing ? '❚❚' : '▶'; if (radioToggle) radioToggle.setAttribute('aria-pressed', playing ? 'true' : 'false'); if (radioLive) radioLive.hidden = !playing; } if (radioToggle && radioAudio){ radioToggle.addEventListener('click', function(){ if (radioAudio.paused){ if (radioError) radioError.hidden = true; var p; try { p = radioAudio.play(); } catch (e) { p = null; } if (p && p.catch) p.catch(function(){ if (radioError) radioError.hidden = false; radioSetLabel(); }); } else { radioAudio.pause(); } radioSetLabel(); }); radioAudio.addEventListener('play', radioSetLabel); radioAudio.addEventListener('pause', radioSetLabel); radioAudio.addEventListener('error', function(){ if (radioError) radioError.hidden = false; radioSetLabel(); }); document.getElementById('btn-fr').addEventListener('click', function(){ setTimeout(radioSetLabel, 0); }); document.getElementById('btn-en').addEventListener('click', function(){ setTimeout(radioSetLabel, 0); }); radioSetLabel(); }
 
 /* ---- Lecture à voix haute (Web Speech API — gratuit, 100 % navigateur) ---- */
 var listenBtn = document.getElementById('listen-btn');
