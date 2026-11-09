@@ -21106,7 +21106,7 @@
   }
  },
  "flightsBoard": {
-  "checkedAt": "2026-11-09T16:31:33Z",
+  "checkedAt": "2026-11-09T19:27:05Z",
   "source": "AeroDataBox",
   "departures": [
    {
@@ -21286,7 +21286,7 @@
     },
     "sched": "2026-11-10T01:00+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21297,6 +21297,18 @@
      "name": "Brazzaville"
     },
     "sched": "2026-11-10T01:45+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 60",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-11-10T08:00+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
@@ -21468,7 +21480,7 @@
     },
     "sched": "2026-11-10T00:05+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21479,6 +21491,18 @@
      "name": "Luanda"
     },
     "sched": "2026-11-10T00:45+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KP 45",
+    "airline": "ASKY",
+    "from": {
+     "iata": "BZV",
+     "name": "Brazzaville"
+    },
+    "sched": "2026-11-10T08:25+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
