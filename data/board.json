@@ -21158,7 +21158,7 @@
   }
  },
  "flightsBoard": {
-  "checkedAt": "2026-11-11T19:29:41Z",
+  "checkedAt": "2026-11-11T22:27:17Z",
   "source": "AeroDataBox",
   "departures": [
    {
@@ -21362,7 +21362,7 @@
     },
     "sched": "2026-11-12T05:05+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21373,6 +21373,114 @@
      "name": "Lubumbashi"
     },
     "sched": "2026-11-12T08:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "UR 881",
+    "airline": "Uganda",
+    "to": {
+     "iata": "EBB",
+     "name": "Kampala"
+    },
+    "sched": "2026-11-12T08:45+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "BU 1433",
+    "airline": "CAA",
+    "to": {
+     "iata": "MJM",
+     "name": "Mbuji Mayi"
+    },
+    "sched": "2026-11-12T09:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 72",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "GMA",
+     "name": "Gemena"
+    },
+    "sched": "2026-11-12T09:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KP 45",
+    "airline": "ASKY",
+    "to": {
+     "iata": "LFW",
+     "name": "Lomé"
+    },
+    "sched": "2026-11-12T09:05+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "HF 837",
+    "airline": "Air Cote D'Ivoire",
+    "to": {
+     "iata": "ABJ",
+     "name": "Abidjan"
+    },
+    "sched": "2026-11-12T09:45+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 70",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "FKI",
+     "name": "Kisangani"
+    },
+    "sched": "2026-11-12T10:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 80",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "MDK",
+     "name": "Mbandaka"
+    },
+    "sched": "2026-11-12T10:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KQ 555",
+    "airline": "Kenya",
+    "to": {
+     "iata": "NBO",
+     "name": "Nairobi"
+    },
+    "sched": "2026-11-12T10:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "J7 377",
+    "airline": "Afrijet",
+    "to": {
+     "iata": "PNR",
+     "name": "Pointe Noire"
+    },
+    "sched": "2026-11-12T10:30+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
@@ -21556,7 +21664,7 @@
     },
     "sched": "2026-11-12T04:05+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21591,6 +21699,54 @@
      "name": "Brazzaville"
     },
     "sched": "2026-11-12T08:25+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 65",
+    "airline": "Ethiopian",
+    "from": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-11-12T09:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KQ 554",
+    "airline": "Kenya",
+    "from": {
+     "iata": "NBO",
+     "name": "Nairobi"
+    },
+    "sched": "2026-11-12T09:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "HF 837",
+    "airline": "Air Cote D'Ivoire",
+    "from": {
+     "iata": "BZV",
+     "name": "Brazzaville"
+    },
+    "sched": "2026-11-12T09:05+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "J7 376",
+    "airline": "Afrijet",
+    "from": {
+     "iata": "LBV",
+     "name": "Libreville"
+    },
+    "sched": "2026-11-12T09:45+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
