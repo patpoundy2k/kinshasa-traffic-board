@@ -17,8 +17,8 @@
      "zones_en": "Gombe — downtown, ministries and embassies",
      "peak": 0.85,
      "centre": [
-      -4.32922,
-      15.30231
+      -4.32932,
+      15.30233
      ]
     },
     "geometry": {
@@ -850,10 +850,6 @@
        [
         15.29943,
         -4.30612
-       ],
-       [
-        15.29911,
-        -4.30618
        ],
        [
         15.29767,
@@ -13241,8 +13237,8 @@
      "zones_en": "Mont Ngafula, Makala, Ngaba — southern bypass",
      "peak": 0.75,
      "centre": [
-      -4.37826,
-      15.30758
+      -4.37852,
+      15.3074
      ]
     },
     "geometry": {
@@ -13346,6 +13342,10 @@
        [
         15.30858,
         -4.35697
+       ],
+       [
+        15.30862,
+        -4.35684
        ],
        [
         15.30875,
@@ -13586,6 +13586,20 @@
        [
         15.29876,
         -4.39828
+       ]
+      ],
+      [
+       [
+        15.29449,
+        -4.40457
+       ],
+       [
+        15.2944,
+        -4.40444
+       ],
+       [
+        15.29429,
+        -4.40429
        ]
       ],
       [
@@ -21046,6 +21060,18 @@
   "decree_date": "2026-04-16",
   "source": "Ministère de l'Économie nationale (CSPPP)",
   "crosscheck_url": "https://www.globalpetrolprices.com/Democratic-Republic-of-the-Congo/"
+ },
+ "train": {
+  "line_fr": "Gare Centrale ↔ Tshenke / Masina",
+  "line_en": "Gare Centrale ↔ Tshenke / Masina",
+  "duration_fr": "≈ 1 h 15",
+  "duration_en": "≈ 1 h 15",
+  "frequency_fr": "1 aller-retour / jour",
+  "frequency_en": "1 round trip / day",
+  "fare_fr": "2 000–5 000 FC",
+  "fare_en": "2,000–5,000 FC",
+  "schedule_fr": "Pas d'horaire officiel publié",
+  "schedule_en": "No official timetable published"
  },
  "dataNotes": {
   "congestion": "Typical pattern model by time of day (Africa/Kinshasa). When board.json carries a recent 'live' block (Google Routes sweep by scripts/live_refresh.py, key held server-side only), the page shows those live levels instead and falls back to the typical model when the block is stale or absent.",
