@@ -57,32 +57,40 @@
 }
 </script>
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.14.0/dist/maplibre-gl.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=IBM+Plex+Mono:wght@500;600&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+  /* ---- Power BI-style palette (preview design) ---- */
   :root{
-    --ink:#0f1c2e; --muted:#64748b; --bg:#edf1f6; --card:#ffffff;
-    --brand:#0e7a5f; --brand-2:#0b5e8a; --header-1:#0a2748; --header-2:#0a3d31;
-    --green:#16a34a; --amber:#f59e0b; --orange:#ea580c; --red:#dc2626;
-    --line:#e2e8f0; --radius:18px;
+    --bg:#f2f0e9; --panel:#ffffff; --panel2:#f7f5ee; --ink:#16233a; --muted:#5a6678; --line:#e2ded2;
+    --navy:#0e2242; --navy2:#122c52; --yellow:#f2c230; --sky:#2f7fd1;
+    --green:#1a9e6b; --amber:#e08a00; --orange:#ea580c; --red:#d93a2b;
+    --brand:#0e7a5f; --brand-2:#0b5e8a;
+    --chip:#eef1f6; --chipink:#16233a;
+    --wx-bg:#eaf2fa; --wx-line:#cfe0f2;
+    --radius:18px;
     --shadow:0 1px 2px rgba(15,28,46,.05),0 12px 32px -14px rgba(15,28,46,.18);
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
-  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-  ::selection{background:rgba(14,122,95,.25)}
+  body{margin:0;font-family:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  ::selection{background:rgba(242,194,48,.45)}
+  h1,h2,h3,.brand-name,.kpi-num,.temp,.hour-value{font-family:"Archivo","Public Sans",system-ui,sans-serif}
 
-  /* ---- Sticky slim header ---- */
-  header.site-head{position:sticky;top:0;z-index:1300;background:linear-gradient(120deg,var(--header-1),var(--header-2));color:#fff;box-shadow:0 2px 14px rgba(10,30,55,.28)}
+  /* ---- Sticky slim header (navy, yellow accent) ---- */
+  header.site-head{position:sticky;top:0;z-index:1300;background:linear-gradient(180deg,#0e2242,#0a1a33);color:#fff;box-shadow:0 2px 14px rgba(10,30,55,.35)}
   .head-in{max-width:1540px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;justify-content:space-between}
   .brand{display:flex;align-items:center;gap:9px;min-width:0}
   .brand-icon{font-size:1.35rem;line-height:1}
-  h1.brand-name{margin:0;font-size:1.08rem;font-weight:800;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  h1.brand-name{margin:0;font-size:1.08rem;font-weight:800;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff}
   .head-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
-  .clock-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:5px 12px;font-size:.86rem;font-weight:600;font-variant-numeric:tabular-nums}
+  .clock-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:5px 12px;font-size:.86rem;font-weight:600;font-variant-numeric:tabular-nums;color:#e8eef7}
   .clock-chip .clock-city{opacity:.75;font-weight:500}
   @media(max-width:560px){.clock-chip .clock-city{display:none}h1.brand-name{font-size:.98rem}}
   .lang-switch{display:flex;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:3px;gap:2px}
   .lang-switch button{border:none;background:transparent;color:#fff;border-radius:999px;padding:5px 13px;font:inherit;font-size:.85rem;font-weight:700;cursor:pointer;transition:background .15s ease,color .15s ease}
-  .lang-switch button.active{background:#fff;color:var(--header-1);box-shadow:0 1px 4px rgba(0,0,0,.22)}
+  .lang-switch button.active{background:var(--yellow);color:var(--navy);box-shadow:0 1px 4px rgba(0,0,0,.22)}
   .lang-switch button:focus-visible{outline:2px solid #fff;outline-offset:2px}
 
   /* ---- Accessibility options (button + panel in the header) ---- */
@@ -91,12 +99,14 @@
   .a11y-btn:hover{background:rgba(255,255,255,.22)}
   .a11y-btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
   @media(max-width:560px){.a11y-btn-word{display:none}.a11y-btn{padding:6px 10px}}
-  /* ---- Donation support button (header pill, same weight as the a11y pill) — links directly to the Stripe payment page ---- */
-  .kofi-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);color:#fff;border-radius:999px;padding:6px 13px;font:inherit;font-size:.85rem;font-weight:700;text-decoration:none;cursor:pointer;transition:background .15s ease}
-  .kofi-btn:hover{background:rgba(255,255,255,.22)}
+  /* ---- Donation support button (header pill) — links directly to the Stripe payment page ---- */
+  .kofi-btn{display:inline-flex;align-items:center;gap:6px;background:var(--yellow);border:1px solid var(--yellow);color:var(--navy);border-radius:999px;padding:6px 13px;font:inherit;font-size:.85rem;font-weight:800;text-decoration:none;cursor:pointer;transition:filter .15s ease}
+  .kofi-btn:hover{filter:brightness(1.07)}
   .kofi-btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+  #listen-btn{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);color:#fff}
+  #listen-btn:hover{background:rgba(255,255,255,.22)}
   @media(max-width:560px){.kofi-btn-word{display:none}.kofi-btn{padding:6px 10px}}
-  .a11y-panel{position:absolute;top:calc(100% + 8px);right:0;min-width:246px;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 36px -10px rgba(15,28,46,.45);padding:12px 15px 8px;z-index:1400;text-align:left}
+  .a11y-panel{position:absolute;top:calc(100% + 8px);right:0;min-width:246px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 36px -10px rgba(15,28,46,.45);padding:12px 15px 8px;z-index:1400;text-align:left}
   .a11y-title{margin:0 0 4px;font-size:.95rem;font-weight:800}
   .a11y-row{display:flex;align-items:center;gap:9px;font-size:.92rem;font-weight:600;margin:0;padding:8px 0;cursor:pointer}
   .a11y-row input{width:19px;height:19px;padding:0;margin:0;accent-color:var(--brand);flex-shrink:0;cursor:pointer}
@@ -118,89 +128,53 @@
   body.a11y-contrast :focus-visible{outline:3px solid #000;outline-offset:2px}
   /* Reduced motion: kill CSS animations/transitions + smooth scroll. */
   html.a11y-motion{scroll-behavior:auto}
-  body.a11y-motion *,body.a11y-motion *::before,body.a11y-motion *::after{
-    animation:none !important;transition:none !important;
-  }
+  body.a11y-motion *,body.a11y-motion *::before,body.a11y-motion *::after{animation:none !important;transition:none !important}
 
-  /* ---- Scheduled dark mode (18:30 → 04:45, Africa/Kinshasa) ----
-     JS toggles a .dark class on <html>/<body> on the Kinshasa
-     schedule (see applyTheme below); the palette flips through the
-     same CSS variables the design already reads, exactly like the
-     high-contrast mode above. The dark palette covers the page UI
-     only: the map always keeps its light OpenFreeMap liberty style
-     (Pat's correction), so what needs overrides here is the DOM
-     chrome — every element painted with a hard-coded light colour
-     gets a dark counterpart. Level colours are brightened one step
-     so the dots, pills, badges and gauge labels stay vivid on dark. */
+  /* ---- Scheduled dark mode (18:30 → 04:45 Kinshasa; map stays light) ---- */
   body.dark{
-    --ink:#e9eff7; --muted:#9db0c6; --bg:#0a1120; --card:#141f33;
-    --brand:#15a37e; --brand-2:#3ea8dd;
-    --green:#22c55e; --amber:#fbbf24; --orange:#f97316; --red:#ef4444;
-    --line:#2c3e59;
-    --shadow:0 1px 2px rgba(0,0,0,.45),0 14px 34px -14px rgba(0,0,0,.7);
+    --bg:#0c1220; --panel:#141d30; --panel2:#182238; --ink:#eef1f6; --muted:#9aa7ba; --line:#26324a;
+    --chip:#1d2a44; --chipink:#eef1f6; --wx-bg:#152238; --wx-line:#24344f;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 32px -14px rgba(0,0,0,.6);
   }
-  body.dark .hour-control{background:#101c31}
-  body.dark .honest{background:#33290f;border-color:#7a5c14}
-  body.dark .preview-chip{background:#33290f;border-color:#a97e14;color:#fcd34d}
-  body.dark .live-badge{background:#38141c;border-color:#8c2f3d;color:#fda4af}
-  body.dark input,body.dark select,body.dark textarea{background:#0d1830}
-  body.dark .ktb-layers,body.dark .ktb-layers-panel{background:var(--card);color:var(--ink)}
-  body.dark .ktb-airport-chip{background:var(--card)}
-  body.dark .maplibregl-popup-content{background:#1a2742;color:var(--ink)}
-  body.dark .maplibregl-popup-anchor-bottom .maplibregl-popup-tip,
-  body.dark .maplibregl-popup-anchor-bottom-left .maplibregl-popup-tip,
-  body.dark .maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip{border-top-color:#1a2742}
-  body.dark .maplibregl-popup-anchor-top .maplibregl-popup-tip,
-  body.dark .maplibregl-popup-anchor-top-left .maplibregl-popup-tip,
-  body.dark .maplibregl-popup-anchor-top-right .maplibregl-popup-tip{border-bottom-color:#1a2742}
-  body.dark .maplibregl-popup-anchor-left .maplibregl-popup-tip{border-right-color:#1a2742}
-  body.dark .maplibregl-popup-anchor-right .maplibregl-popup-tip{border-left-color:#1a2742}
-  body.dark .maplibregl-ctrl-attribution{background:rgba(10,17,32,.78) !important;color:var(--muted)}
-  /* Dark + high contrast together: a white-on-black palette with
-     strong lines — the visitor's explicit choice beats plain dark. */
-  body.dark.a11y-contrast{
-    --ink:#ffffff; --muted:#c3d2e4; --line:#8fa6c4; --bg:#000000; --card:#0a0f18;
-    --brand:#2ee6a8; --brand-2:#6fd3ff;
-    --green:#4ade80; --amber:#fcd34d; --orange:#fda04d; --red:#ff6b62;
-  }
-  body.dark.a11y-contrast :focus-visible{outline-color:#fff}
+  body.dark .honest{background:#3a2f14;border-color:#6b5a22;color:#f5e6b8}
+  body.dark .hour-control{background:#182238}
+  body.dark input,body.dark select,body.dark textarea{background:#0f1830;border-color:#33415e;color:#eef1f6}
+  body.dark .artcard{background:#182238}
+  body.dark .alert{background:#182238}
+  body.dark .ktb-layers,.ktb-layers-panel{background:#141d30;color:#eef1f6}
+  body.dark .ktb-layers-toggle{color:#eef1f6}
+  body.dark .ktb-airport-chip{background:#141d30;color:#eef1f6;border-color:#33415e}
+  body.dark .maplibregl-popup-content{background:#141d30;color:#eef1f6}
+  body.dark .maplibregl-popup-close-button{color:#9aa7ba}
+  body.dark .pl-error{color:#fca5a5}
 
-  /* ---- Layout & cards ---- */
-  main{max-width:1540px;margin:0 auto;padding:18px 16px 8px}
-  .tagline{margin:0 0 16px;color:var(--muted);font-size:1rem;line-height:1.5;max-width:880px}
-
-  /* ---- Wide app shell (2026-10-23) ----
-     Pat's layout direction: the page is WIDE so everything fits,
-     and long content lives in scrolling panels so the page itself
-     is not too long. Desktop: the map is the hero (2fr) beside a
-     rail (1fr) of info cards — trip planner, weather, air quality,
-     fuel; below, the arteries sit in a scrolling panel beside the
-     report form; roadworks, flights and river follow in a clean
-     responsive grid. Mobile: the same content stacks in the same
-     order, with no horizontal overflow and no clipped controls. */
-  .hero{display:grid;grid-template-columns:1fr;gap:16px}
-  .rail{display:flex;flex-direction:column;gap:16px;min-width:0}
-  @media(min-width:1024px){.hero{grid-template-columns:2fr 1fr}}
-  .mid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px}
-  @media(min-width:1024px){.mid{grid-template-columns:2fr 1fr}}
-  .sections{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px}
-  @media(min-width:820px){.sections{grid-template-columns:1fr 1fr}}
-  @media(min-width:820px) and (max-width:1279px){#river-card{grid-column:1/-1}}
-  @media(min-width:1280px){.sections{grid-template-columns:repeat(3,1fr)}}
-  /* Scrolling panel: the list scrolls inside its card while the
-     card header stays put. overscroll-behavior:contain keeps the
-     panel from trapping or chaining page scroll on touch. */
-  .panel-scroll{overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
-  .panel-scroll::-webkit-scrollbar{width:8px}
-  .panel-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
-  #arteries-card{display:flex;flex-direction:column;min-height:0}
-  #arteries-card .panel-scroll{flex:1 1 auto;min-height:0;max-height:440px}
-  @media(min-width:1024px){#arteries-card .panel-scroll{max-height:600px}}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);transition:border-color .2s ease,box-shadow .2s ease}
-  .card h2{margin:0 0 12px;font-size:1.06rem;font-weight:750;letter-spacing:.01em;display:flex;align-items:center;gap:8px}
+  /* ---- Page shell ---- */
+  main{max-width:1540px;margin:0 auto;padding:16px 16px 8px;display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px}
+  .card h2{margin:0 0 12px;font-size:1.06rem;font-weight:800;letter-spacing:.01em;display:flex;align-items:center;gap:8px}
   .card h3{margin:16px 0 8px;font-size:.97rem;font-weight:700}
+  .card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .card-head h2{margin-bottom:4px}
+  .sub{color:var(--muted);font-size:.9rem;margin:0 0 12px;line-height:1.5}
+  .chip{display:inline-block;background:var(--chip);color:var(--chipink);border-radius:999px;padding:3px 10px;font-size:.78rem;font-weight:700;white-space:nowrap}
+  .note{font-size:.85rem;color:var(--muted);line-height:1.5}
+  .honest{background:#fff8e6;border:1px solid #f3ddab;border-radius:12px;padding:10px 13px;font-size:.88rem;line-height:1.5}
+  .hidden{display:none !important}
 
-  /* ---- Map ---- */
+  /* ---- Hero photo ---- */
+  .hero{position:relative;border-radius:var(--radius);overflow:hidden;min-height:340px;box-shadow:var(--shadow)}
+  .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+  .hero-overlay{position:relative;z-index:1;min-height:340px;display:flex;flex-direction:column;justify-content:flex-end;gap:10px;padding:26px 28px;background:linear-gradient(180deg,rgba(10,20,40,.18) 0%,rgba(10,20,40,.42) 45%,rgba(10,20,40,.82) 100%);color:#fff}
+  .hero-tag{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.72rem;font-weight:600;letter-spacing:.16em;color:var(--yellow)}
+  .hero h1{margin:0;font-size:2.15rem;line-height:1.08;font-weight:900;letter-spacing:-.01em;max-width:720px;text-shadow:0 2px 14px rgba(0,0,0,.45)}
+  .hero .tagline{margin:0;max-width:720px;font-size:1rem;line-height:1.5;color:#e8eef7}
+  .hero-stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .hstat{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:12px;padding:9px 13px;backdrop-filter:blur(3px)}
+  .hstat b{display:block;font-size:1.25rem;font-weight:800;line-height:1.1}
+  .hstat span{font-size:.8rem;color:#dbe4f2}
+  @media(max-width:960px){.hero,.hero-overlay{min-height:280px}.hero h1{font-size:1.5rem}.hero-overlay{padding:18px}}
+
+  /* ---- Map card ---- */
   #map-card{display:flex;flex-direction:column}
   #map{height:430px;flex:1 1 auto;border-radius:14px;z-index:0;background:#dbe7f3}
   @media(min-width:1024px){#map{min-height:560px}}
@@ -231,8 +205,6 @@
   .dot{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:-1px;margin-right:5px;box-shadow:inset 0 0 0 1px rgba(15,28,46,.12)}
   .lvl-fluid{background:var(--green)} .lvl-slow{background:var(--amber)}
   .lvl-heavy{background:var(--orange)} .lvl-blocked{background:var(--red)}
-  .note{font-size:.85rem;color:var(--muted);line-height:1.5}
-  .honest{background:#fff8e6;border:1px solid #f3ddab;border-radius:12px;padding:10px 13px;font-size:.88rem;line-height:1.5}
   .live-links a{color:var(--brand-2);font-weight:600;text-decoration:none}
   .live-links a:hover{text-decoration:underline}
 
@@ -240,7 +212,7 @@
   .hour-control{margin-top:14px;background:#f6f9fc;border:1px solid var(--line);border-radius:14px;padding:13px 15px 11px}
   .hour-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .hour-label{display:inline-flex;align-items:center;gap:6px;font-size:.92rem;font-weight:700;margin:0}
-  .hour-value{font-size:1.4rem;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:.01em;margin-left:auto;line-height:1}
+  .hour-value{font-size:1.4rem;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:.01em;margin-left:auto;line-height:1;background:var(--navy);color:#fff;border-radius:9px;padding:6px 11px}
   .now-btn{border:none;background:linear-gradient(120deg,var(--brand),var(--brand-2));color:#fff;border-radius:999px;padding:7px 15px;font:inherit;font-size:.85rem;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(11,94,138,.28);transition:filter .15s ease}
   .now-btn:hover{filter:brightness(1.1)}
   .now-btn:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px}
@@ -252,9 +224,75 @@
   input[type=range].hour-slider:focus-visible{outline:2px solid var(--brand-2);outline-offset:4px;border-radius:999px}
   .hour-ticks{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted);font-variant-numeric:tabular-nums;padding:0 2px}
   .preview-chip{display:inline-flex;align-items:center;gap:6px;margin:10px 0 2px;background:#fef3c7;border:1px solid #fcd34d;color:#92400e;border-radius:999px;padding:5px 13px;font-size:.85rem;font-weight:700}
-  .live-badge{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;background:#fef2f2;border:1px solid #fca5a5;color:#b91c1c;border-radius:999px;padding:5px 13px;font-size:.85rem;font-weight:700}
+  .live-badge{display:inline-flex;align-items:center;gap:6px;background:#fef2f2;border:1px solid #fca5a5;color:#b91c1c;border-radius:999px;padding:5px 13px;font-size:.85rem;font-weight:700}
 
-  /* ---- Lists, badges, forms ---- */
+  /* ---- Weather & air band (inside the map card) ---- */
+  .wxband{margin-top:14px;background:var(--wx-bg);border:1px solid var(--wx-line);border-radius:14px;padding:14px 16px}
+  .wxband h2{margin:0 0 2px;font-size:1rem}
+  .wxband .sub{margin:0 0 10px}
+  .wx{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+  .temp{font-size:2.4rem;font-weight:900;letter-spacing:-.02em;line-height:1}
+  #wx-cond{color:var(--muted);font-size:.9rem;margin-top:4px}
+  #wx-icon{font-size:2.1rem;line-height:1}
+  .wxgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+  @media(max-width:700px){.wxgrid{grid-template-columns:repeat(2,1fr)}}
+  .kv{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 11px}
+  .kv span{display:block;font-size:.74rem;color:var(--muted);font-weight:600;margin-bottom:3px}
+  .kv b{font-size:.92rem;font-weight:700}
+  .wxband .note{margin:10px 0 0}
+
+  /* ---- KPI cards ---- */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:960px){.kpis{grid-template-columns:repeat(2,1fr)}}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:15px 16px 14px}
+  .kpi-label{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.7rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .kpi-num{font-size:1.85rem;font-weight:900;letter-spacing:-.01em;line-height:1.15;margin-top:5px}
+  .kpi-sub{font-size:.84rem;color:var(--muted);margin-top:2px;min-height:1.15em;line-height:1.35}
+  .kpi-bar{height:7px;background:var(--chip);border-radius:999px;margin-top:10px;overflow:hidden}
+  .kpi-bar i{display:block;height:100%;background:var(--navy);border-radius:999px;transition:width .3s ease}
+  .kpi:nth-child(1) .kpi-bar i{background:var(--green)}
+  .kpi:nth-child(3) .kpi-bar i{background:var(--sky)}
+  .kpi:nth-child(4) .kpi-bar i{background:var(--amber)}
+
+  /* ---- Two-column layout: main + rail ---- */
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:16px;align-items:start}
+  .maincol,.rail{display:flex;flex-direction:column;gap:16px;min-width:0}
+
+  /* ---- Alerts (roadworks) ---- */
+  .badge-nov{background:var(--yellow);color:var(--navy);border-radius:999px;padding:3px 10px;font-size:.78rem;font-weight:800;white-space:nowrap}
+  .alert{border:1px solid var(--line);border-left:4px solid var(--amber);border-radius:12px;padding:12px 14px;margin:0 0 12px;background:var(--panel)}
+  .alert:last-child{margin-bottom:0}
+  .alert-head{display:flex;align-items:center;gap:9px}
+  .alert-ic{font-size:1.15rem;line-height:1}
+  .alert-head strong{flex:1;font-size:.95rem;line-height:1.35}
+  .datechip{background:var(--chip);color:var(--chipink);border-radius:8px;padding:3px 8px;font-size:.76rem;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .alert p{margin:8px 0 0;font-size:.9rem;line-height:1.5}
+  .alert .alert-src{margin-top:7px}
+  .alert .badge{margin-top:8px}
+
+  /* ---- Arteries grid ---- */
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+  .flt{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:6px 14px;font:inherit;font-size:.85rem;font-weight:700;cursor:pointer;transition:background .15s ease,color .15s ease}
+  .flt:hover{background:var(--chip)}
+  .flt.active{background:var(--navy);border-color:var(--navy);color:#fff}
+  .flt:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px}
+  .artgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  @media(max-width:700px){.artgrid{grid-template-columns:1fr}}
+  .artcard{display:block;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--green);border-radius:12px;padding:11px 13px;font:inherit;color:var(--ink);cursor:pointer;transition:box-shadow .15s ease,transform .15s ease}
+  .artcard:hover{box-shadow:0 6px 18px -8px rgba(15,28,46,.35);transform:translateY(-1px)}
+  .artcard:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px}
+  .artcard.lvl-slow{border-left-color:var(--amber)}
+  .artcard.lvl-heavy{border-left-color:var(--orange)}
+  .artcard.lvl-blocked{border-left-color:var(--red)}
+  .art-name{font-weight:800;font-size:.95rem}
+  .art-zones{font-size:.83rem;color:var(--muted);margin-top:2px;line-height:1.35}
+  .art-row{display:flex;align-items:center;gap:10px;margin-top:9px}
+  .art-level{font-size:.8rem;font-weight:700;white-space:nowrap}
+  .art-bar{flex:1;height:7px;background:var(--chip);border-radius:999px;overflow:hidden}
+  .art-bar i{display:block;height:100%;background:var(--green);border-radius:999px}
+  .artcard.lvl-slow .art-bar i{background:var(--amber)}
+  .artcard.lvl-heavy .art-bar i{background:var(--orange)}
+  .artcard.lvl-blocked .art-bar i{background:var(--red)}
   ul.clean{list-style:none;margin:0;padding:0}
   ul.clean li{padding:10px 0;border-bottom:1px solid var(--line);line-height:1.5}
   ul.clean li:last-child{border-bottom:none}
@@ -264,6 +302,8 @@
   .b-stalled{background:var(--orange)} .b-progressing{background:var(--brand-2)} .b-degraded{background:#a16207}
   .pill{display:inline-block;font-size:.75rem;font-weight:700;border-radius:999px;padding:2px 9px;color:#fff}
   .p-river{background:var(--brand-2)}
+
+  /* ---- Forms ---- */
   label{display:block;font-size:.86rem;font-weight:600;margin:10px 0 4px}
   input,select,textarea{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff;color:var(--ink)}
   input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(14,122,95,.18)}
@@ -271,34 +311,22 @@
   button.cta:hover{filter:brightness(1.08)}
   .wx-big{font-size:2rem;font-weight:800;letter-spacing:-.01em}
 
-  /* ---- Air quality ---- */
-  .aq-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-  .aq-cat{font-size:1.55rem;font-weight:800;letter-spacing:-.01em;line-height:1.15}
-  .aq-aqi-small{font-size:.88rem;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
-  .aq-gauge{position:relative;margin-top:10px;padding-top:12px}
-  .aq-bar{display:flex;height:14px;border-radius:999px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(15,28,46,.14)}
-  .aq-bar i{display:block;height:100%}
-  .aq-marker{position:absolute;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none;z-index:2}
-  .aq-caret{width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid var(--ink)}
-  .aq-dot{width:16px;height:16px;border-radius:50%;border:3px solid #fff;box-shadow:0 1px 4px rgba(15,28,46,.5);margin-top:3px}
-  .aq-ticks{position:relative;height:1.05rem;margin-top:5px;font-size:.72rem;color:var(--muted);font-variant-numeric:tabular-nums}
-  .aq-ticks span{position:absolute;top:0;transform:translateX(-50%)}
-  .aq-ticks span:first-child{transform:none}
-  .aq-ticks .aq-tick-end{right:0;transform:none}
-  .aq-advice{margin:10px 0 0;font-size:1rem;line-height:1.45}
-
   /* ---- Trip planner (Google Maps deep link — no API) ---- */
   .pl-swap-row{display:flex;justify-content:flex-end;margin-top:6px}
-  .pl-swap{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--brand-2);font-size:1.1rem;line-height:1;cursor:pointer;transition:background .15s ease}
+  .pl-swap{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--brand-2);font-size:1.1rem;line-height:1;cursor:pointer;transition:background .15s ease}
   .pl-swap:hover{background:var(--bg)}
   .pl-swap:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px}
   .pl-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
   .pl-btn{flex:1 1 150px;display:inline-flex;align-items:center;justify-content:center;gap:7px;text-align:center;text-decoration:none;border-radius:12px;padding:12px 10px;font-weight:700;font-size:.95rem;transition:filter .15s ease,background .15s ease}
   .pl-btn-primary{background:linear-gradient(120deg,var(--brand),var(--brand-2));color:#fff;box-shadow:0 4px 14px -4px rgba(11,94,138,.45)}
   .pl-btn-primary:hover{filter:brightness(1.08)}
-  .pl-btn:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px} .radio-live{color:var(--red);font-weight:800;font-size:.8rem;letter-spacing:.04em;white-space:nowrap}
+  .pl-btn:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px}
+  .pl-presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .pl-preset{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:6px 12px;font:inherit;font-size:.83rem;font-weight:600;cursor:pointer;transition:background .15s ease}
+  .pl-preset:hover{background:var(--chip)}
+  .pl-preset:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px}
+  .radio-live{color:var(--red);font-weight:800;font-size:.8rem;letter-spacing:.04em;white-space:nowrap}
   .pl-error{color:#b91c1c;margin-top:10px}
-  body.dark .pl-error{color:#fca5a5}
 
   /* ---- Official fuel prices (zone Ouest) ---- */
   .fuel-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:1rem}
@@ -322,6 +350,16 @@
   .fb-chip.fb-bad{background:var(--red)}
   .fb-chip.fb-sched{background:transparent;color:var(--muted);border:1px solid var(--line)}
 
+  /* ---- Train & boat board ---- */
+  .tb-table{width:100%;border-collapse:collapse;font-size:.92rem;margin:0 0 6px}
+  .tb-table th,.tb-table td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;line-height:1.45}
+  .tb-table th{width:34%;color:var(--muted);font-weight:600;white-space:nowrap}
+  .tb-table tr:last-child th,.tb-table tr:last-child td{border-bottom:none}
+
+  /* ---- Bottom boards (train & boat / flights) ---- */
+  .trio{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+  @media(max-width:960px){.trio{grid-template-columns:1fr}}
+
   /* ---- Footer ---- */
   footer{max-width:1540px;margin:0 auto;padding:14px 16px 30px;color:var(--muted);font-size:.84rem;line-height:1.55}
   footer p{margin:6px 0}
@@ -333,7 +371,20 @@
   .share-btn svg{width:14px;height:14px;fill:currentColor;flex:none}
   .owner-line{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
   .owner-line a{color:inherit;text-decoration:underline}
-  .hidden{display:none !important}
+
+  /* ---- Mobile: interleaved card order (preview fix) ---- */
+  @media(max-width:960px){
+    .layout,.maincol,.rail{display:contents}
+    #alerts-card{order:1}
+    #planner-card{order:2}
+    #arteries-card{order:3}
+    #report-card{order:4}
+    #fuel-card{order:5}
+    #radio-card{order:6}
+    #map{height:340px}
+    main{padding:12px 12px 6px;gap:12px}
+    .card{padding:15px 16px}
+  }
 </style>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6345969595369472" crossorigin="anonymous"></script>
 </head>
@@ -373,12 +424,25 @@
 </header>
 
 <main>
-  <p class="tagline" data-i18n="tagline">Circulation à Kinshasa : grandes artères, congestion habituelle, chantiers, météo en direct et signalements d'embouteillages.</p>
+  <section class="hero" aria-label="Kinshasa Traffic Board">
+    <img src="images/hero-30-juin.jpg" alt="Boulevard du 30 Juin, Gombe, Kinshasa" width="1024" height="586" fetchpriority="high">
+    <div class="hero-overlay">
+      <div class="hero-tag" data-i18n="heroTag">KINSHASA · CIRCULATION EN DIRECT</div>
+      <h1 data-i18n="heroTitle">La circulation de Kinshasa, d'un seul coup d'œil.</h1>
+      <p class="tagline" data-i18n="tagline">Circulation à Kinshasa : grandes artères, congestion habituelle, chantiers, météo en direct et signalements d'embouteillages.</p>
+      <div class="hero-stats">
+        <div class="hstat"><b id="hs-fluid">—</b><span data-i18n="heroFluid">artères fluides</span></div>
+        <div class="hstat"><b id="hs-blocked">—</b><span data-i18n="heroBlocked">points bloqués / fermés</span></div>
+        <div class="hstat"><b>24 h</b><span data-i18n="heroReports">signalements actifs (roulement)</span></div>
+      </div>
+    </div>
+  </section>
 
-  <div class="hero">
   <section class="card" id="map-card">
-    <h2>🗺️ <span data-i18n="mapTitle">Carte des grandes artères</span></h2>
-    <p class="live-badge hidden" id="live-badge" role="status"></p>
+    <div class="card-head">
+      <h2>🗺️ <span data-i18n="mapTitle">Carte des grandes artères</span></h2>
+      <p class="live-badge hidden" id="live-badge" role="status"></p>
+    </div>
     <div id="map" aria-label="Map of Kinshasa main arteries"></div>
     <div class="hour-control">
       <div class="hour-top">
@@ -402,62 +466,112 @@
     <p class="note hidden" id="flights-note" style="margin-top:8px" data-i18n="flightsNote">Données de vol : adsb.lol et OpenSky — ADS-B communautaire (ODbL). Vols en direct — Congo Airways (COG), Ethiopian (ETH), Air France (AFR), Brussels Airlines (BEL). Couverture limitée autour de Kinshasa : l'absence d'avion ne signifie pas l'absence de vol.</p>
     <p class="note hidden" id="flights-none" style="margin-top:8px" role="status" data-i18n="flightsNone">Aucun avion suivi pour le moment (couverture limitée autour de Kinshasa).</p>
     <p class="note live-links" style="margin-top:8px">🛰️ <a href="https://zoom.earth/maps/satellite/#view=-4.32,15.32,9z" target="_blank" rel="noopener" data-i18n="zoomEarthLink">Satellite en direct (Zoom Earth)</a></p>
+    <div class="wxband" id="wxband">
+      <h2>🌤️ <span data-i18n="wxTitle">Météo &amp; air — Kinshasa</span></h2>
+      <p class="sub">Open-Meteo · <span data-i18n="updatedOn">Données du</span> {{GENERATED_DATE}}</p>
+      <div class="wx">
+        <div>
+          <div class="temp" id="wx-temp">--°</div>
+          <div id="wx-cond" data-i18n="weatherLoading">Chargement de la météo…</div>
+        </div>
+        <div id="wx-icon" aria-hidden="true">🌤️</div>
+      </div>
+      <div class="wxgrid">
+        <div class="kv"><span data-i18n="wxHum">Humidité</span><b id="wx-hum">—</b></div>
+        <div class="kv"><span data-i18n="wxWind">Vent</span><b id="wx-wind">—</b></div>
+        <div class="kv"><span data-i18n="wxAq">Qualité de l'air (CAMS)</span><b id="wx-aq">—</b></div>
+        <div class="kv"><span data-i18n="wxFlood">Risque d'inondation</span><b id="wx-flood">—</b></div>
+      </div>
+      <p class="note hidden" id="wx-aq-advice"></p>
+      <p class="note hidden" id="wx-flood-note"></p>
+      <p class="note" style="margin-top:8px" data-i18n="aqSource">Estimation pour Kinshasa : modèle CAMS via Open-Meteo (pas de mesure au sol en direct).</p>
+    </div>
   </section>
 
-    <div class="rail">
-    <section class="card" id="report-card">
-      <h2>📝 <span data-i18n="reportTitle">Signaler un embouteillage</span></h2>
-      <div class="honest" data-i18n="reportNote">Votre signalement est partagé avec tous les visiteurs et reste visible 24 heures.</div>
-      <form id="report-form">
-        <label for="rep-artery" data-i18n="reportArtery">Artère</label>
-        <select id="rep-artery" required></select>
-        <label for="rep-level" data-i18n="reportLevel">Niveau</label>
-        <select id="rep-level" required>
-          <option value="fluid" data-i18n="lvlFluid">Fluide</option>
-          <option value="slow" data-i18n="lvlSlow">Ralenti</option>
-          <option value="heavy" data-i18n="lvlHeavy">Dense</option>
-          <option value="blocked" data-i18n="lvlBlocked">Bloqué</option>
-        </select>
-        <label for="rep-comment" data-i18n="reportComment">Commentaire (optionnel)</label>
-        <textarea id="rep-comment" rows="2" maxlength="140"></textarea>
-        <button type="submit" class="cta" data-i18n="reportSubmit">Ajouter mon signalement</button>
-      </form>
-      <p id="report-error" class="note" role="alert" style="display:none;color:#b91c1c" data-i18n="reportError">Envoi impossible pour le moment — réessayez dans un instant.</p>
-      <h3 data-i18n="myReports">Mes signalements (cet appareil)</h3>
-      <ul class="clean" id="my-reports"><li class="note" data-i18n="noReports">Aucun signalement pour le moment.</li></ul>
-    </section>
+  <section class="kpis" id="kpis" aria-label="Indicateurs">
+    <article class="kpi">
+      <div class="kpi-label" data-i18n="kpiFluidity">Fluidité du réseau</div>
+      <div class="kpi-num" id="kpi-fluid-num">—</div>
+      <div class="kpi-sub" id="kpi-fluid-sub"></div>
+      <div class="kpi-bar"><i id="kpi-fluid-bar" style="width:0%"></i></div>
+    </article>
+    <article class="kpi">
+      <div class="kpi-label" data-i18n="kpiArteries">Artères surveillées</div>
+      <div class="kpi-num" id="kpi-arteries-num">16</div>
+      <div class="kpi-sub" data-i18n="kpiArteriesSub">artères majeures de Kinshasa</div>
+      <div class="kpi-bar"><i style="width:100%"></i></div>
+    </article>
+    <article class="kpi">
+      <div class="kpi-label" data-i18n="kpiSpeed">Vitesse moyenne estimée</div>
+      <div class="kpi-num" id="kpi-speed-num">—</div>
+      <div class="kpi-sub" data-i18n="kpiSpeedSub">estimation à partir de la fluidité</div>
+      <div class="kpi-bar"><i id="kpi-speed-bar" style="width:0%"></i></div>
+    </article>
+    <article class="kpi">
+      <div class="kpi-label" id="kpi-alerts-label">Alertes actives — novembre</div>
+      <div class="kpi-num" id="kpi-alerts-num">—</div>
+      <div class="kpi-sub" id="kpi-alerts-sub"></div>
+      <div class="kpi-bar"><i id="kpi-alerts-bar" style="width:0%"></i></div>
+    </article>
+  </section>
 
-      <section class="card" id="weather-card">
-        <h2>🌦️ <span data-i18n="weatherTitle">Météo à Kinshasa (en direct)</span></h2>
-        <div id="weather-body"><p class="note" data-i18n="weatherLoading">Chargement de la météo…</p></div>
-        <p class="note">Open-Meteo · <span data-i18n="updatedOn">Données du</span> {{GENERATED_DATE}}</p>
-      </section>
-
-      <section class="card" id="air-card">
-        <h2>🌫️ <span data-i18n="aqTitle">Qualité de l'air</span></h2>
-        <div id="air-body"><p class="note" data-i18n="aqLoading">Chargement de la qualité de l'air…</p></div>
-        <p class="note" style="margin-top:8px" data-i18n="aqSource">Estimation pour Kinshasa : modèle CAMS via Open-Meteo (pas de mesure au sol en direct).</p>
-      </section>
-
-      <section class="card" id="fuel-card">
-        <h2>⛽ <span data-i18n="fuelTitle">Prix du carburant — zone Ouest (officiel)</span></h2>
-        <div id="fuel-body">
-{{FUEL_HTML}}
+  <div class="layout">
+    <div class="maincol">
+      <section class="card" id="alerts-card">
+        <div class="card-head">
+          <h2>⚠️ <span id="alerts-title">Alertes &amp; travaux — novembre</span></h2>
+          <span class="badge-nov" id="alerts-count">3 en novembre</span>
         </div>
+        <p class="sub" data-i18n="alertsNote">Les mises à jour de novembre en tête, puis l'ensemble des chantiers signalés dans la presse.</p>
+        <div id="alerts-list">
+{{ROADWORKS_LIST_HTML}}
+        </div>
+        <p class="note" data-i18n="worksNote">Informations tirées de la presse congolaise, avec source et date — à confirmer sur place.</p>
+      </section>
+
+      <section class="card" id="arteries-card">
+        <div class="card-head">
+          <h2>🛣️ <span data-i18n="arteriesTitle">Les grandes artères</span></h2>
+          <span class="chip" id="art-count">16 artères</span>
+        </div>
+        <div class="filters" id="art-filters" role="group" aria-label="Filtrer les artères">
+          <button type="button" class="flt active" data-filter="all" data-i18n="artFilterAll">Toutes</button>
+          <button type="button" class="flt" data-filter="fluid" data-i18n="artFilterFluid">Fluides</button>
+          <button type="button" class="flt" data-filter="dense" data-i18n="artFilterDense">Denses</button>
+          <button type="button" class="flt" data-filter="blocked" data-i18n="artFilterBlocked">Bloquées</button>
+        </div>
+        <div class="artgrid" id="artGrid">
+          <ul class="clean" id="arteries-list">
+{{ARTERIES_LIST_HTML}}
+          </ul>
+        </div>
+        <p class="note hidden" id="art-filter-note" style="margin-top:10px"></p>
+      </section>
+
+      <section class="card" id="report-card">
+        <h2>📝 <span data-i18n="reportTitle">Signaler un embouteillage</span></h2>
+        <div class="honest" data-i18n="reportNote">Votre signalement est partagé avec tous les visiteurs et reste visible 24 heures.</div>
+        <form id="report-form">
+          <label for="rep-artery" data-i18n="reportArtery">Artère</label>
+          <select id="rep-artery" required></select>
+          <label for="rep-level" data-i18n="reportLevel">Niveau</label>
+          <select id="rep-level" required>
+            <option value="fluid" data-i18n="lvlFluid">Fluide</option>
+            <option value="slow" data-i18n="lvlSlow">Ralenti</option>
+            <option value="heavy" data-i18n="lvlHeavy">Dense</option>
+            <option value="blocked" data-i18n="lvlBlocked">Bloqué</option>
+          </select>
+          <label for="rep-comment" data-i18n="reportComment">Commentaire (optionnel)</label>
+          <textarea id="rep-comment" rows="2" maxlength="140"></textarea>
+          <button type="submit" class="cta" data-i18n="reportSubmit">Ajouter mon signalement</button>
+        </form>
+        <p id="report-error" class="note" role="alert" style="display:none;color:#b91c1c" data-i18n="reportError">Envoi impossible pour le moment — réessayez dans un instant.</p>
+        <h3 data-i18n="myReports">Mes signalements (cet appareil)</h3>
+        <ul class="clean" id="my-reports"><li class="note" data-i18n="noReports">Aucun signalement pour le moment.</li></ul>
       </section>
     </div>
-  </div>
 
-  <div class="mid">
-    <section class="card" id="arteries-card">
-      <h2>🛣️ <span data-i18n="arteriesTitle">Les grandes artères</span></h2>
-      <div class="panel-scroll">
-        <ul class="clean" id="arteries-list">
-{{ARTERIES_LIST_HTML}}
-        </ul>
-      </div>
-    </section>
-
+    <div class="rail">
       <section class="card" id="planner-card">
         <h2>🧭 <span data-i18n="plannerTitle">Planificateur de trajet</span></h2>
         <form id="planner-form">
@@ -475,46 +589,66 @@
             <a class="pl-btn pl-btn-primary" id="pl-google" href="#" target="_blank" rel="noopener noreferrer">🗺️ <span data-i18n="plannerGoogle">Ouvrir dans Google Maps</span></a>
           </div>
           <p class="note" style="margin-top:10px" data-i18n="plannerHint">Google Maps utilise le départ indiqué — ou votre position actuelle s'il est vide.</p>
+          <p class="note" style="margin-top:10px;font-weight:700" data-i18n="plannerPresets">Trajets fréquents</p>
+          <div class="pl-presets" id="pl-presets"></div>
         </form>
       </section>
+
+      <section class="card" id="fuel-card">
+        <h2>⛽ <span data-i18n="fuelTitle">Prix du carburant — zone Ouest (officiel)</span></h2>
+        <div id="fuel-body">
+{{FUEL_HTML}}
+        </div>
+      </section>
+
+      <section class="card" id="radio-card">
+        <h2>📻 <span data-i18n="radioTitle">Radio — Kinshasa en direct</span></h2>
+        <p class="note" data-i18n="radioNote">La radio des Nations unies en RDC, en français et en langues nationales — à écouter pendant que vous consultez le trafic.</p>
+        <p><strong>Radio Okapi — 103.5 FM, Kinshasa</strong> <span id="radio-live" class="radio-live" hidden>● <span data-i18n="radioLive">EN DIRECT</span></span></p>
+        <p class="pl-actions">
+          <button type="button" class="pl-btn pl-btn-primary" id="radio-toggle" aria-pressed="false"><span id="radio-toggle-icon">▶</span> <span id="radio-toggle-label" data-i18n="radioListen">Écouter en direct</span></button><a class="pl-btn" href="https://www.radiookapi.net/page/ecouter-radio-okapi-en-ligne" target="_blank" rel="noopener noreferrer">radiookapi.net ↗</a><audio id="radio-audio" preload="none" src="https://servidor30-5.brlogic.com:7090/live"></audio>
+        </p>
+        <p class="note" id="radio-error" hidden><span data-i18n="radioError">Le flux direct est indisponible pour le moment — écoutez sur le site de Radio Okapi.</span> <a href="https://www.radiookapi.net/page/ecouter-radio-okapi-en-ligne" target="_blank" rel="noopener noreferrer">radiookapi.net</a></p><p class="note" data-i18n="radioPlayerNote">Lecteur intégré — la station émet en continu.</p>
+      </section>
+    </div>
   </div>
 
-  <div class="sections">
-    <section class="card" id="works-card">
-      <h2>🚧 <span data-i18n="worksTitle">Chantiers et points signalés</span></h2>
-        <p class="note" data-i18n="worksNote">Informations tirées de la presse congolaise, avec source et date — à confirmer sur place.</p>
-        <ul class="clean" id="works-list">
-{{ROADWORKS_LIST_HTML}}
-        </ul>
-      </section>
-
-      <section class="card" id="flights-board-card">
-        <h2>✈ <span data-i18n="fihTitle">Aéroport de N'djili (FIH) — départs et arrivées du jour</span></h2>
-        <p class="note" id="flights-board-updated"></p>
-        <div id="flights-board-body" class="hidden">
-          <h3>🛫 <span data-i18n="fihDepartures">Départs</span></h3>
-          <ul class="clean" id="fih-departures"></ul>
-          <h3>🛬 <span data-i18n="fihArrivals">Arrivées</span></h3>
-          <ul class="clean" id="fih-arrivals"></ul>
-        </div>
-        <p class="note" id="flights-board-empty" data-i18n="fihUnavailable">Données vols indisponibles pour le moment.</p>
-      </section>
-
-    <section class="card" id="river-card">
-      <h2>🌊 <span data-i18n="riverTitle">Fleuve Congo — navigation et traversée</span></h2>
-        <p class="honest" data-i18n="riverNote">Régime du fleuve : hautes eaux vers décembre et avril–mai, basses eaux (étiage) en juillet–août. La traversée Kinshasa–Brazzaville part du Beach Ngobila. Il n'existe aucun flux en direct des niveaux du fleuve ni des bateaux : ces informations viennent de la presse et de rapports officiels, comme les chantiers.</p>
-        <ul class="clean" id="river-list">
+  <div class="trio">
+    <section class="card" id="trainboat-card">
+      <h2>🚆 <span data-i18n="trainTitle">Train &amp; bateau</span></h2>
+      <h3 style="margin-top:0" data-i18n="trainTableTitle">Train urbain ONATRA</h3>
+      <table class="tb-table" aria-label="Train urbain ONATRA">
+        <tbody id="train-body">
+{{TRAIN_TABLE_HTML}}
+        </tbody>
+      </table>
+      <p class="note" data-i18n="trainNote">Le train urbain ONATRA circule depuis le 19 août 2026. Aucun horaire officiel publié : les départs ne sont pas annoncés à l'avance.</p>
+      <h3 data-i18n="boatTableTitle">Fleuve Congo — traversée</h3>
+      <table class="tb-table" aria-label="Fleuve Congo — traversée">
+        <tbody>
+          <tr><th data-i18n="boatCrossing">Traversée</th><td>Beach Ngobila ↔ Brazzaville</td></tr>
+          <tr><th data-i18n="boatDepartures">Départs</th><td data-i18n="boatDeparturesVal">Selon la demande — pas d'horaire publié</td></tr>
+          <tr><th data-i18n="boatLevel">Niveau du fleuve</th><td data-i18n="boatLevelVal">Pas de relevé en direct — suivi par la presse</td></tr>
+        </tbody>
+      </table>
+      <p class="note" id="boat-updated"></p>
+      <h3 data-i18n="riverTitle">Fleuve Congo — navigation et traversée</h3>
+      <p class="honest" data-i18n="riverNote">Régime du fleuve : hautes eaux vers décembre et avril–mai, basses eaux (étiage) en juillet–août. La traversée Kinshasa–Brazzaville part du Beach Ngobila. Il n'existe aucun flux en direct des niveaux du fleuve ni des bateaux : ces informations viennent de la presse et de rapports officiels, comme les chantiers.</p>
+      <ul class="clean" id="river-list">
 {{RIVER_LIST_HTML}}
-        </ul>
+      </ul>
     </section>
-    <section class="card" id="radio-card">
-      <h2>📻 <span data-i18n="radioTitle">Radio — Kinshasa en direct</span></h2>
-      <p class="note" data-i18n="radioNote">La radio locale en direct, en français et en lingala — à écouter pendant que vous consultez le trafic.</p>
-      <p><strong>Radio Okapi — 103.5 FM, Kinshasa</strong> <span id="radio-live" class="radio-live" hidden>● <span data-i18n="radioLive">EN DIRECT</span></span></p>
-      <p class="pl-actions">
-        <button type="button" class="pl-btn pl-btn-primary" id="radio-toggle" aria-pressed="false"><span id="radio-toggle-icon">▶</span> <span id="radio-toggle-label" data-i18n="radioListen">Écouter en direct</span></button><a class="pl-btn" href="https://www.radiookapi.net/page/ecouter-radio-okapi-en-ligne" target="_blank" rel="noopener noreferrer">radiookapi.net ↗</a><audio id="radio-audio" preload="none" src="https://servidor30-5.brlogic.com:7090/live"></audio>
-      </p>
-      <p class="note" id="radio-error" hidden><span data-i18n="radioError">Le flux direct est indisponible pour le moment — écoutez sur le site de Radio Okapi.</span> <a href="https://www.radiookapi.net/page/ecouter-radio-okapi-en-ligne" target="_blank" rel="noopener noreferrer">radiookapi.net</a></p><p class="note" data-i18n="radioPlayerNote">Lecteur intégré — la station émet en continu.</p>
+
+    <section class="card" id="flights-board-card">
+      <h2>✈ <span data-i18n="fihTitle">Aéroport de N'djili (FIH) — départs et arrivées du jour</span></h2>
+      <p class="note" id="flights-board-updated"></p>
+      <div id="flights-board-body" class="hidden">
+        <h3>🛫 <span data-i18n="fihDepartures">Départs</span></h3>
+        <ul class="clean" id="fih-departures"></ul>
+        <h3>🛬 <span data-i18n="fihArrivals">Arrivées</span></h3>
+        <ul class="clean" id="fih-arrivals"></ul>
+      </div>
+      <p class="note" id="flights-board-empty" data-i18n="fihUnavailable">Données vols indisponibles pour le moment.</p>
     </section>
   </div>
 </main>
@@ -522,6 +656,7 @@
 <footer>
   <p data-i18n="footerNote">Sources : OpenStreetMap (géométrie des routes, données communautaires pouvant être incomplètes), Open-Meteo (météo), Google (trafic en direct, lorsqu'il est récent), presse congolaise (chantiers), adsb.lol (vols suivis, ADS-B communautaire, ODbL), AeroDataBox (départs et arrivées de l'aéroport de N'djili). À défaut de données en direct récentes, la congestion affichée est un modèle habituel par heure.</p>
   <p>Kinshasa Traffic Board — <span data-i18n="generatedOn">Page générée le</span> {{GENERATED_DATE}}</p>
+  <p class="note" data-i18n="photoCredit">Photo : Boulevard du 30 Juin, Gombe — via RFI / Afrique</p>
   <p class="share-row"><span class="share-label" data-i18n="shareLabel">Partager</span>
     <a class="share-btn" href="https://wa.me/?text=Kinshasa%20Bouge%20%E2%80%94%20trafic%20en%20direct%2C%20%C3%A9tat%20des%20routes%20et%20vols%20%C3%A0%20Kinshasa%20https%3A%2F%2Fkinshasabouge.com%2F" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>WhatsApp</a>
     <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkinshasabouge.com%2F" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>Facebook</a>
@@ -660,7 +795,58 @@ var I18N = {
     fuelNote: "Prix officiel par zone — arrêté du {D}. Source : Ministère de l'Économie nationale (CSPPP). Le même prix s'applique dans toutes les stations de la zone.",
     fuelCheck: "Vérification hebdomadaire (GlobalPetrolPrices)",
     fuelUnavailable: "Prix du carburant indisponible pour le moment.",
-    status: { active:"En cours", stopped:"À l'arrêt", stalled:"Presque à l'arrêt", progressing:"En progression", degraded:"Dégradé" }
+    status: { active:"En cours", stopped:"À l'arrêt", stalled:"Presque à l'arrêt", progressing:"En progression", degraded:"Dégradé" },
+    heroTag: "KINSHASA · CIRCULATION EN DIRECT",
+    heroTitle: "La circulation de Kinshasa, d'un seul coup d'œil.",
+    heroFluid: "artères fluides",
+    heroBlocked: "points bloqués / fermés",
+    heroReports: "signalements actifs (roulement)",
+    kpiFluidity: "Fluidité du réseau",
+    kpiFluiditySub: "{N} / 16 artères fluides à {H}",
+    kpiArteries: "Artères surveillées",
+    kpiArteriesSub: "artères majeures de Kinshasa",
+    kpiSpeed: "Vitesse moyenne estimée",
+    kpiSpeedSub: "estimation à partir de la fluidité",
+    kpiAlerts: "Alertes actives",
+    alertsTitle: "Alertes & travaux",
+    alertsNote: "Les mises à jour du mois en tête, puis l'ensemble des chantiers signalés dans la presse.",
+    alertsCount: "{N} en {M}",
+    artFilterAll: "Toutes",
+    artFilterFluid: "Fluides",
+    artFilterDense: "Denses",
+    artFilterBlocked: "Bloquées",
+    artCount: "{N} artères",
+    artEmpty: "Aucune artère dans cette catégorie pour l'heure affichée.",
+    wxTitle: "Météo & air — Kinshasa",
+    wxHum: "Humidité",
+    wxWind: "Vent",
+    wxAq: "Qualité de l'air (CAMS)",
+    wxFlood: "Risque d'inondation",
+    wxFloodHigh: "Élevé aujourd'hui",
+    wxFloodLow: "Faible",
+    wxCondClear: "Ciel dégagé",
+    wxCondCloudy: "Nuageux",
+    wxCondFog: "Brouillard",
+    wxCondRain: "Pluie",
+    wxCondShowers: "Averses",
+    wxCondStorm: "Orages",
+    trainTitle: "Train & bateau",
+    trainTableTitle: "Train urbain ONATRA",
+    trainNote: "Le train urbain ONATRA circule depuis le 19 août 2026. Aucun horaire officiel publié : les départs ne sont pas annoncés à l'avance.",
+    boatTableTitle: "Fleuve Congo — traversée",
+    boatCrossing: "Traversée",
+    boatDepartures: "Départs",
+    boatDeparturesVal: "Selon la demande — pas d'horaire publié",
+    boatLevel: "Niveau du fleuve",
+    boatLevelVal: "Pas de relevé en direct — suivi par la presse",
+    boatPressNote: "Section fleuve alimentée par la presse fluviale — dernier point le {D}.",
+    trainLine: "Ligne",
+    trainDuration: "Durée",
+    trainFrequency: "Fréquence",
+    trainFare: "Tarif",
+    trainSchedule: "Horaires",
+    plannerPresets: "Trajets fréquents",
+    photoCredit: "Photo : Boulevard du 30 Juin, Gombe — via RFI / Afrique"
   },
   en: {
     tagline: "Traffic in Kinshasa: main arteries, typical congestion, roadworks, live weather and crowd-reported jams.",
@@ -771,7 +957,58 @@ var I18N = {
     fuelNote: "Official zonal price — decree of {D}. Source: Ministry of National Economy (CSPPP). The same price applies at every station in the zone.",
     fuelCheck: "Weekly cross-check (GlobalPetrolPrices)",
     fuelUnavailable: "Fuel price unavailable right now.",
-    status: { active:"Active", stopped:"Stopped", stalled:"Nearly stopped", progressing:"Progressing", degraded:"Degraded" }
+    status: { active:"Active", stopped:"Stopped", stalled:"Nearly stopped", progressing:"Progressing", degraded:"Degraded" },
+    heroTag: "KINSHASA · LIVE TRAFFIC",
+    heroTitle: "Kinshasa traffic, at a glance.",
+    heroFluid: "fluid arteries",
+    heroBlocked: "blocked / closed points",
+    heroReports: "active reports (rolling)",
+    kpiFluidity: "Network fluidity",
+    kpiFluiditySub: "{N} / 16 arteries fluid at {H}",
+    kpiArteries: "Arteries monitored",
+    kpiArteriesSub: "major Kinshasa arteries",
+    kpiSpeed: "Estimated average speed",
+    kpiSpeedSub: "estimate from fluidity",
+    kpiAlerts: "Active alerts",
+    alertsTitle: "Alerts & roadworks",
+    alertsNote: "This month's updates first, then all press-reported works.",
+    alertsCount: "{N} in {M}",
+    artFilterAll: "All",
+    artFilterFluid: "Fluid",
+    artFilterDense: "Congested",
+    artFilterBlocked: "Blocked",
+    artCount: "{N} arteries",
+    artEmpty: "No artery in this category at the shown hour.",
+    wxTitle: "Weather & air — Kinshasa",
+    wxHum: "Humidity",
+    wxWind: "Wind",
+    wxAq: "Air quality (CAMS)",
+    wxFlood: "Flood risk",
+    wxFloodHigh: "High today",
+    wxFloodLow: "Low",
+    wxCondClear: "Clear sky",
+    wxCondCloudy: "Cloudy",
+    wxCondFog: "Fog",
+    wxCondRain: "Rain",
+    wxCondShowers: "Showers",
+    wxCondStorm: "Thunderstorms",
+    trainTitle: "Train & boat",
+    trainTableTitle: "ONATRA urban train",
+    trainNote: "The ONATRA urban train has run since 19 August 2026. No official timetable is published: departures are not announced in advance.",
+    boatTableTitle: "Congo River — crossing",
+    boatCrossing: "Crossing",
+    boatDepartures: "Departures",
+    boatDeparturesVal: "On demand — no published schedule",
+    boatLevel: "River level",
+    boatLevelVal: "No live gauge — press-tracked",
+    boatPressNote: "River section fed by press reports — latest item {D}.",
+    trainLine: "Line",
+    trainDuration: "Duration",
+    trainFrequency: "Frequency",
+    trainFare: "Fare",
+    trainSchedule: "Schedule",
+    plannerPresets: "Frequent trips",
+    photoCredit: "Photo: Boulevard du 30 Juin, Gombe — via RFI / Afrique"
   }
 };
 
@@ -892,6 +1129,61 @@ function updateLiveUI(){
       ? t('liveNote').replace('{T}', kinshasaHM(liveCheckedAt()))
       : t('typicalNote');
   }
+}
+
+/* ---- KPI cards + hero stats (computed live from BOARD data) ----
+   Fluidity = share of arteries fluid at the shown hour (live-aware:
+   the live sweep wins when fresh, else the typical model). Speed is
+   an ESTIMATE derived from that fluidity share, labelled as such.
+   Alerts = roadworks dated in the board's generated month. */
+function kpiFluidity(){
+  var n = 0, total = BOARD.arteries.features.length;
+  BOARD.arteries.features.forEach(function(f){ if (displayLevel(f.properties) === 'fluid') n++; });
+  return { n: n, total: total, pct: total ? Math.round(n / total * 100) : 0 };
+}
+function currentMonthKey(){ return String(BOARD.generated || '').slice(0, 7); }
+function monthRoadworks(){
+  var k = currentMonthKey();
+  return BOARD.roadworks.filter(function(rw){ return String(rw.date || '').indexOf(k) === 0; });
+}
+function monthName(){
+  var k = currentMonthKey(); var p = k.split('-');
+  if (p.length !== 2) return '';
+  var m = parseInt(p[1], 10);
+  return (FUEL_MONTHS[lang] && FUEL_MONTHS[lang][m - 1]) || '';
+}
+function renderKPIs(){
+  var f = kpiFluidity();
+  var el = document.getElementById('kpi-fluid-num'); if (el) el.textContent = f.pct + ' %';
+  var sub = document.getElementById('kpi-fluid-sub');
+  if (sub) sub.textContent = t('kpiFluiditySub').replace('{N}', f.n).replace('{H}', fmtHour(effectiveHour()));
+  var bar = document.getElementById('kpi-fluid-bar'); if (bar) bar.style.width = f.pct + '%';
+  var arteriesNum = document.getElementById('kpi-arteries-num');
+  if (arteriesNum) arteriesNum.textContent = f.total;
+  var speed = Math.round(52 * (f.pct / 100) + 6);
+  var sp = document.getElementById('kpi-speed-num'); if (sp) sp.textContent = speed + ' km/h';
+  var sb = document.getElementById('kpi-speed-bar'); if (sb) sb.style.width = Math.min(100, Math.round(speed / 60 * 100)) + '%';
+  var nov = monthRoadworks();
+  var an = document.getElementById('kpi-alerts-num'); if (an) an.textContent = nov.length;
+  var asub = document.getElementById('kpi-alerts-sub');
+  if (asub) asub.textContent = nov.map(function(rw){
+    return (lang === 'fr' ? rw.title_fr : rw.title_en).split(' — ')[0];
+  }).join(' · ');
+  var ab = document.getElementById('kpi-alerts-bar');
+  if (ab) ab.style.width = BOARD.roadworks.length ? Math.min(100, Math.round(nov.length / BOARD.roadworks.length * 100)) + '%' : '0%';
+  var alab = document.getElementById('kpi-alerts-label');
+  if (alab) alab.textContent = t('kpiAlerts') + (monthName() ? ' — ' + monthName() : '');
+  var atitle = document.getElementById('alerts-title');
+  if (atitle) atitle.textContent = t('alertsTitle') + (monthName() ? ' — ' + monthName() : '');
+  var ac = document.getElementById('alerts-count');
+  if (ac) ac.textContent = t('alertsCount').replace('{N}', nov.length).replace('{M}', monthName());
+}
+function updateHeroStats(){
+  var f = kpiFluidity();
+  var hf = document.getElementById('hs-fluid'); if (hf) hf.textContent = f.n + ' / ' + f.total;
+  var blocked = 0;
+  BOARD.arteries.features.forEach(function(x){ if (displayLevel(x.properties) === 'blocked') blocked++; });
+  var hb = document.getElementById('hs-blocked'); if (hb) hb.textContent = blocked;
 }
 
 /* ---- Header clock (live, Africa/Kinshasa) ---- */
@@ -1111,7 +1403,7 @@ map.on('load', setupStyleLayers);
 /* Scheduled dark mode: toggles the .dark class (CSS palette above)
    only — the map always keeps its light basemap, so a flip while
    the page is open changes nothing but the page's own colours. The
-   air-quality widget re-renders on a flip because its category text
+   air-quality cell re-renders on a flip because its category text
    colour has a bright dark-mode variant. Called at init, then
    every 60 s. */
 function applyTheme(){
@@ -1173,7 +1465,18 @@ function drawWorks(){
   });
 }
 
-/* ---- Weather (live, Open-Meteo, keyless) ---- */
+/* ---- Weather (live, Open-Meteo, keyless) — fills the wxband inside
+   the map card: temperature + conditions, humidity, wind, flood risk. ---- */
+var WX_ICONS = { clear: '☀️', cloudy: '⛅', fog: '🌫️', rain: '🌧️', showers: '🌦️', storm: '⛈️' };
+function wxCondition(code){
+  if (code == null) return { label: '', icon: '🌤️' };
+  if (code === 0 || code === 1) return { label: t('wxCondClear'), icon: WX_ICONS.clear };
+  if (code === 2 || code === 3) return { label: t('wxCondCloudy'), icon: WX_ICONS.cloudy };
+  if (code === 45 || code === 48) return { label: t('wxCondFog'), icon: WX_ICONS.fog };
+  if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return { label: t('wxCondRain'), icon: WX_ICONS.rain };
+  if (code >= 95) return { label: t('wxCondStorm'), icon: WX_ICONS.storm };
+  return { label: t('wxCondCloudy'), icon: WX_ICONS.cloudy };
+}
 function loadWeather(){
   var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + BOARD.city.lat +
     '&longitude=' + BOARD.city.lon +
@@ -1183,20 +1486,38 @@ function loadWeather(){
     var c = d.current;
     var probs = (d.hourly && d.hourly.precipitation_probability || []).filter(function(x){ return x != null; });
     var maxProb = probs.length ? Math.max.apply(null, probs) : null;
-    var html = '<div class="wx-big">' + Math.round(c.temperature_2m) + ' °C</div>' +
-      '<div>💧 ' + c.relative_humidity_2m + ' % · 🌬️ ' + Math.round(c.wind_speed_10m) + ' km/h' +
-      (c.precipitation > 0 ? ' · 🌧️ ' + c.precipitation + ' mm' : '') + '</div>';
-    if (maxProb != null) html += '<div>' + t('rainRisk') + ' : ' + maxProb + ' %</div>';
-    if ((maxProb != null && maxProb >= 60) || c.precipitation >= 2) {
-      html += '<p class="honest" style="margin-top:8px">⚠️ ' + t('floodNote') + '</p>';
+    var cond = wxCondition(c.weather_code);
+    var temp = document.getElementById('wx-temp');
+    if (temp) temp.textContent = Math.round(c.temperature_2m) + '°';
+    var icon = document.getElementById('wx-icon');
+    if (icon) icon.textContent = cond.icon;
+    var condEl = document.getElementById('wx-cond');
+    if (condEl){
+      condEl.textContent = cond.label +
+        (maxProb != null ? ' · ' + t('rainRisk') + ' : ' + maxProb + ' %' : '') +
+        (c.precipitation > 0 ? ' · 🌧️ ' + c.precipitation + ' mm' : '');
     }
-    document.getElementById('weather-body').innerHTML = html;
+    var hum = document.getElementById('wx-hum');
+    if (hum) hum.textContent = c.relative_humidity_2m + ' %';
+    var wind = document.getElementById('wx-wind');
+    if (wind) wind.textContent = Math.round(c.wind_speed_10m) + ' km/h';
+    var high = (maxProb != null && maxProb >= 60) || c.precipitation >= 2;
+    var flood = document.getElementById('wx-flood');
+    if (flood) flood.textContent = high ? t('wxFloodHigh') : t('wxFloodLow');
+    var floodNote = document.getElementById('wx-flood-note');
+    if (floodNote){
+      floodNote.classList.toggle('hidden', !high);
+      if (high) floodNote.textContent = '⚠️ ' + t('floodNote');
+    }
   }).catch(function(){
-    document.getElementById('weather-body').innerHTML = '<p class="note">' + t('weatherError') + '</p>';
+    var condEl = document.getElementById('wx-cond');
+    if (condEl) condEl.textContent = t('weatherError');
   });
 }
 
-/* ---- Air quality (model estimate, Open-Meteo CAMS, keyless) ---- */
+/* ---- Air quality (model estimate, Open-Meteo CAMS, keyless) — fills
+   the wxband's air-quality cell: category + US AQI, with the advice
+   as a note under the grid. ---- */
 var aqState = 'loading';
 var aqData = null;
 function aqBand(aqi){
@@ -1211,60 +1532,37 @@ function aqBand(aqi){
 /* In scheduled dark mode the band's text colour swaps to a brighter
    variant (the gauge bar + marker keep the standard EPA colours). */
 var AQ_TXT_DARK = { aqCatGood:'#4ade80', aqCatModerate:'#fbbf24', aqCatUsg:'#fb923c', aqCatUnhealthy:'#f87171', aqCatVeryUnhealthy:'#c084fc', aqCatHazardous:'#fca5a5' };
-/* Gauge geometry: AQI 0–300 maps onto the first 96% of the bar (six EPA
-   segments: 16/16/16/16/32%), the last 4% is the maroon 300+ segment.
-   The marker position is clamped so it never leaves the bar. */
-function aqMarkerPct(aqi){
-  if (aqi == null || isNaN(aqi)) return null;
-  if (aqi > 300) return 98;
-  var p = (Math.max(0, aqi) / 300) * 96;
-  p = Math.min(98, Math.max(1.5, p));
-  return Math.round(p * 10) / 10;
-}
-var AQ_BAR_HTML =
-  '<div class="aq-bar" aria-hidden="true">' +
-  '<i style="width:16%;background:#00e400"></i>' +
-  '<i style="width:16%;background:#ffff00"></i>' +
-  '<i style="width:16%;background:#ff7e00"></i>' +
-  '<i style="width:16%;background:#ff0000"></i>' +
-  '<i style="width:32%;background:#8f3f97"></i>' +
-  '<i style="width:4%;background:#7e0023"></i></div>' +
-  '<div class="aq-ticks" aria-hidden="true"><span style="left:0">0</span>' +
-  '<span style="left:16%">50</span><span style="left:32%">100</span>' +
-  '<span style="left:48%">150</span><span style="left:64%">200</span>' +
-  '<span class="aq-tick-end">300+</span></div>';
 function fmtNum(v){
   if (v == null || isNaN(v)) return '—';
   var s = String(Math.round(v * 10) / 10);
   return lang === 'fr' ? s.replace('.', ',') : s;
 }
 function renderAirQuality(){
-  var body = document.getElementById('air-body');
-  if (!body) return;
+  var cell = document.getElementById('wx-aq');
+  var advice = document.getElementById('wx-aq-advice');
+  if (!cell) return;
   if (aqState === 'loading'){
-    body.innerHTML = '<p class="note">' + t('aqLoading') + '</p>';
+    cell.textContent = '…';
+    if (advice) advice.classList.add('hidden');
     return;
   }
   var band = (aqState === 'ok' && aqData) ? aqBand(aqData.us_aqi) : null;
-  if (band && darkActive && AQ_TXT_DARK[band.key]) band.txt = AQ_TXT_DARK[band.key];
   if (!band){
-    body.innerHTML = '<p class="note">' + t('aqError') + '</p>';
+    cell.textContent = t('aqError');
+    cell.style.color = '';
+    if (advice) advice.classList.add('hidden');
     return;
   }
   var aqi = Math.round(aqData.us_aqi);
-  var pct = aqMarkerPct(aqData.us_aqi);
-  var hhmm = (aqData.time && aqData.time.length >= 16) ? aqData.time.slice(11, 16) : '';
-  var meta = 'PM2.5 : ' + fmtNum(aqData.pm2_5) + ' µg/m³ · PM10 : ' + fmtNum(aqData.pm10) + ' µg/m³';
-  if (hhmm) meta = '🕐 ' + t('aqTime') + ' : ' + hhmm + ' · ' + meta;
-  body.innerHTML =
-    '<div class="aq-head"><span class="aq-cat" style="color:' + band.txt + '">' + t(band.key) + '</span>' +
-    '<span class="aq-aqi-small">AQI ' + aqi + '</span></div>' +
-    '<div class="aq-gauge" role="img" aria-label="' + t('aqLabel') + ' : ' + aqi + ' — ' + t(band.key) + '">' +
-    '<div class="aq-marker" style="left:' + pct + '%"><span class="aq-caret"></span>' +
-    '<span class="aq-dot" style="background:' + band.bg + '"></span></div>' +
-    AQ_BAR_HTML + '</div>' +
-    '<p class="aq-advice">' + t(band.advice) + '</p>' +
-    '<div class="note" style="margin-top:8px">' + meta + '</div>';
+  cell.textContent = t(band.key) + ' · AQI ' + aqi;
+  cell.style.color = (darkActive && AQ_TXT_DARK[band.key]) ? AQ_TXT_DARK[band.key] : band.txt;
+  if (advice){
+    var hhmm = (aqData.time && aqData.time.length >= 16) ? aqData.time.slice(11, 16) : '';
+    advice.textContent = t(band.advice) +
+      ' (PM2.5 ' + fmtNum(aqData.pm2_5) + ' µg/m³ · PM10 ' + fmtNum(aqData.pm10) + ' µg/m³' +
+      (hhmm ? ' · 🕐 ' + t('aqTime') + ' ' + hhmm : '') + ')';
+    advice.classList.remove('hidden');
+  }
 }
 function loadAirQuality(){
   var url = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=' + BOARD.city.lat +
@@ -1281,33 +1579,97 @@ function loadAirQuality(){
   });
 }
 
-/* ---- Lists (re-rendered in the active language) ---- */
+/* ---- Lists (re-rendered in the active language) ----
+   Arteries render as a filterable grid of cards (preview design);
+   the bar width is a level indicator (fluid 20 / slow 50 / heavy 75 /
+   blocked 100), never a measured percentage. Clicking a card flies
+   the map to that artery. Roadworks render as alert cards. */
+var artFilter = 'all';
+function artLevelGroup(lvl){ return lvl === 'fluid' ? 'fluid' : (lvl === 'blocked' ? 'blocked' : 'dense'); }
+function artBarPct(lvl){ return lvl === 'fluid' ? 20 : lvl === 'slow' ? 50 : lvl === 'heavy' ? 75 : 100; }
+function arteryById(id){
+  return BOARD.arteries.features.filter(function(f){ return f.properties.id === id; })[0];
+}
+function locateArtery(id){
+  var art = arteryById(id);
+  if (!art || !art.properties.centre) return;
+  var c = art.properties.centre; /* stored as [lat, lon] */
+  try { map.flyTo({ center: [c[1], c[0]], zoom: Math.max(map.getZoom(), 13) }); } catch(e){}
+  var st = statusInfo(art.properties);
+  var line = st.text;
+  if (st.live) line += ' · ' + t('liveMins').replace('{M}', Math.round(st.live.mins)) + ' (' + fmtDelay(st.live) + ')';
+  try {
+    new maplibregl.Popup({ maxWidth: '280px' })
+      .setLngLat([c[1], c[0]])
+      .setHTML('<strong>' + art.properties.name + '</strong><br>' +
+        (lang === 'fr' ? art.properties.zones_fr : art.properties.zones_en) + '<br>' + line)
+      .addTo(map);
+  } catch(e){}
+  var mc = document.getElementById('map-card');
+  if (mc && mc.scrollIntoView) mc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 function renderArteriesList(){
-  var ul = document.getElementById('arteries-list');
-  ul.innerHTML = '';
+  var grid = document.getElementById('artGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  var shown = 0;
   BOARD.arteries.features.forEach(function(f){
     var lvl = displayLevel(f.properties);
+    if (artFilter !== 'all' && artLevelGroup(lvl) !== artFilter) return;
+    shown++;
     var st = statusInfo(f.properties);
-    var li = document.createElement('li');
-    li.innerHTML = '<span class="dot lvl-' + lvl + '"></span><strong></strong> — <span></span> · <em></em>';
-    li.querySelector('strong').textContent = f.properties.name;
-    li.querySelector('span:not(.dot)').textContent = (lang === 'fr' ? f.properties.zones_fr : f.properties.zones_en);
-    li.querySelector('em').textContent = st.text + (st.live ? ' · ' + fmtDelay(st.live) : '');
-    ul.appendChild(li);
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'artcard lvl-' + lvl;
+    b.setAttribute('data-artery', f.properties.id);
+    var name = document.createElement('div'); name.className = 'art-name'; name.textContent = f.properties.name;
+    var zones = document.createElement('div'); zones.className = 'art-zones'; zones.textContent = (lang === 'fr' ? f.properties.zones_fr : f.properties.zones_en);
+    var row = document.createElement('div'); row.className = 'art-row';
+    var lab = document.createElement('span'); lab.className = 'art-level'; lab.textContent = t(lvlKey(lvl)) + (st.live ? ' · ' + fmtDelay(st.live) : '');
+    var bar = document.createElement('div'); bar.className = 'art-bar';
+    var fill = document.createElement('i'); fill.style.width = artBarPct(lvl) + '%';
+    bar.appendChild(fill);
+    row.appendChild(lab); row.appendChild(bar);
+    b.appendChild(name); b.appendChild(zones); b.appendChild(row);
+    b.addEventListener('click', function(){ locateArtery(f.properties.id); });
+    grid.appendChild(b);
   });
+  var note = document.getElementById('art-filter-note');
+  if (note){
+    if (!shown){ note.textContent = t('artEmpty'); note.classList.remove('hidden'); }
+    else note.classList.add('hidden');
+  }
+  var count = document.getElementById('art-count');
+  if (count) count.textContent = t('artCount').replace('{N}', BOARD.arteries.features.length);
+}
+var ALERT_ICON = { active: '🚧', stopped: '🛑', stalled: '⚠️', progressing: '🔨', degraded: '⚠️' };
+function fmtAlertDate(iso){
+  var p = String(iso || '').split('-');
+  if (p.length !== 3) return iso || '';
+  var m = parseInt(p[1], 10), d = parseInt(p[2], 10);
+  var months = lang === 'fr'
+    ? ['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.']
+    : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return d + ' ' + months[m - 1];
 }
 function renderLists(){
   renderArteriesList();
-  var wl = document.getElementById('works-list');
+  var wl = document.getElementById('alerts-list');
   wl.innerHTML = '';
   BOARD.roadworks.forEach(function(rw){
-    var li = document.createElement('li');
-    var badge = '<span class="badge b-' + rw.status + '">' + (t('status')[rw.status] || rw.status) + '</span> ';
-    li.innerHTML = badge + '<strong></strong><br><span></span><br><em></em>';
-    li.querySelector('strong').textContent = (lang === 'fr' ? rw.title_fr : rw.title_en);
-    li.querySelector('span:not(.badge)').textContent = (lang === 'fr' ? rw.detail_fr : rw.detail_en);
-    li.querySelector('em').textContent = t('sourceLabel') + ' : ' + rw.source + ' — ' + rw.date + ' (' + t('reportedLabel') + ')';
-    wl.appendChild(li);
+    var div = document.createElement('div');
+    div.className = 'alert st-' + rw.status;
+    var head = document.createElement('div'); head.className = 'alert-head';
+    var icon = document.createElement('span'); icon.className = 'alert-ic'; icon.textContent = ALERT_ICON[rw.status] || '🚧';
+    var title = document.createElement('strong'); title.textContent = (lang === 'fr' ? rw.title_fr : rw.title_en);
+    var date = document.createElement('span'); date.className = 'datechip'; date.textContent = fmtAlertDate(rw.date);
+    head.appendChild(icon); head.appendChild(title); head.appendChild(date);
+    var badge = document.createElement('span'); badge.className = 'badge b-' + rw.status; badge.textContent = (t('status')[rw.status] || rw.status);
+    var det = document.createElement('p'); det.textContent = (lang === 'fr' ? rw.detail_fr : rw.detail_en);
+    var src = document.createElement('p'); src.className = 'note alert-src';
+    src.textContent = t('sourceLabel') + ' : ' + rw.source + ' — ' + rw.date + ' (' + t('reportedLabel') + ')';
+    div.appendChild(head); div.appendChild(badge); div.appendChild(det); div.appendChild(src);
+    wl.appendChild(div);
   });
   var rl = document.getElementById('river-list');
   rl.innerHTML = '';
@@ -1357,12 +1719,21 @@ function setPreviewHour(h){
   updateSliderUI();
   drawArteries();
   renderArteriesList();
+  renderKPIs();
+  updateHeroStats();
 }
 document.getElementById('hour-slider').addEventListener('input', function(){
   setPreviewHour(parseInt(this.value, 10));
 });
 document.getElementById('hour-now').addEventListener('click', function(){
   setPreviewHour(null);
+});
+document.querySelectorAll('#art-filters .flt').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    artFilter = btn.getAttribute('data-filter');
+    document.querySelectorAll('#art-filters .flt').forEach(function(x){ x.classList.toggle('active', x === btn); });
+    renderArteriesList();
+  });
 });
 
 /* ---- Reports (SHARED with all visitors via the kinshasa-reports
@@ -1398,9 +1769,6 @@ function sharedRow(r){
    site never breaks. */
 function mapReports(){
   return sharedReports ? sharedReports : loadReports();
-}
-function arteryById(id){
-  return BOARD.arteries.features.filter(function(f){ return f.properties.id === id; })[0];
 }
 function reportListItem(r){
   var art = arteryById(r.arteryId);
@@ -1912,6 +2280,34 @@ if (plGoogleBtn) plGoogleBtn.addEventListener('click', function(ev){
   url += '&destination=' + encodeURIComponent(plannerValue('to')) + '&travelmode=driving';
   this.href = url;
 });
+/* Frequent-trip preset chips: fill the two planner fields with a
+   pair of well-known places (same PLANNER_PLACES data, no new
+   coordinates, no time estimate — the route still opens in
+   Google Maps). Rebuilt on every language switch. */
+var PLANNER_PRESETS = [
+  { from: 1, to: 0 },  /* Gare Centrale → Aéroport de N'djili (FIH) */
+  { from: 4, to: 2 },  /* Marché Central (Zando) → Beach Ngobila */
+  { from: 6, to: 5 }   /* Université de Kinshasa → Stade des Martyrs */
+];
+function buildPlannerPresets(){
+  var wrap = document.getElementById('pl-presets');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  PLANNER_PRESETS.forEach(function(pr){
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'pl-preset';
+    b.textContent = plannerPlaceLabel(PLANNER_PLACES[pr.from]) + ' → ' + plannerPlaceLabel(PLANNER_PLACES[pr.to]);
+    b.addEventListener('click', function(){
+      var fromInput = document.getElementById('pl-from');
+      var toInput = document.getElementById('pl-to');
+      if (fromInput) fromInput.value = plannerPlaceLabel(PLANNER_PLACES[pr.from]);
+      if (toInput) toInput.value = plannerPlaceLabel(PLANNER_PLACES[pr.to]);
+      hidePlannerError();
+    });
+    wrap.appendChild(b);
+  });
+}
 
 /* ---- Official fuel prices (zone Ouest) ----
    Curated in scripts/build.py (FUEL), like the roadworks/river
@@ -1957,6 +2353,38 @@ function renderFuel(){
           escapeHtml(t('fuelCheck')) + '</a>'
         : '') +
     '</p>';
+}
+
+/* ---- Train & boat board ----
+   Train table: rendered from BOARD.train (curated in build.py,
+   same discipline as fuel — no timetable exists, the page says
+   so). Boat table: static facts (Beach Ngobila crossing, on-demand
+   departures, no live river gauge); the "dernier point" line takes
+   the latest press date from BOARD.river. */
+function renderTrainBoat(){
+  var tb = document.getElementById('train-body');
+  if (tb && BOARD.train){
+    var tr = BOARD.train;
+    var rows = [
+      [t('trainLine'), lang === 'fr' ? tr.line_fr : tr.line_en],
+      [t('trainDuration'), lang === 'fr' ? tr.duration_fr : tr.duration_en],
+      [t('trainFrequency'), lang === 'fr' ? tr.frequency_fr : tr.frequency_en],
+      [t('trainFare'), lang === 'fr' ? tr.fare_fr : tr.fare_en],
+      [t('trainSchedule'), lang === 'fr' ? tr.schedule_fr : tr.schedule_en]
+    ];
+    tb.innerHTML = '';
+    rows.forEach(function(r){
+      var trEl = document.createElement('tr');
+      var th = document.createElement('th'); th.textContent = r[0];
+      var td = document.createElement('td'); td.textContent = r[1];
+      trEl.appendChild(th); trEl.appendChild(td);
+      tb.appendChild(trEl);
+    });
+  }
+  var latest = null;
+  (BOARD.river || []).forEach(function(rv){ if (!latest || rv.date > latest) latest = rv.date; });
+  var bn = document.getElementById('boat-updated');
+  if (bn && latest) bn.textContent = t('boatPressNote').replace('{D}', fmtAlertDate(latest));
 }
 
 /* ---- Accessibility options (header button + panel) ----
@@ -2062,7 +2490,7 @@ function applyLang(){
   });
   document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
   document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-  renderLists(); drawArteries(); drawWorks(); renderReports(); paintGcVisits(); buildLayersControl(); updateSliderUI(); renderAirQuality(); updateLiveUI(); updateFlightsUI(); refreshFlightLabels(); applyA11yLabels(); renderFlightsBoard(); buildPlannerLists(); renderFuel();
+  renderLists(); drawArteries(); drawWorks(); renderReports(); paintGcVisits(); buildLayersControl(); updateSliderUI(); renderAirQuality(); updateLiveUI(); updateFlightsUI(); refreshFlightLabels(); applyA11yLabels(); renderFlightsBoard(); buildPlannerLists(); buildPlannerPresets(); renderFuel(); renderTrainBoat(); renderKPIs(); updateHeroStats();
 }
 document.getElementById('btn-fr').addEventListener('click', function(){ listenStop(); lang = 'fr'; saveLang(); applyLang(); });
 document.getElementById('btn-en').addEventListener('click', function(){ listenStop(); lang = 'en'; saveLang(); applyLang(); }); /* Radio Okapi in-page player: no autoplay - the stream starts only when the user taps the button. */ var radioAudio = document.getElementById('radio-audio'), radioToggle = document.getElementById('radio-toggle'), radioToggleIcon = document.getElementById('radio-toggle-icon'), radioToggleLabel = document.getElementById('radio-toggle-label'), radioLive = document.getElementById('radio-live'), radioError = document.getElementById('radio-error'); function radioSetLabel(){ var playing = radioAudio && !radioAudio.paused; if (radioToggleLabel) radioToggleLabel.textContent = playing ? ((I18N[lang] && I18N[lang].radioPause) || 'Pause') : ((I18N[lang] && I18N[lang].radioListen) || 'Écouter en direct'); if (radioToggleIcon) radioToggleIcon.textContent = playing ? '❚❚' : '▶'; if (radioToggle) radioToggle.setAttribute('aria-pressed', playing ? 'true' : 'false'); if (radioLive) radioLive.hidden = !playing; } if (radioToggle && radioAudio){ radioToggle.addEventListener('click', function(){ if (radioAudio.paused){ if (radioError) radioError.hidden = true; var p; try { p = radioAudio.play(); } catch (e) { p = null; } if (p && p.catch) p.catch(function(){ if (radioError) radioError.hidden = false; radioSetLabel(); }); } else { radioAudio.pause(); } radioSetLabel(); }); radioAudio.addEventListener('play', radioSetLabel); radioAudio.addEventListener('pause', radioSetLabel); radioAudio.addEventListener('error', function(){ if (radioError) radioError.hidden = false; radioSetLabel(); }); document.getElementById('btn-fr').addEventListener('click', function(){ setTimeout(radioSetLabel, 0); }); document.getElementById('btn-en').addEventListener('click', function(){ setTimeout(radioSetLabel, 0); }); radioSetLabel(); }
@@ -2089,12 +2517,12 @@ function listenCollect(){
   var blocks = [];
   var tag = document.querySelector('.tagline');
   if (tag && tag.innerText) blocks.push(tag.innerText.trim());
-  blocks.push(t('arteriesTitle') + '. ' + txt('arteries-list'));
-  blocks.push(t('worksTitle') + '. ' + txt('works-list'));
+  blocks.push(t('arteriesTitle') + '. ' + txt('artGrid'));
+  blocks.push(t('alertsTitle') + '. ' + txt('alerts-list'));
   var fb = document.getElementById('flights-board-body');
   if (fb && !fb.classList.contains('hidden')) blocks.push(t('fihTitle') + '. ' + txt('flights-board-body'));
-  blocks.push(t('riverTitle') + '. ' + txt('river-list'));
-  blocks.push(t('weatherTitle') + '. ' + txt('weather-body'));
+  blocks.push(t('trainTitle') + '. ' + txt('trainboat-card'));
+  blocks.push(t('wxTitle') + '. ' + txt('wxband'));
   blocks.push(t('fuelTitle') + '. ' + txt('fuel-body'));
   var sentences = [];
   blocks.forEach(function(b){
@@ -2161,7 +2589,7 @@ loadAirQuality();
 updateClock();
 setInterval(updateClock, 1000);
 setInterval(applyTheme, 60 * 1000);
-setInterval(function(){ updateLiveUI(); drawArteries(); if (previewHour == null) { renderArteriesList(); updateSliderUI(); } }, 15 * 60 * 1000);
+setInterval(function(){ updateLiveUI(); drawArteries(); if (previewHour == null) { renderArteriesList(); renderKPIs(); updateHeroStats(); updateSliderUI(); } }, 15 * 60 * 1000);
 setInterval(function(){ if (previewHour == null) updateSliderUI(); }, 60 * 1000);
 })();
 </script>
