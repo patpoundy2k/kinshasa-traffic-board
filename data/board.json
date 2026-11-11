@@ -17,8 +17,8 @@
      "zones_en": "Gombe — downtown, ministries and embassies",
      "peak": 0.85,
      "centre": [
-      -4.32932,
-      15.30233
+      -4.32922,
+      15.30231
      ]
     },
     "geometry": {
@@ -852,6 +852,10 @@
         -4.30612
        ],
        [
+        15.29911,
+        -4.30618
+       ],
+       [
         15.29767,
         -4.30644
        ],
@@ -1403,8 +1407,8 @@
      "zones_en": "Limete, Kingabwa, Masina — eastern axis toward Ndjili Airport",
      "peak": 0.95,
      "centre": [
-      -4.37855,
-      15.39299
+      -4.37851,
+      15.39266
      ]
     },
     "geometry": {
@@ -1434,6 +1438,10 @@
        [
         15.3251,
         -4.33088
+       ],
+       [
+        15.32528,
+        -4.33146
        ],
        [
         15.32531,
@@ -2628,8 +2636,8 @@
         -4.38609
        ],
        [
-        15.3623,
-        -4.38565
+        15.36261,
+        -4.38576
        ],
        [
         15.36129,
@@ -3094,12 +3102,12 @@
       ],
       [
        [
-        15.35932,
-        -4.38462
+        15.359,
+        -4.3845
        ],
        [
-        15.35938,
-        -4.38465
+        15.35935,
+        -4.38469
        ],
        [
         15.35975,
@@ -3110,12 +3118,16 @@
         -4.38506
        ],
        [
-        15.36118,
-        -4.38537
+        15.36154,
+        -4.38552
        ],
        [
-        15.36152,
-        -4.38546
+        15.36223,
+        -4.38577
+       ],
+       [
+        15.36257,
+        -4.38584
        ]
       ],
       [
@@ -4030,8 +4042,8 @@
         -4.38423
        ],
        [
-        15.35923,
-        -4.3846
+        15.35888,
+        -4.38448
        ]
       ],
       [
@@ -4738,6 +4750,10 @@
         -4.35728
        ],
        [
+        15.33688,
+        -4.356
+       ],
+       [
         15.33686,
         -4.35597
        ],
@@ -4830,12 +4846,20 @@
       ],
       [
        [
-        15.36129,
-        -4.38528
+        15.36261,
+        -4.38576
        ],
        [
-        15.36129,
-        -4.38523
+        15.36232,
+        -4.38558
+       ],
+       [
+        15.36175,
+        -4.38537
+       ],
+       [
+        15.36131,
+        -4.38521
        ],
        [
         15.3604,
@@ -4843,11 +4867,19 @@
        ],
        [
         15.35983,
-        -4.38466
+        -4.38464
        ],
        [
-        15.35938,
-        -4.38454
+        15.35941,
+        -4.38447
+       ],
+       [
+        15.35871,
+        -4.38424
+       ],
+       [
+        15.35851,
+        -4.3842
        ]
       ],
       [
@@ -4938,6 +4970,10 @@
         -4.3842
        ],
        [
+        15.35781,
+        -4.38395
+       ],
+       [
         15.35758,
         -4.38386
        ],
@@ -4952,12 +4988,12 @@
       ],
       [
        [
-        15.35923,
-        -4.3846
+        15.35888,
+        -4.38448
        ],
        [
-        15.35932,
-        -4.38462
+        15.359,
+        -4.3845
        ]
       ],
       [
@@ -4966,8 +5002,8 @@
         -4.38546
        ],
        [
-        15.36162,
-        -4.38549
+        15.36257,
+        -4.38584
        ],
        [
         15.36327,
@@ -13205,8 +13241,8 @@
      "zones_en": "Mont Ngafula, Makala, Ngaba — southern bypass",
      "peak": 0.75,
      "centre": [
-      -4.37852,
-      15.3074
+      -4.37826,
+      15.30758
      ]
     },
     "geometry": {
@@ -13310,10 +13346,6 @@
        [
         15.30858,
         -4.35697
-       ],
-       [
-        15.30862,
-        -4.35684
        ],
        [
         15.30875,
@@ -13554,20 +13586,6 @@
        [
         15.29876,
         -4.39828
-       ]
-      ],
-      [
-       [
-        15.29449,
-        -4.40457
-       ],
-       [
-        15.2944,
-        -4.40444
-       ],
-       [
-        15.29429,
-        -4.40429
        ]
       ],
       [
@@ -19260,7 +19278,7 @@
        ],
        [
         15.31451,
-        -4.33197
+        -4.33198
        ],
        [
         15.31457,
@@ -20821,6 +20839,58 @@
   ]
  },
  "roadworks": [
+  {
+   "id": "mondjiba-fermeture",
+   "status": "active",
+   "title_fr": "Boulevard Mondjiba — fermé 30 jours (Ngaliema)",
+   "title_en": "Mondjiba Boulevard — closed for 30 days (Ngaliema)",
+   "detail_fr": "Fermeture du tronçon entre l'avenue Avenir (sortie Maman Olangi) et l'avenue du Parc (Le Balcon) depuis le 2 novembre 2026, pour 30 jours : réhabilitation de la chaussée et réparation de l'ouvrage d'assainissement. Déviations : vers Kintambo Magasin par l'avenue Avenir ; vers le centre-ville par Bokoro, Boboliko et Basoko.",
+   "detail_en": "Closure of the stretch between Avenue Avenir (Maman Olangi exit) and Avenue du Parc (Le Balcon) since 2 November 2026, for 30 days: road rehabilitation and repair of the drainage structure. Detours: toward Kintambo Magasin via Avenue Avenir; toward the city centre via Bokoro, Boboliko and Basoko.",
+   "source": "Journal de Kinshasa",
+   "date": "2026-11-04",
+   "points": [
+    [
+     -4.322,
+     15.264
+    ]
+   ]
+  },
+  {
+   "id": "brigade-anti-embouteillages",
+   "status": "active",
+   "title_fr": "Brigade mixte anti-embouteillages — déployée dès le 9 novembre 2026",
+   "title_en": "Joint anti-traffic-jam brigade — deployed from 9 November 2026",
+   "detail_fr": "Une brigade mixte (Ville de Kinshasa, CNPR, Service national, sous coordination de la Police nationale) régule la circulation sur les grands boulevards et les axes principaux, et fait respecter l'interdiction des voies rapides vers l'aéroport pour les bus, 207, camions, motos, tricycles et taxis.",
+   "detail_en": "A joint brigade (City of Kinshasa, CNPR, National Service, coordinated by the National Police) regulates traffic on the main boulevards and major roads, and enforces the ban on the airport expressways for buses, 207s, trucks, motorbikes, tricycles and taxis.",
+   "source": "Actualite.cd",
+   "date": "2026-11-08",
+   "points": [
+    [
+     -4.322,
+     15.311
+    ]
+   ]
+  },
+  {
+   "id": "inondations-limete-kalamu",
+   "status": "active",
+   "title_fr": "Inondations — fortes pluies du 11 novembre 2026 (Limete, Kalamu)",
+   "title_en": "Flooding — heavy rain on 11 November 2026 (Limete, Kalamu)",
+   "detail_fr": "Après de fortes pluies, plusieurs quartiers inondés : avenue Canas (9e rue résidentielle, Limete) et débordement de la rivière Kalamu ; plusieurs axes difficilement praticables, circulation perturbée. Aucun bilan officiel communiqué pour l'instant.",
+   "detail_en": "After heavy rain, several neighbourhoods flooded: Avenue Canas (9e Rue residential, Limete) and the Kalamu River overflowing; several roads barely passable, traffic disrupted. No official toll reported for now.",
+   "source": "Congo24",
+   "date": "2026-11-11",
+   "points": [
+    [
+     -4.388,
+     15.357
+    ],
+    [
+     -4.335,
+     15.315
+    ]
+   ]
+  },
   {
    "id": "deuxieme-republique",
    "status": "active",
