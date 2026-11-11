@@ -372,6 +372,24 @@ FUEL = {
 }
 
 
+# ONATRA urban train — in service since 19 August 2026 (Gare Centrale
+# ↔ Tshenke/Masina, ~1 h 15, one round trip a day, 2,000–5,000 FC).
+# There is NO official timetable: departures are not announced in
+# advance, and the page says so instead of inventing one.
+TRAIN = {
+    "line_fr": "Gare Centrale ↔ Tshenke / Masina",
+    "line_en": "Gare Centrale ↔ Tshenke / Masina",
+    "duration_fr": "≈ 1 h 15",
+    "duration_en": "≈ 1 h 15",
+    "frequency_fr": "1 aller-retour / jour",
+    "frequency_en": "1 round trip / day",
+    "fare_fr": "2 000–5 000 FC",
+    "fare_en": "2,000–5,000 FC",
+    "schedule_fr": "Pas d'horaire officiel publié",
+    "schedule_en": "No official timetable published",
+}
+
+
 def overpass_query(regex):
     """Return the list of OSM ways whose name matches `regex` in the bbox."""
     ql = (
@@ -516,13 +534,32 @@ def arteries_list_html(features):
 
 
 def roadworks_list_html():
+    """Baked-in (French, default language) alerts for SEO/no-JS, in the
+    preview's alert-card style; the page re-renders them from
+    BOARD.roadworks in the active language (renderLists)."""
+    status_icon = {"active": "🚧", "stopped": "🛑", "stalled": "⚠️",
+                   "progressing": "🔨", "degraded": "⚠️"}
+    status_fr = {"active": "En cours", "stopped": "À l'arrêt",
+                 "stalled": "Presque à l'arrêt", "progressing": "En progression",
+                 "degraded": "Dégradé"}
+    months_fr = ["janv.", "févr.", "mars", "avr.", "mai", "juin",
+                 "juil.", "août", "sept.", "oct.", "nov.", "déc."]
     items = []
     for rw in ROADWORKS:
+        year, month, day = rw["date"].split("-")
+        date_fr = f"{int(day)} {months_fr[int(month) - 1]}"
         items.append(
-            "        <li>"
-            f'<strong>{rw["title_fr"]}</strong><br>{rw["detail_fr"]}<br>'
-            f'<em>Source : {rw["source"]} — {rw["date"]} (signalé, à confirmer sur place)</em>'
-            "</li>"
+            f'        <div class="alert st-{rw["status"]}">'
+            f'<div class="alert-head"><span class="alert-ic">'
+            f'{status_icon.get(rw["status"], "🚧")}</span>'
+            f'<strong>{rw["title_fr"]}</strong>'
+            f'<span class="datechip">{date_fr}</span></div>'
+            f'<span class="badge b-{rw["status"]}">'
+            f'{status_fr.get(rw["status"], rw["status"])}</span>'
+            f'<p>{rw["detail_fr"]}</p>'
+            f'<p class="note alert-src">Source : {rw["source"]} — '
+            f'{rw["date"]} (signalé, à confirmer sur place)</p>'
+            "</div>"
         )
     return "\n".join(items)
 
@@ -565,6 +602,23 @@ def fuel_html():
     )
 
 
+def train_table_html():
+    """Baked-in (French, default language) ONATRA train table for
+    SEO/no-JS; the page re-renders it from BOARD.train in the active
+    language (renderTrainBoat in the template)."""
+    rows = [
+        ("Ligne", TRAIN["line_fr"]),
+        ("Durée", TRAIN["duration_fr"]),
+        ("Fréquence", TRAIN["frequency_fr"]),
+        ("Tarif", TRAIN["fare_fr"]),
+        ("Horaires", TRAIN["schedule_fr"]),
+    ]
+    return "\n".join(
+        f'        <tr><th>{label}</th><td>{value}</td></tr>'
+        for label, value in rows
+    )
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--skip-overpass", action="store_true",
@@ -603,6 +657,7 @@ def main():
         "roadworks": ROADWORKS,
         "river": RIVER,
         "fuel": FUEL,
+        "train": TRAIN,
         "dataNotes": {
             "congestion": "Typical pattern model by time of day (Africa/Kinshasa). When board.json carries a recent 'live' block (Google Routes sweep by scripts/live_refresh.py, key held server-side only), the page shows those live levels instead and falls back to the typical model when the block is stale or absent.",
             "towers": "Cell towers are fetched live by the page from OpenStreetMap via Overpass: community-mapped data, possibly incomplete.",
@@ -637,6 +692,7 @@ def main():
         .replace("{{ROADWORKS_LIST_HTML}}", roadworks_list_html())
         .replace("{{RIVER_LIST_HTML}}", river_list_html())
         .replace("{{FUEL_HTML}}", fuel_html())
+        .replace("{{TRAIN_TABLE_HTML}}", train_table_html())
         .replace("{{BOARD_JSON}}", json.dumps(board, ensure_ascii=False))
     )
     INDEX_FILE.write_text(page, encoding="utf-8")
