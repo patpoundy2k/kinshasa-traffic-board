@@ -349,6 +349,18 @@
   .fb-chip.fb-done{background:var(--green)}
   .fb-chip.fb-bad{background:var(--red)}
   .fb-chip.fb-sched{background:transparent;color:var(--muted);border:1px solid var(--line)}
+  .fb-chip.fb-ok{background:var(--green)}
+  .fb-chip.fb-delayed{background:var(--orange)}
+  .fih-row{padding-left:10px}
+  .fih-row.fih-ok{border-left:4px solid var(--green)}
+  .fih-row.fih-delayed{border-left:4px solid var(--orange)}
+  .fih-row.fih-cancelled{border-left:4px solid var(--red)}
+  .fih-row.fih-unknown{border-left:4px solid var(--line)}
+  .fih-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.82rem;font-weight:700;color:var(--muted);margin:2px 0 10px}
+  .fih-legend .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+  .fih-legend .dot.ok{background:var(--green)}
+  .fih-legend .dot.delayed{background:var(--orange)}
+  .fih-legend .dot.cancelled{background:var(--red)}
 
   /* ---- Train & boat board ---- */
   .tb-table{width:100%;border-collapse:collapse;font-size:.92rem;margin:0 0 6px}
@@ -643,6 +655,7 @@
       <h2>✈ <span data-i18n="fihTitle">Aéroport de N'djili (FIH) — départs et arrivées du jour</span></h2>
       <p class="note" id="flights-board-updated"></p>
       <div id="flights-board-body" class="hidden">
+        <p class="fih-legend"><span><i class="dot ok"></i><span data-i18n="fihLegendOnTime">À l'heure</span></span><span><i class="dot delayed"></i><span data-i18n="fihLegendDelayed">Retardé</span></span><span><i class="dot cancelled"></i><span data-i18n="fihLegendCancelled">Annulé</span></span></p>
         <h3>🛫 <span data-i18n="fihDepartures">Départs</span></h3>
         <ul class="clean" id="fih-departures"></ul>
         <h3>🛬 <span data-i18n="fihArrivals">Arrivées</span></h3>
@@ -760,6 +773,9 @@ var I18N = {
     fihScheduled: "Horaire prévu",
     fihUnavailable: "Données vols indisponibles pour le moment.",
     fihNone: "Aucun vol dans la fenêtre affichée.",
+    fihLegendOnTime: "À l'heure",
+    fihLegendDelayed: "Retardé",
+    fihLegendCancelled: "Annulé",
     flightAlt: "Altitude",
     flightSpeed: "Vitesse sol",
     flightHeading: "Cap",
@@ -922,6 +938,9 @@ var I18N = {
     fihScheduled: "Scheduled only",
     fihUnavailable: "Flight data unavailable right now.",
     fihNone: "No flights in the displayed window.",
+    fihLegendOnTime: "On time",
+    fihLegendDelayed: "Delayed",
+    fihLegendCancelled: "Cancelled",
     flightAlt: "Altitude",
     flightSpeed: "Ground speed",
     flightHeading: "Heading",
@@ -2078,8 +2097,11 @@ function disableFlights(){
    feed has live data for that flight (quality "Live") may a revised
    time appear: the scheduled time is then struck through, the
    revised time shown bold, and a "+N min" badge appears from
-   10 minutes of delay. "Basic" rows are schedule-only and carry the
-   "Horaire prévu" chip — never dressed up as live. The header line
+   10 minutes of delay. Each row also carries a status colour — green
+   on time, orange delayed (10+ min), red cancelled, grey when the
+   status is unknown — on the row's left border and its chip. "Basic"
+   rows are schedule-only and carry the "Horaire prévu" chip — never
+   dressed up as live. The header line
    carries the mandatory free-plan attribution ("Source :
    AeroDataBox"). An absent block, an empty block, or a block older
    than 24 h renders the honest unavailable line instead of rows. ---- */
@@ -2114,20 +2136,30 @@ function fihDelayMins(row){
   if (isNaN(a) || isNaN(b)) return 0;
   return Math.round((b - a) / 60000);
 }
+function fihStatus(row){
+  var st = String((row && row.status) || '').toLowerCase();
+  if (st.indexOf('cancel') !== -1) return 'cancelled';
+  if (fihDelayMins(row) >= 10 || st.indexOf('delay') !== -1) return 'delayed';
+  if (st === 'unknown' || st === '') return 'unknown';
+  return 'ok';
+}
 function fihChip(row){
+  var st = fihStatus(row);
   if (row.quality !== 'Live') {
-    return '<span class="fb-chip fb-sched">' + escapeHtml(t('fihScheduled')) + '</span>';
+    var cls = st === 'cancelled' ? 'fb-bad' : (st === 'ok' ? 'fb-ok' : 'fb-sched');
+    return '<span class="fb-chip ' + cls + '">' + escapeHtml(t('fihScheduled')) + '</span>';
   }
   var label = FIH_STATUS_LABELS[row.status] ? FIH_STATUS_LABELS[row.status][lang] : (row.status || '');
   if (!label) return '';
   var cls = 'fb-live';
-  if (row.status === 'Cancelled') cls = 'fb-bad';
-  else if (row.status === 'Departed' || row.status === 'Arrived' || row.status === 'Landed') cls = 'fb-done';
+  if (st === 'cancelled') cls = 'fb-bad';
+  else if (st === 'delayed') cls = 'fb-delayed';
+  else if (st === 'ok') cls = 'fb-done';
   return '<span class="fb-chip ' + cls + '">' + escapeHtml(label) + '</span>';
 }
 function fihRow(row, dirKey){
   var li = document.createElement('li');
-  li.className = 'fih-row';
+  li.className = 'fih-row fih-' + fihStatus(row);
   var delay = fihDelayMins(row);
   var timeHtml = '<span class="fih-time">';
   if (row.revised && Math.abs(delay) >= 1) {
