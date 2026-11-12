@@ -21176,7 +21176,7 @@
   }
  },
  "flightsBoard": {
-  "checkedAt": "2026-11-12T16:29:44Z",
+  "checkedAt": "2026-11-12T19:26:28Z",
   "source": "AeroDataBox",
   "departures": [
    {
@@ -21380,7 +21380,7 @@
     },
     "sched": "2026-11-13T01:00+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21391,6 +21391,30 @@
      "name": "Brazzaville"
     },
     "sched": "2026-11-13T01:45+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "UR 881",
+    "airline": "Uganda",
+    "to": {
+     "iata": "EBB",
+     "name": "Kampala"
+    },
+    "sched": "2026-11-13T07:15+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 60",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-11-13T08:00+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
@@ -21598,7 +21622,7 @@
     },
     "sched": "2026-11-13T00:05+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21609,6 +21633,42 @@
      "name": "Luanda"
     },
     "sched": "2026-11-13T00:45+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "UR 880",
+    "airline": "Uganda",
+    "from": {
+     "iata": "EBB",
+     "name": "Kampala"
+    },
+    "sched": "2026-11-13T06:30+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "QR 1491",
+    "airline": "Qatar",
+    "from": {
+     "iata": "DOH",
+     "name": "Doha"
+    },
+    "sched": "2026-11-13T08:15+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KP 71",
+    "airline": "ASKY",
+    "from": {
+     "iata": "JNB",
+     "name": "Jo'anna"
+    },
+    "sched": "2026-11-13T08:25+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
