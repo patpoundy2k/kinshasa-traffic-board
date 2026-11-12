@@ -1,0 +1,119 @@
+name: iOS build
+
+# Builds the Kinshasabouge iOS app (ios/Kinshasabouge/) on macOS runners.
+# No secrets are needed: both jobs build UNSIGNED (CODE_SIGNING_ALLOWED=NO).
+# An unsigned build cannot install on a real iPhone — the simulator job is
+# compile verification only, and the .ipa artifact is for inspection.
+# App Store signing is added later, once the owner's Apple Developer
+# account exists — see the commented section at the bottom.
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'ios/**'
+      - '.github/workflows/ios-build.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  simulator-smoke-test:
+    name: Simulator smoke test
+    runs-on: macos-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Build for testing (iOS Simulator, unsigned)
+        run: |
+          xcodebuild build-for-testing \
+            -project ios/Kinshasabouge/Kinshasabouge.xcodeproj \
+            -scheme Kinshasabouge \
+            -destination 'generic/platform=iOS Simulator' \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO
+
+  unsigned-archive:
+    name: Unsigned archive (.ipa)
+    runs-on: macos-latest
+    needs: simulator-smoke-test
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Archive (unsigned)
+        run: |
+          xcodebuild archive \
+            -project ios/Kinshasabouge/Kinshasabouge.xcodeproj \
+            -scheme Kinshasabouge \
+            -destination 'generic/platform=iOS' \
+            -archivePath build/Kinshasabouge.xcarchive \
+            -configuration Release \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Package unsigned .ipa
+        run: |
+          APP_PATH="build/Kinshasabouge.xcarchive/Products/Applications/Kinshasabouge.app"
+          mkdir -p Payload
+          cp -R "$APP_PATH" Payload/
+          zip -r Kinshasabouge-unsigned.ipa Payload
+          rm -rf Payload
+
+      - name: Upload unsigned .ipa
+        uses: actions/upload-artifact@v4
+        with:
+          name: Kinshasabouge-unsigned-ipa
+          path: Kinshasabouge-unsigned.ipa
+          if-no-files-found: error
+
+# ---------------------------------------------------------------------------
+# APP STORE SIGNING — ADD LATER (commented out, not active)
+#
+# Once the owner's Apple Developer Program membership exists ($99/year,
+# owner's own Apple ID), signing needs these GitHub repository secrets:
+#   APPLE_CERTIFICATE_BASE64        — .p12 distribution certificate, base64
+#   APPLE_CERTIFICATE_PASSWORD      — password for that .p12
+#   APPLE_PROVISIONING_PROFILE_BASE64 — App Store distribution provisioning
+#                                      profile for bundle id
+#                                      ca.patsrides.kinshasatrafficboard
+#   KEYCHAIN_PASSWORD               — throwaway password for the CI keychain
+#
+# Then add a third job (or extend unsigned-archive) with these steps
+# BEFORE the archive step, and remove CODE_SIGNING_ALLOWED=NO from the
+# archive so Xcode signs with the imported identity and profile:
+#
+#      - name: Install signing certificate
+#        env:
+#          APPLE_CERTIFICATE_BASE64: ${{ secrets.APPLE_CERTIFICATE_BASE64 }}
+#          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+#          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+#        run: |
+#          echo "$APPLE_CERTIFICATE_BASE64" | base64 --decode > certificate.p12
+#          security create-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+#          security default-keychain -s build.keychain
+#          security unlock-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+#          security import certificate.p12 -k build.keychain \
+#            -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+#          security set-key-partition-list -S apple-tool:,apple:,codesign: \
+#            -s -k "$KEYCHAIN_PASSWORD" build.keychain
+#
+#      - name: Install provisioning profile
+#        env:
+#          APPLE_PROVISIONING_PROFILE_BASE64: ${{ secrets.APPLE_PROVISIONING_PROFILE_BASE64 }}
+#        run: |
+#          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+#          echo "$APPLE_PROVISIONING_PROFILE_BASE64" | base64 --decode \
+#            > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
+#
+# The signed archive can then be exported and uploaded to App Store
+# Connect (e.g. with `xcodebuild -exportArchive` + `xcrun altool` /
+# Transporter, or fastlane). Do NOT commit certificates, .p12 files,
+# provisioning profiles, or passwords to the repo.
+# ---------------------------------------------------------------------------
