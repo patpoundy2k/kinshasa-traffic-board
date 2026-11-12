@@ -375,9 +375,9 @@
   /* ---- Mobile: interleaved card order (preview fix) ---- */
   @media(max-width:960px){
     .layout,.maincol,.rail{display:contents}
-    #alerts-card{order:1}
+    #arteries-card{order:1}
     #planner-card{order:2}
-    #arteries-card{order:3}
+    #alerts-card{order:3}
     #report-card{order:4}
     #fuel-card{order:5}
     #radio-card{order:6}
@@ -517,18 +517,6 @@
 
   <div class="layout">
     <div class="maincol">
-      <section class="card" id="alerts-card">
-        <div class="card-head">
-          <h2>⚠️ <span id="alerts-title">Alertes &amp; travaux — novembre</span></h2>
-          <span class="badge-nov" id="alerts-count">3 en novembre</span>
-        </div>
-        <p class="sub" data-i18n="alertsNote">Les mises à jour de novembre en tête, puis l'ensemble des chantiers signalés dans la presse.</p>
-        <div id="alerts-list">
-{{ROADWORKS_LIST_HTML}}
-        </div>
-        <p class="note" data-i18n="worksNote">Informations tirées de la presse congolaise, avec source et date — à confirmer sur place.</p>
-      </section>
-
       <section class="card" id="arteries-card">
         <div class="card-head">
           <h2>🛣️ <span data-i18n="arteriesTitle">Les grandes artères</span></h2>
@@ -546,6 +534,18 @@
           </ul>
         </div>
         <p class="note hidden" id="art-filter-note" style="margin-top:10px"></p>
+      </section>
+
+      <section class="card" id="alerts-card">
+        <div class="card-head">
+          <h2>⚠️ <span id="alerts-title">Alertes &amp; travaux — novembre</span></h2>
+          <span class="badge-nov" id="alerts-count">3 en novembre</span>
+        </div>
+        <p class="sub" data-i18n="alertsNote">Les mises à jour de novembre en tête, puis l'ensemble des chantiers signalés dans la presse.</p>
+        <div id="alerts-list">
+{{ROADWORKS_LIST_HTML}}
+        </div>
+        <p class="note" data-i18n="worksNote">Informations tirées de la presse congolaise, avec source et date — à confirmer sur place.</p>
       </section>
 
       <section class="card" id="report-card">
