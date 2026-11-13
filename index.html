@@ -384,7 +384,9 @@
   .owner-line{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
   .owner-line a{color:inherit;text-decoration:underline}
 
-  /* ---- Mobile: card order matches desktop top-to-bottom order ---- */
+  /* ---- Mobile: card order matches desktop top-to-bottom order.
+     NOTE: .trio needs an explicit order too — without one it defaults
+     to 0 and jumps ahead of all the ordered cards. ---- */
   @media(max-width:960px){
     .layout,.maincol,.rail{display:contents}
     #arteries-card{order:1}
@@ -393,6 +395,7 @@
     #alerts-card{order:4}
     #radio-card{order:5}
     #report-card{order:6}
+    .trio{order:7}
     #map{height:340px}
     main{padding:12px 12px 6px;gap:12px}
     .card{padding:15px 16px}
