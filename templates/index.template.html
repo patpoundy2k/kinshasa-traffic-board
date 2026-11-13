@@ -384,15 +384,15 @@
   .owner-line{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
   .owner-line a{color:inherit;text-decoration:underline}
 
-  /* ---- Mobile: interleaved card order (preview fix) ---- */
+  /* ---- Mobile: card order matches desktop top-to-bottom order ---- */
   @media(max-width:960px){
     .layout,.maincol,.rail{display:contents}
     #arteries-card{order:1}
     #planner-card{order:2}
-    #alerts-card{order:3}
-    #report-card{order:4}
-    #fuel-card{order:5}
-    #radio-card{order:6}
+    #fuel-card{order:3}
+    #alerts-card{order:4}
+    #radio-card{order:5}
+    #report-card{order:6}
     #map{height:340px}
     main{padding:12px 12px 6px;gap:12px}
     .card{padding:15px 16px}
