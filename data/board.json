@@ -21188,7 +21188,7 @@
   }
  },
  "flightsBoard": {
-  "checkedAt": "2026-11-14T16:09:52Z",
+  "checkedAt": "2026-11-14T19:16:39Z",
   "source": "AeroDataBox",
   "departures": [
    {
@@ -21404,7 +21404,7 @@
     },
     "sched": "2026-11-15T00:50+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21416,7 +21416,7 @@
     },
     "sched": "2026-11-15T01:00+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21427,6 +21427,30 @@
      "name": "Brazzaville"
     },
     "sched": "2026-11-15T01:45+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "BU 1256",
+    "airline": "CAA",
+    "to": {
+     "iata": "FKI",
+     "name": "Kisangani"
+    },
+    "sched": "2026-11-15T08:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 60",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-11-15T08:00+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
@@ -21622,7 +21646,7 @@
     },
     "sched": "2026-11-14T23:50+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21634,7 +21658,7 @@
     },
     "sched": "2026-11-15T00:05+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21645,6 +21669,18 @@
      "name": "Luanda"
     },
     "sched": "2026-11-15T00:45+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 98",
+    "airline": "Ethiopian",
+    "from": {
+     "iata": "CDG",
+     "name": "Paris"
+    },
+    "sched": "2026-11-15T06:10+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
