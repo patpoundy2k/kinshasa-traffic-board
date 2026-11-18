@@ -8,30 +8,34 @@ name: FIH flights board (AeroDataBox)
 # exits 0 without touching the data, and this workflow simply has
 # nothing to commit.
 #
-# Cadence (Pat's rule): checks ONLY between 16:00 and 23:00 Kinshasa
-# time — no fetches overnight or in the morning. Kinshasa is UTC+1
-# year-round, so the UTC crons below are WAT minus 1 hour:
+# Cadence (Pat's rule): one check a day, before the evening —
+# no fetches overnight or in the morning. Kinshasa is UTC+1
+# year-round, so the UTC cron below is WAT minus 1 hour:
 #
-#   16:30 WAT = 15:30 UTC
-#   19:30 WAT = 18:30 UTC
-#   22:30 WAT = 21:30 UTC
+#   16:00 WAT = 15:00 UTC
 #
-# Each fetch covers the NEXT 12 h, so the board still shows the full
-# day: the 22:30 fetch alone covers until 10:30 the next morning, and
-# the fetcher merges in the same-day rows earlier fetches found, so
-# the day's board is cumulative.
+# Cut from 3 to 1 fetch/day on Nov 18, 2026 at Pat's word:
+# AeroDataBox was at 85% of its Basic quota. The single 16:00 WAT
+# fetch is kept because it lands just before the evening departure
+# bank (in Kinshasa people mostly fly out in the evening and at
+# night) — a check in the evening itself would be too late, the
+# flights have already left. The 16:00 fetch catches the whole
+# evening/night bank in its 12 h window.
+#
+# Each fetch covers the NEXT 12 h: the 16:00 fetch covers until
+# 04:00 the next morning, so the board shows the evening and night
+# departures plus the overnight arrivals.
 #
 # Quota (AeroDataBox FREE Basic plan, hard cap 400 units/month):
 # the FIDS endpoint is TIER 2 = 2 units/call; one fetch = 2 calls
-# (departures + arrivals) = 4 units; 3 fetches/day = 12 units/day
-# ≈ 372 units/month worst case — inside the cap, with no headroom
-# for extra scheduled fetches. Do not add crons without redoing
-# this arithmetic.
+# (departures + arrivals) = 4 units; 1 fetch/day = 4 units/day
+# ≈ 124 units/month worst case — well inside the cap.
+# Do not add crons without redoing this arithmetic.
 
 on:
   schedule:
-    # 15:30, 18:30, 21:30 UTC = 16:30, 19:30, 22:30 Africa/Kinshasa
-    - cron: "30 15,18,21 * * *"
+    # 15:00 UTC = 16:00 Africa/Kinshasa
+    - cron: "0 15 * * *"
   workflow_dispatch:
 
 permissions:
