@@ -21188,7 +21188,7 @@
   }
  },
  "flightsBoard": {
-  "checkedAt": "2026-11-18T16:30:06Z",
+  "checkedAt": "2026-11-18T19:28:32Z",
   "source": "AeroDataBox",
   "departures": [
    {
@@ -21368,7 +21368,7 @@
     },
     "sched": "2026-11-19T00:50+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21380,7 +21380,7 @@
     },
     "sched": "2026-11-19T01:00+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21391,6 +21391,18 @@
      "name": "Cairo"
     },
     "sched": "2026-11-19T05:05+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 60",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-11-19T08:00+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
@@ -21550,7 +21562,7 @@
     },
     "sched": "2026-11-18T23:50+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21562,7 +21574,7 @@
     },
     "sched": "2026-11-19T00:05+01:00",
     "revised": null,
-    "status": "Expected",
+    "status": "Unknown",
     "quality": "Basic"
    },
    {
@@ -21573,6 +21585,42 @@
      "name": "Cairo"
     },
     "sched": "2026-11-19T04:05+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 98",
+    "airline": "Ethiopian",
+    "from": {
+     "iata": "CDG",
+     "name": "Paris"
+    },
+    "sched": "2026-11-19T06:10+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "UR 880",
+    "airline": "Uganda",
+    "from": {
+     "iata": "EBB",
+     "name": "Kampala"
+    },
+    "sched": "2026-11-19T08:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KP 45",
+    "airline": "ASKY",
+    "from": {
+     "iata": "BZV",
+     "name": "Brazzaville"
+    },
+    "sched": "2026-11-19T08:25+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
