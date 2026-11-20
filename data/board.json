@@ -21188,93 +21188,9 @@
   }
  },
  "flightsBoard": {
-  "checkedAt": "2026-11-19T15:46:48Z",
+  "checkedAt": "2026-11-20T15:45:33Z",
   "source": "AeroDataBox",
   "departures": [
-   {
-    "flight": "SA 59",
-    "airline": "South African",
-    "to": {
-     "iata": "JNB",
-     "name": "Jo'anna"
-    },
-    "sched": "2026-11-19T00:50+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "ET 842",
-    "airline": "Ethiopian",
-    "to": {
-     "iata": "ADD",
-     "name": "Addis Ababa"
-    },
-    "sched": "2026-11-19T01:00+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "MS 864",
-    "airline": "EgyptAir",
-    "to": {
-     "iata": "CAI",
-     "name": "Cairo"
-    },
-    "sched": "2026-11-19T05:05+01:00",
-    "revised": null,
-    "status": "Expected",
-    "quality": "Basic"
-   },
-   {
-    "flight": "ET 60",
-    "airline": "Ethiopian",
-    "to": {
-     "iata": "FBM",
-     "name": "Lubumbashi"
-    },
-    "sched": "2026-11-19T08:00+01:00",
-    "revised": null,
-    "status": "Expected",
-    "quality": "Basic"
-   },
-   {
-    "flight": "KP 70",
-    "airline": "ASKY",
-    "to": {
-     "iata": "JNB",
-     "name": "Jo'anna"
-    },
-    "sched": "2026-11-19T18:45+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "AF 722",
-    "airline": "Air France",
-    "to": {
-     "iata": "BZV",
-     "name": "Brazzaville"
-    },
-    "sched": "2026-11-19T19:30+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "SN 358",
-    "airline": "Brussels",
-    "to": {
-     "iata": "BRU",
-     "name": "Brussels"
-    },
-    "sched": "2026-11-19T22:45+01:00",
-    "revised": null,
-    "status": "Expected",
-    "quality": "Basic"
-   },
    {
     "flight": "ET 842",
     "airline": "Ethiopian",
@@ -21298,153 +21214,81 @@
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
-   }
-  ],
-  "arrivals": [
+   },
    {
-    "flight": "ET 843",
-    "airline": "Ethiopian",
-    "from": {
-     "iata": "ADD",
-     "name": "Addis Ababa"
+    "flight": "BU 21",
+    "airline": "CAA",
+    "to": {
+     "iata": "NBJ",
+     "name": "Luanda"
     },
-    "sched": "2026-11-19T00:05+01:00",
+    "sched": "2026-11-20T17:00+01:00",
     "revised": null,
     "status": "Unknown",
     "quality": "Basic"
    },
    {
-    "flight": "MS 863",
-    "airline": "EgyptAir",
-    "from": {
-     "iata": "CAI",
-     "name": "Cairo"
-    },
-    "sched": "2026-11-19T04:05+01:00",
-    "revised": null,
-    "status": "Expected",
-    "quality": "Basic"
-   },
-   {
-    "flight": "ET 98",
-    "airline": "Ethiopian",
-    "from": {
-     "iata": "CDG",
-     "name": "Paris"
-    },
-    "sched": "2026-11-19T06:10+01:00",
-    "revised": null,
-    "status": "Expected",
-    "quality": "Basic"
-   },
-   {
-    "flight": "UR 880",
-    "airline": "Uganda",
-    "from": {
-     "iata": "EBB",
-     "name": "Kampala"
-    },
-    "sched": "2026-11-19T08:00+01:00",
-    "revised": null,
-    "status": "Expected",
-    "quality": "Basic"
-   },
-   {
-    "flight": "KP 45",
+    "flight": "KP 44",
     "airline": "ASKY",
-    "from": {
+    "to": {
      "iata": "BZV",
      "name": "Brazzaville"
     },
-    "sched": "2026-11-19T08:25+01:00",
-    "revised": null,
-    "status": "Expected",
-    "quality": "Basic"
-   },
-   {
-    "flight": "AF 722",
-    "airline": "Air France",
-    "from": {
-     "iata": "CDG",
-     "name": "Paris"
-    },
-    "sched": "2026-11-19T17:50+01:00",
-    "revised": null,
-    "status": "Expected",
-    "quality": "Basic"
-   },
-   {
-    "flight": "ET 77",
-    "airline": "Ethiopian",
-    "from": {
-     "iata": "KGA",
-     "name": "Kananga"
-    },
-    "sched": "2026-11-19T18:00+01:00",
+    "sched": "2026-11-20T18:45+01:00",
     "revised": null,
     "status": "Unknown",
     "quality": "Basic"
    },
    {
-    "flight": "KP 70",
-    "airline": "ASKY",
-    "from": {
-     "iata": "LFW",
-     "name": "Lomé"
-    },
-    "sched": "2026-11-19T18:05+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "BU 1162",
-    "airline": "CAA",
-    "from": {
-     "iata": "MDK",
-     "name": "Mbandaka"
-    },
-    "sched": "2026-11-19T18:30+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "BU 1255",
-    "airline": "CAA",
-    "from": {
-     "iata": "FKI",
-     "name": "Kisangani"
-    },
-    "sched": "2026-11-19T19:30+01:00",
-    "revised": null,
-    "status": "Unknown",
-    "quality": "Basic"
-   },
-   {
-    "flight": "SN 357",
+    "flight": "SN 358",
     "airline": "Brussels",
-    "from": {
+    "to": {
      "iata": "BRU",
      "name": "Brussels"
     },
-    "sched": "2026-11-19T20:25+01:00",
+    "sched": "2026-11-20T22:45+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
    },
    {
-    "flight": "ET 63",
-    "airline": "Ethiopian",
-    "from": {
-     "iata": "FBM",
-     "name": "Lubumbashi"
+    "flight": "AF 756",
+    "airline": "Air France",
+    "to": {
+     "iata": "CDG",
+     "name": "Paris"
     },
-    "sched": "2026-11-19T21:00+01:00",
+    "sched": "2026-11-20T23:00+01:00",
     "revised": null,
-    "status": "Unknown",
+    "status": "Expected",
     "quality": "Basic"
    },
+   {
+    "flight": "SA 59",
+    "airline": "South African",
+    "to": {
+     "iata": "JNB",
+     "name": "Jo'anna"
+    },
+    "sched": "2026-11-21T00:50+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 842",
+    "airline": "Ethiopian",
+    "to": {
+     "iata": "ADD",
+     "name": "Addis Ababa"
+    },
+    "sched": "2026-11-21T01:00+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   }
+  ],
+  "arrivals": [
    {
     "flight": "ET 843",
     "airline": "Ethiopian",
@@ -21465,6 +21309,114 @@
      "name": "Luanda"
     },
     "sched": "2026-11-20T00:45+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "KP 44",
+    "airline": "ASKY",
+    "from": {
+     "iata": "LFW",
+     "name": "Lomé"
+    },
+    "sched": "2026-11-20T18:05+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 93",
+    "airline": "Ethiopian",
+    "from": {
+     "iata": "BDT",
+     "name": "Gbadolite"
+    },
+    "sched": "2026-11-20T19:10+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "BU 22",
+    "airline": "CAA",
+    "from": {
+     "iata": "NBJ",
+     "name": "Luanda"
+    },
+    "sched": "2026-11-20T19:55+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "SN 357",
+    "airline": "Brussels",
+    "from": {
+     "iata": "BRU",
+     "name": "Brussels"
+    },
+    "sched": "2026-11-20T20:25+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 63",
+    "airline": "Ethiopian",
+    "from": {
+     "iata": "FBM",
+     "name": "Lubumbashi"
+    },
+    "sched": "2026-11-20T21:00+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "AF 756",
+    "airline": "Air France",
+    "from": {
+     "iata": "BZV",
+     "name": "Brazzaville"
+    },
+    "sched": "2026-11-20T21:20+01:00",
+    "revised": null,
+    "status": "Unknown",
+    "quality": "Basic"
+   },
+   {
+    "flight": "SA 58",
+    "airline": "South African",
+    "from": {
+     "iata": "JNB",
+     "name": "Jo'anna"
+    },
+    "sched": "2026-11-20T23:50+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "ET 843",
+    "airline": "Ethiopian",
+    "from": {
+     "iata": "ADD",
+     "name": "Addis Ababa"
+    },
+    "sched": "2026-11-21T00:05+01:00",
+    "revised": null,
+    "status": "Expected",
+    "quality": "Basic"
+   },
+   {
+    "flight": "MS 863",
+    "airline": "EgyptAir",
+    "from": {
+     "iata": "CAI",
+     "name": "Cairo"
+    },
+    "sched": "2026-11-21T04:05+01:00",
     "revised": null,
     "status": "Expected",
     "quality": "Basic"
