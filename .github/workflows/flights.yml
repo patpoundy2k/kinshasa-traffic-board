@@ -31,7 +31,6 @@ name: FIH flights board (AeroDataBox)
 # (departures + arrivals) = 4 units; 1 fetch/day = 4 units/day
 # ≈ 124 units/month worst case — well inside the cap.
 # Do not add crons without redoing this arithmetic.
-
 on:
   schedule:
     # 15:00 UTC = 16:00 Africa/Kinshasa
@@ -42,6 +41,7 @@ permissions:
   contents: write # commit the refreshed flights board
   pages: write # deploy to GitHub Pages
   id-token: write
+  actions: read # let the artifact-visibility check list this run's artifacts
 
 concurrency:
   group: pages # same group as update.yml/live.yml: never deploy two builds at once
@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url || steps.deployment_retry.outputs.page_url }}
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
@@ -67,16 +67,22 @@ jobs:
           RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
         run: python3 scripts/flights_refresh.py
 
-      - name: Commit the refreshed flights board
+      - name: Commit the refreshed flight data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/board.json index.html
+          # Stage every file the refresh regenerates: build.py also rewrites
+          # sitemap.xml, and leaving it unstaged blocks the rebase below.
+          git add data/board.json index.html sitemap.xml
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
             git commit -m "FIH flights board refresh ($(date -u +%Y-%m-%dT%H:%MZ))"
-            git push || (git pull --rebase && git push)
+            # Runs queue behind the shared "pages" group, so main may have
+            # moved since checkout. Rebase onto the latest main and retry
+            # the push; --autostash keeps any leftover unstaged change
+            # from blocking the rebase.
+            git push || (git pull --rebase --autostash && git push)
           fi
 
       - name: Stage the public site files
@@ -84,7 +90,7 @@ jobs:
           mkdir -p _site/data _site/images
           cp index.html robots.txt sitemap.xml ads.txt privacy.html _site/
           cp data/board.json _site/data/
-          cp -r images/. _site/images/
+          cp -r images/ _site/images/
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
@@ -94,6 +100,38 @@ jobs:
         with:
           path: _site
 
+      # The deploy below sometimes fails because it cannot see the
+      # artifact that was just uploaded ("Found 0 artifact(s)"), even
+      # though the upload succeeded. Wait until the artifact is listed
+      # for this run before deploying, and retry the deploy once if it
+      # still fails.
+      - name: Wait for the Pages artifact to be visible
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 1 12); do
+            count="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts" --jq '[.artifacts[] | select(.name == "github-pages")] | length' 2>/dev/null || echo 0)"
+            if [ "${count}" -gt 0 ]; then
+              echo "github-pages artifact is visible; deploying."
+              exit 0
+            fi
+            echo "github-pages artifact not listed yet (attempt ${i}/12); waiting 5s..."
+            sleep 5
+          done
+          echo "::warning::github-pages artifact is still not listed after 60s; attempting the deploy anyway."
       - name: Deploy to GitHub Pages
         id: deployment
+        continue-on-error: true
         uses: actions/deploy-pages@v4
+      - name: Wait before retrying the deploy
+        if: steps.deployment.outcome == 'failure'
+        run: sleep 15
+      - name: Deploy to GitHub Pages (retry)
+        id: deployment_retry
+        if: steps.deployment.outcome == 'failure'
+        uses: actions/deploy-pages@v4
+      - name: Fail if the deployment did not succeed
+        if: steps.deployment.outcome == 'failure' && steps.deployment_retry.outcome == 'failure'
+        run: |
+          echo "::error::GitHub Pages deployment failed on both attempts."
+          exit 1
