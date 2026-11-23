@@ -1,0 +1,57 @@
+name: Site health check
+
+# Monitors both live sites (kinshasabouge.com and ride401.ca) for outages,
+# stale content and expiring TLS certificates. No external service, no cost.
+# If any check fails the job fails and GitHub emails the repo owner.
+# Runs every 6 hours, plus on demand from the Actions tab.
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check kinshasabouge.com is up
+        run: |
+          code=$(curl -s -o /tmp/kin.html -w "%{http_code}" --max-time 30 https://kinshasabouge.com/)
+          echo "kinshasabouge.com HTTP $code"
+          test "$code" = "200"
+
+      - name: Check ride401.ca is up
+        run: |
+          code=$(curl -s -o /tmp/ride.html -w "%{http_code}" --max-time 30 https://ride401.ca/)
+          echo "ride401.ca HTTP $code"
+          test "$code" = "200"
+
+      - name: Check kinshasabouge.com content is fresh
+        run: |
+          generated=$(curl -s --max-time 30 https://kinshasabouge.com/data/board.json | grep -o '"generated": "[0-9][0-9-]*"' | grep -o '[0-9][0-9-]*')
+          echo "kinshasabouge.com board generated: $generated"
+          test -n "$generated"
+          age=$(( ($(date +%s) - $(date -d "$generated" +%s)) / 86400 ))
+          echo "age: ${age} day(s)"
+          test "$age" -le 2
+
+      - name: Check ride401.ca content is fresh
+        run: |
+          updated=$(grep -o 'updated-time" datetime="[0-9][0-9-]*' /tmp/ride.html | grep -o '[0-9][0-9-]*')
+          echo "ride401.ca last updated: $updated"
+          test -n "$updated"
+          age=$(( ($(date +%s) - $(date -d "$updated" +%s)) / 86400 ))
+          echo "age: ${age} day(s)"
+          test "$age" -le 2
+
+      - name: Check TLS certificates (fail if under 14 days left)
+        run: |
+          for d in kinshasabouge.com ride401.ca; do
+            end=$(echo | openssl s_client -servername "$d" -connect "$d:443" 2>/dev/null | openssl x509 -noout -enddate | cut -d= -f2)
+            days=$(( ($(date -d "$end" +%s) - $(date +%s)) / 86400 ))
+            echo "$d certificate expires $end ($days days left)"
+            test "$days" -ge 14
+          done
